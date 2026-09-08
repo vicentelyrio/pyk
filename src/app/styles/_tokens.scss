@@ -1,0 +1,173 @@
+// -----------------------------------------------------------------------------
+// Design tokens — the single source of truth
+// -----------------------------------------------------------------------------
+// Raw scales + semantic maps, built from styles/_config.scss.
+// Read these through styles/_functions.scss (color(), space(), radius(), …),
+// never with map.get() directly — the accessors fail loud on a bad key.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'config';
+
+$g: config.$grid; // 4px
+
+// -- Colour -------------------------------------------------------------------
+// Solid ground colours. Alpha overlays live in $line / $fill below.
+$palette: (
+  base:      #0e0e14, // desktop / root surface
+  page:      #0a0a10, // full-bleed backgrounds (spec sheet, overview)
+  surface:   #12121a, // popouts, panels (composited at $surface-opacity)
+  raised:    #2a2536, // chips, avatars, nested tiles on a surface
+  raised-warm: #2a2130,
+
+  text:      #e8e6ef, // primary text / icons on a surface
+  text-hi:   #f7f5fc, // display numerals, emphasised headings
+  text-soft: #cfcada, // secondary labels
+  muted:     #9c97ad, // tertiary labels, resting icons
+  faint:     #8f8ba3, // captions, metadata, disabled
+  ink:       #12121a, // text / icons ON accent + tint fills
+
+  accent:    config.$accent,
+  info:      #a7bff0, // blue   — weather, network
+  ok:        #9ecfb0, // green  — audio, healthy
+  warn:      #e8a598, // coral  — alerts, destructive
+  attention: #e8cf98, // amber  — pending, night-light
+);
+
+// -- Hairlines & fills (white / accent at alpha) ----------------------------
+$line: (
+  hairline: rgba(#fff, 0.06), // section dividers inside a panel
+  subtle:   rgba(#fff, 0.08), // panel outer border
+  strong:   rgba(#fff, 0.12), // inputs, emphasised edges
+  divider:  rgba(#fff, 0.22), // widget hairlines on the wallpaper
+);
+
+$fill: (
+  hover:       rgba(#fff, 0.07), // icon-button hover
+  hover-soft:  rgba(#fff, 0.04), // list-row hover
+  track:       rgba(#fff, 0.14), // slider / progress track
+  active:      rgba(#fff, 0.08), // pressed / current bar item
+  accent-wash: rgba(config.$accent, 0.13), // selected row, active toggle
+  warn-wash:   rgba(#e8a598, 0.15),
+);
+
+// -- Spacing (grid-derived) ------------------------------------------------
+$space: (
+  0:    0,
+  px:   1px,
+  xxs:  $g * 0.5,  //  2
+  xs:   $g,        //  4
+  sm:   $g * 2,    //  8  — panel inset from bar, grid gap
+  md:   $g * 3,    // 12  — intra-panel gaps, row padding
+  lg:   $g * 4,    // 16  — section gaps
+  xl:   $g * 5,    // 20
+  xxl:  $g * 6,    // 24  — large section gaps
+  xxxl: $g * 8,    // 32
+  huge: $g * 10,   // 40
+);
+
+// -- Radius ---------------------------------------------------------------
+$radius: (
+  xs:   6px,                  // swatches, tiny chips
+  sm:   8px,                  // icon buttons, list rows
+  md:   12px,                 // toggle tiles, inputs
+  lg:   config.$panel-radius, // 16 — popouts, overlays  (the knob)
+  xl:   18px,                 // settings modal, power tiles
+  pill: 9999px,
+  full: 50%,
+);
+
+// -- Component sizing ----------------------------------------------------
+$size: (
+  bar:        config.$bar-height, // 44
+  bar-hit:    config.$bar-hit,    // 30
+  bar-hit-sm: 28px,               // media transport
+  icon:       15px,
+  icon-sm:    13px,
+  icon-lg:    20px,
+  toggle:     58px,               // control-centre toggle tile
+  swatch:     26px,
+  avatar:     38px,
+);
+
+// Popout widths, keyed by surface (spec: 320–860)
+$panel-width: (
+  launcher:      620px,
+  control:       372px,
+  calendar:      320px,
+  notifications: 356px,
+  clipboard:     340px,
+  wallpaper:     404px,
+  media:         320px,
+  settings:      860px,
+);
+
+// -- Typography --------------------------------------------------------
+$font-size: (
+  xxs:        10.5px, // badge counts, timestamps
+  xs:         11px,   // captions, metadata
+  sm:         12px,   // secondary labels
+  base:       13px,   // body / bar text
+  md:         14px,   // list titles
+  lg:         15px,   // panel headings, search input
+  title:      22px,   // spec-sheet section titles
+  display-sm: 40px,
+  display:    64px,   // date widget
+  display-lg: 84px,   // temperature widget
+  clock:      96px,   // lock screen
+);
+
+$font-weight: (
+  regular:  400,
+  medium:   500,
+  semibold: 600,
+);
+
+$tracking: (
+  tight:  -0.045em, // large display numerals
+  normal: 0,
+  label:  0.14em,   // mono caps labels (CPU, TUE SEP)
+  caps:   0.2em,    // password dots, spaced captions
+);
+
+$leading: (
+  none:   0.9,  // stacked display numerals
+  snug:   1.2,
+  normal: 1.45, // notification / spec body copy
+);
+
+// -- Elevation --------------------------------------------------------
+$shadow: (
+  popout: 0 28px 70px rgba(#000, 0.55), // control / calendar / notifs / …
+  raised: 0 32px 90px rgba(#000, 0.6),  // launcher
+  modal:  0 40px 100px rgba(#000, 0.65),// settings
+  toast:  0 18px 44px rgba(#000, 0.5),
+);
+
+$text-shadow: (
+  wallpaper: 0 1px 14px rgba(#06060c, 0.85), // bare widgets sitting on the image
+);
+
+// Documented only — GTK4 CSS has no blur. Surface opacity is the stand-in.
+$blur: (
+  surface: 32px,
+  bar:     28px,
+);
+
+// -- Motion ----------------------------------------------------------
+$duration: (
+  fast:   140ms, // overlay cross-fade
+  base:   150ms, // popout fade + lift
+  toggle: 160ms, // control-centre toggles
+  slow:   180ms, // toast slide-in
+  pill:   200ms, // workspace pill grow
+);
+
+$easing: (
+  standard: cubic-bezier(0.2, 0.8, 0.2, 1),
+  linear:   linear,
+);
+
+$timeout: (
+  toast: 3200ms, // non-critical toast auto-dismiss
+);

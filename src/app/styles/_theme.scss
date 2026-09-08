@@ -1,0 +1,62 @@
+// -----------------------------------------------------------------------------
+// Runtime colour layer  (emits CSS)
+// -----------------------------------------------------------------------------
+// Projects every colour token onto a GTK `@define-color` name. Two reasons:
+//
+//   1. It's GTK's native theming primitive — widget code reads `@accent`, not a
+//      compiled hex, so one definition drives everything.
+//   2. It can be re-defined at *runtime* without recompiling SCSS:
+//
+//        // e.g. from a matugen template on wallpaper change
+//        app.apply_css(`
+//          @define-color accent ${hex};
+//          @define-color accentWash alpha(${hex}, 0.13);
+//        `, false)   // false = merge, don't reset the base sheet
+//
+// Names are camelCase. Alpha variants are pre-composed so widgets don't hand-roll
+// rgba(). Reference them via s.gtk(name) — see styles/_functions.scss.
+// -----------------------------------------------------------------------------
+
+@use 'functions' as *;
+@use 'config';
+
+// Ground -------------------------------------------------------------------
+@define-color base          #{color(base)};
+@define-color page          #{color(page)};
+@define-color surface       #{color(surface)};
+@define-color raised        #{color(raised)};
+@define-color raisedWarm    #{color(raised-warm)};
+
+// Composited surfaces (the "glass" look, minus the blur GTK can't do) -------
+@define-color surfaceGlass  #{rgba(color(surface), config.$surface-opacity)};
+@define-color barGlass      #{rgba(color(base), 0.72)};
+@define-color scrim         #{rgba(color(page), 0.82)};
+
+// Text / icons -----------------------------------------------------------
+@define-color text          #{color(text)};
+@define-color textHi        #{color(text-hi)};
+@define-color textSoft      #{color(text-soft)};
+@define-color muted         #{color(muted)};
+@define-color faint         #{color(faint)};
+@define-color ink           #{color(ink)};
+
+// Accent + status --------------------------------------------------------
+@define-color accent        #{color(accent)};
+@define-color accentHover   #{config.$accent-hover};
+@define-color accentPress   #{config.$accent-press};
+@define-color accentWash    #{fill(accent-wash)};
+@define-color info          #{color(info)};
+@define-color ok            #{color(ok)};
+@define-color warn          #{color(warn)};
+@define-color warnWash      #{fill(warn-wash)};
+@define-color attention     #{color(attention)};
+
+// Hairlines + fills -----------------------------------------------------
+@define-color line          #{line(hairline)};
+@define-color lineSubtle    #{line(subtle)};
+@define-color lineStrong    #{line(strong)};
+@define-color divider       #{line(divider)};
+@define-color fillHover     #{fill(hover)};
+@define-color fillHoverSoft #{fill(hover-soft)};
+@define-color fillActive    #{fill(active)};
+@define-color fillTrack     #{fill(track)};

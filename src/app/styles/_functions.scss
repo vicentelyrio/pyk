@@ -1,0 +1,57 @@
+// -----------------------------------------------------------------------------
+// Token accessors
+// -----------------------------------------------------------------------------
+// Fail-loud lookups into the maps in styles/_tokens.scss. A typo is a build
+// error with the list of valid keys, not a silently-dropped declaration.
+//
+//   @use 'styles' as s;
+//   .Panel { padding: s.space(lg); border-radius: s.radius(lg); }
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:string';
+@use 'tokens';
+@use 'config';
+
+@function _get($map, $key, $ns) {
+  @if not map.has-key($map, $key) {
+    @error "#{$ns}(): no such token `#{$key}`. Valid: #{map.keys($map)}.";
+  }
+  @return map.get($map, $key);
+}
+
+// Colour ---------------------------------------------------------------------
+@function color($k)  { @return _get(tokens.$palette, $k, 'color'); }
+@function line($k)   { @return _get(tokens.$line,    $k, 'line'); }
+@function fill($k)   { @return _get(tokens.$fill,    $k, 'fill'); }
+
+// Dimension ----------------------------------------------------------------
+@function space($k)       { @return _get(tokens.$space,       $k, 'space'); }
+@function radius($k)      { @return _get(tokens.$radius,      $k, 'radius'); }
+@function size($k)        { @return _get(tokens.$size,        $k, 'size'); }
+@function panel-width($k) { @return _get(tokens.$panel-width, $k, 'panel-width'); }
+
+// Type -------------------------------------------------------------------
+@function font-size($k) { @return _get(tokens.$font-size,   $k, 'font-size'); }
+@function weight($k)    { @return _get(tokens.$font-weight, $k, 'weight'); }
+@function tracking($k)  { @return _get(tokens.$tracking,    $k, 'tracking'); }
+@function leading($k)   { @return _get(tokens.$leading,     $k, 'leading'); }
+
+// Effect ---------------------------------------------------------------
+@function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow'); }
+@function text-shadow($k) { @return _get(tokens.$text-shadow, $k, 'text-shadow'); }
+@function blur($k)        { @return _get(tokens.$blur,        $k, 'blur'); }
+@function duration($k)    { @return _get(tokens.$duration,    $k, 'duration'); }
+@function easing($k)      { @return _get(tokens.$easing,      $k, 'easing'); }
+@function timeout($k)     { @return _get(tokens.$timeout,     $k, 'timeout'); }
+
+// GTK named colours --------------------------------------------------------
+// styles/_theme.scss turns the palette into `@define-color` names so colours
+// can be re-themed at runtime (app.apply_css). Reference them from widget CSS
+// through this helper — sass can't take a bare `@name` in a value.
+//
+//   background: gtk(surface-glass);   ->  background: @surfaceGlass;
+@function gtk($name) {
+  @return string.unquote("@#{$name}");
+}

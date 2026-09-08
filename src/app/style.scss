@@ -1,20 +1,15 @@
-// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-$fg-color: #{"@theme_fg_color"};
-$bg-color: #{"@theme_bg_color"};
+// -----------------------------------------------------------------------------
+// Style bundle entry — compiled by ags and handed to app.start({ css })
+// -----------------------------------------------------------------------------
+// To retheme the shell, override knobs BEFORE this line pulls the layer in:
+//
+//   @use 'styles/config' with ($accent: #9ecfb0, $panel-radius: 12px);
+//
+// Order matters: config first, then the runtime colour layer, base, widgets.
+// -----------------------------------------------------------------------------
 
-window.Bar {
-  background: transparent;
-  color: $fg-color;
-  font-weight: bold;
+@use 'styles/theme';  // @define-color layer (runtime-swappable colours)
+@use 'styles/reset';  // base typography + keyframes
 
-  > centerbox {
-    background: $bg-color;
-    border-radius: 10px;
-    margin: 8px;
-  }
-
-  button {
-    border-radius: 8px;
-    margin: 2px;
-  }
-}
+// Widgets
+@use 'styles/widgets/bar';

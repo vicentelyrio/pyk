@@ -1,0 +1,30 @@
+// -----------------------------------------------------------------------------
+// Top bar  (emits CSS)
+// -----------------------------------------------------------------------------
+@use '../index' as s;
+
+window.Bar {
+  background-color: transparent;
+
+  > centerbox {
+    @include s.bar-surface;
+  }
+
+  label {
+    font-size: s.font-size(base);
+    color: s.gtk(text);
+  }
+
+  button {
+    @include s.icon-button(bar-hit);
+    margin: 0 s.space(xxs);
+    padding: 0 s.space(sm);
+    color: s.gtk(muted);
+
+    &:hover { color: s.gtk(text); }
+  }
+
+  menubutton > button {
+    @include s.numeric;
+  }
+}
