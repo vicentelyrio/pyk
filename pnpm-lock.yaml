@@ -24,6 +24,9 @@ importers:
       '@effect/tsgo':
         specifier: 0.43.0
         version: 0.43.0
+      typesafe-i18n:
+        specifier: ^5.27.1
+        version: 5.27.1(typescript@7.0.2)
       typescript:
         specifier: 7.0.2
         version: 7.0.2
@@ -210,6 +213,12 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
+  typesafe-i18n@5.27.1:
+    resolution: {integrity: sha512-749uWo2ZXETT//kWjVYPm8QPYR8xLh8G0wLfoAyCAtAmysX67uCaAyLjAjAWojL6fuJpE5B6yIjwvO9orXzUPg==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=3.5.1'
+
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
     engines: {node: '>=16.20.0'}
@@ -324,6 +333,10 @@ snapshots:
   gnim@1.9.1: {}
 
   pure-rand@6.1.0: {}
+
+  typesafe-i18n@5.27.1(typescript@7.0.2):
+    dependencies:
+      typescript: 7.0.2
 
   typescript@7.0.2:
     optionalDependencies:

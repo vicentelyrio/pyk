@@ -2,6 +2,7 @@ import app from 'ags/gtk4/app'
 import { Astal, Gtk, Gdk } from 'ags/gtk4'
 import { execAsync } from 'ags/process'
 import { createPoll } from 'ags/time'
+import { LL } from '@/infraestructure/i18n'
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
   const time = createPoll('', 1000, 'date')
@@ -24,7 +25,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
           hexpand
           halign={Gtk.Align.CENTER}
         >
-          <label label="Welcome to AGS!" />
+          <label label={LL((t) => t.WELCOME())} />
         </button>
         <box $type="center" />
         <menubutton $type="end" hexpand halign={Gtk.Align.CENTER}>

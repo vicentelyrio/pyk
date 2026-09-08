@@ -1,7 +1,8 @@
 {
   "scripts": {
     "prepare": "effect-tsgo patch --typescript --no-oxlint",
-    "start": "ags run src/app/app.ts"
+    "start": "ags run src/app/app.ts",
+    "typesafe-i18n": "typesafe-i18n"
   },
   "dependencies": {
     "ags": "link:/usr/share/astal/gjs",
@@ -11,6 +12,7 @@
   "devDependencies": {
     "@effect/language-service": "^0.87.2",
     "@effect/tsgo": "0.43.0",
+    "typesafe-i18n": "^5.27.1",
     "typescript": "7.0.2"
   }
 }
