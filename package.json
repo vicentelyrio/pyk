@@ -1,13 +1,15 @@
 {
   "scripts": {
-    "prepare": "effect-tsgo patch --typescript --no-oxlint",
+    "prepare": "effect-tsgo patch --typescript --no-oxlint && bin/gen-vendor-types.sh",
     "start": "ags run src/app/app.ts",
+    "typecheck": "tsc",
+    "build": "tsc && mkdir -p dist && ags bundle src/app/app.ts dist/pyk --gtk 4",
     "typesafe-i18n": "typesafe-i18n"
   },
   "dependencies": {
-    "ags": "link:/usr/share/astal/gjs",
+    "ags": "link:/usr/share/ags/js",
     "effect": "^3.22.1",
-    "gnim": "*"
+    "gnim": "^1.9.1"
   },
   "devDependencies": {
     "@effect/language-service": "^0.87.2",

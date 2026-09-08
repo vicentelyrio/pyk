@@ -11,7 +11,7 @@ class URLPolyfill {
     const flags = GLib.UriFlags.HAS_PASSWORD
     if (base !== undefined) {
       const baseStr = base instanceof URLPolyfill ? base.href : base
-      this.#uri = GLib.Uri.parse_relative(GLib.Uri.parse(baseStr, flags), url, flags)
+      this.#uri = GLib.Uri.parse(baseStr, flags).parse_relative(url, flags)
     } else {
       this.#uri = GLib.Uri.parse(url, flags)
     }
@@ -36,7 +36,8 @@ class URLPolyfill {
   toJSON() { return this.href }
 }
 
-if (typeof globalThis.URL === 'undefined') {
-  // @ts-expect-error - minimal polyfill, not a full URL implementation
-  globalThis.URL = URLPolyfill
+const g = globalThis as Record<string, unknown>
+if (typeof g.URL === 'undefined') {
+  // minimal polyfill, not a full URL implementation
+  g.URL = URLPolyfill
 }

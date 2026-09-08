@@ -9,13 +9,13 @@ importers:
   .:
     dependencies:
       ags:
-        specifier: link:/usr/share/astal/gjs
-        version: link:../../../../../usr/share/astal/gjs
+        specifier: link:/usr/share/ags/js
+        version: link:../../../../../usr/share/ags/js
       effect:
         specifier: ^3.22.1
         version: 3.22.1
       gnim:
-        specifier: '*'
+        specifier: ^1.9.1
         version: 1.9.1
     devDependencies:
       '@effect/language-service':

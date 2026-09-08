@@ -1,5 +1,15 @@
 import GObject, { register, property } from 'ags/gobject'
-import { subprocess } from 'ags/process'
+import { exec, subprocess } from 'ags/process'
+
+// Partial shape of a niri `Workspace` from `niri msg --json event-stream`.
+export interface Workspace {
+  id: number
+  idx: number
+  name: string | null
+  output: string | null
+  is_active: boolean
+  is_focused: boolean
+}
 
 @register({ GTypeName: 'Niri' })
 export class Niri extends GObject.Object {

@@ -1,3 +1,8 @@
 node_modules/
 @girs/
+dist/
+types/vendor/
 *.log
+
+# stray tsc emit (tsconfig sets noEmit, but just in case)
+src/**/*.js
