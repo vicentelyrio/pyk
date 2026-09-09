@@ -1,0 +1,12 @@
+@use 'sass:map';
+
+$shadow: (
+  popout: 0 28px 70px rgba(#000, 0.55), // control / calendar / notifs / …
+  raised: 0 32px 90px rgba(#000, 0.6),  // launcher
+  modal:  0 40px 100px rgba(#000, 0.65),// settings
+  toast:  0 18px 44px rgba(#000, 0.5),
+);
+
+$text-shadow: (
+  wallpaper: 0 1px 14px rgba(#06060c, 0.85), // bare widgets sitting on the image
+);

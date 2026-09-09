@@ -1,0 +1,14 @@
+@use 'sass:map';
+@use 'styles/core/config';
+
+$size: (
+  bar:        config.$bar-height, // 44
+  bar-hit:    config.$bar-hit,    // 30
+  bar-hit-sm: 28px,               // media transport
+  icon:       15px,
+  icon-sm:    13px,
+  icon-lg:    20px,
+  toggle:     58px,               // control-centre toggle tile
+  swatch:     32px,
+  avatar:     38px,
+);

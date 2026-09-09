@@ -11,8 +11,8 @@
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:string';
-@use 'tokens';
-@use 'config';
+@use 'styles/core/tokens';
+@use 'styles/core/config';
 
 @function _get($map, $key, $ns) {
   @if not map.has-key($map, $key) {

@@ -5,8 +5,8 @@
 // typography and register the shared keyframes. Everything else is per-widget.
 // -----------------------------------------------------------------------------
 
-@use 'functions' as *;
-@use 'config';
+@use 'styles/core/helpers/functions' as *;
+@use 'styles/core/config';
 
 * {
   font-family: config.$font-family;

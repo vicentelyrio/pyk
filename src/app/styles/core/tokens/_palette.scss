@@ -1,0 +1,40 @@
+@use 'sass:map';
+@use 'styles/core/config';
+
+$palette: (
+  base:      #0e0e14, // desktop / root surface
+  page:      #0a0a10, // full-bleed backgrounds (spec sheet, overview)
+  surface:   #12121a, // popouts, panels (composited at $surface-opacity)
+  raised:    #2a2536, // chips, avatars, nested tiles on a surface
+  raised-warm: #2a2130,
+
+  text:      #e8e6ef, // primary text / icons on a surface
+  text-hi:   #f7f5fc, // display numerals, emphasised headings
+  text-soft: #cfcada, // secondary labels
+  muted:     #9c97ad, // tertiary labels, resting icons
+  faint:     #8f8ba3, // captions, metadata, disabled
+  ink:       #12121a, // text / icons ON accent + tint fills
+
+  accent:    config.$accent,
+  info:      #a7bff0, // blue   — weather, network
+  ok:        #9ecfb0, // green  — audio, healthy
+  warn:      #e8a598, // coral  — alerts, destructive
+  attention: #e8cf98, // amber  — pending, night-light
+);
+
+// -- Hairlines & fills (white / accent at alpha) ----------------------------
+$line: (
+  hairline: rgba(#fff, 0.06), // section dividers inside a panel
+  subtle:   rgba(#fff, 0.08), // panel outer border
+  strong:   rgba(#fff, 0.12), // inputs, emphasised edges
+  divider:  rgba(#fff, 0.22), // widget hairlines on the wallpaper
+);
+
+$fill: (
+  hover:       rgba(#fff, 0.07), // icon-button hover
+  hover-soft:  rgba(#fff, 0.04), // list-row hover
+  track:       rgba(#fff, 0.14), // slider / progress track
+  active:      rgba(#fff, 0.08), // pressed / current bar item
+  accent-wash: rgba(config.$accent, 0.13), // selected row, active toggle
+  warn-wash:   rgba(#e8a598, 0.15),
+);

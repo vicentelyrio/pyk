@@ -1,0 +1,34 @@
+@use 'sass:map';
+
+$font-size: (
+  xxs:        10.5px, // badge counts, timestamps
+  xs:         11px,   // captions, metadata
+  sm:         12px,   // secondary labels
+  base:       13px,   // body / bar text
+  md:         14px,   // list titles
+  lg:         15px,   // panel headings, search input
+  title:      22px,   // spec-sheet section titles
+  display-sm: 40px,
+  display:    64px,   // date widget
+  display-lg: 84px,   // temperature widget
+  clock:      96px,   // lock screen
+);
+
+$font-weight: (
+  regular:  400,
+  medium:   500,
+  semibold: 600,
+);
+
+$tracking: (
+  tight:  -0.045em, // large display numerals
+  normal: 0,
+  label:  0.14em,   // mono caps labels (CPU, TUE SEP)
+  caps:   0.2em,    // password dots, spaced captions
+);
+
+$leading: (
+  none:   0.9,  // stacked display numerals
+  snug:   1.2,
+  normal: 1.45, // notification / spec body copy
+);

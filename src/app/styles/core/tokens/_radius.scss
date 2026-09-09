@@ -1,0 +1,12 @@
+@use 'sass:map';
+@use 'styles/core/config';
+
+$radius: (
+  xs:   6px,                  // swatches, tiny chips
+  sm:   8px,                  // icon buttons, list rows
+  md:   12px,                 // toggle tiles, inputs
+  lg:   config.$panel-radius, // 16 — popouts, overlays  (the knob)
+  xl:   18px,                 // settings modal, power tiles
+  pill: 9999px,
+  full: 50%,
+);

@@ -1,24 +1,5 @@
-// -----------------------------------------------------------------------------
-// Runtime colour layer  (emits CSS)
-// -----------------------------------------------------------------------------
-// Projects every colour token onto a GTK `@define-color` name. Two reasons:
-//
-//   1. It's GTK's native theming primitive — widget code reads `@accent`, not a
-//      compiled hex, so one definition drives everything.
-//   2. It can be re-defined at *runtime* without recompiling SCSS:
-//
-//        // e.g. from a matugen template on wallpaper change
-//        app.apply_css(`
-//          @define-color accent ${hex};
-//          @define-color accentWash alpha(${hex}, 0.13);
-//        `, false)   // false = merge, don't reset the base sheet
-//
-// Names are camelCase. Alpha variants are pre-composed so widgets don't hand-roll
-// rgba(). Reference them via s.gtk(name) — see styles/_functions.scss.
-// -----------------------------------------------------------------------------
-
-@use 'functions' as *;
-@use 'config';
+@use 'styles/core/helpers/functions' as *;
+@use 'styles/core/config';
 
 // Ground -------------------------------------------------------------------
 @define-color base          #{color(base)};

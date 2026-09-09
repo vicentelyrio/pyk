@@ -8,9 +8,9 @@
 // -----------------------------------------------------------------------------
 
 @use 'sass:map';
-@use 'functions' as *;
-@use 'tokens';
-@use 'config';
+@use 'styles/core/helpers/functions' as *;
+@use 'styles/core/tokens';
+@use 'styles/core/config';
 
 // A popout / overlay panel: glass surface, hairline, radius, elevation.
 // $elevation: popout | raised | modal  (see $shadow)
