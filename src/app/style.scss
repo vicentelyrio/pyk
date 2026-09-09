@@ -1,15 +1,3 @@
-// -----------------------------------------------------------------------------
-// Style bundle entry — compiled by ags and handed to app.start({ css })
-// -----------------------------------------------------------------------------
-// To retheme the shell, override knobs BEFORE this line pulls the layer in:
-//
-//   @use 'styles/config' with ($accent: #9ecfb0, $panel-radius: 12px);
-//
-// Order matters: config first, then the runtime colour layer, base, widgets.
-// -----------------------------------------------------------------------------
-
-@use 'styles/theme';  // @define-color layer (runtime-swappable colours)
-@use 'styles/reset';  // base typography + keyframes
-
-// Widgets
-@use 'styles/widgets/bar';
+@use 'styles/theme';
+@use 'styles/reset';
+@use 'styles/features';

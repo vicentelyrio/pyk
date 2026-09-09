@@ -22,9 +22,9 @@
 }
 
 // Colour ---------------------------------------------------------------------
-@function color($k)  { @return _get(tokens.$palette, $k, 'color'); }
-@function line($k)   { @return _get(tokens.$line,    $k, 'line'); }
-@function fill($k)   { @return _get(tokens.$fill,    $k, 'fill'); }
+@function color($k)       { @return _get(tokens.$palette, $k, 'color'); }
+@function line($k)        { @return _get(tokens.$line,    $k, 'line'); }
+@function fill($k)        { @return _get(tokens.$fill,    $k, 'fill'); }
 
 // Dimension ----------------------------------------------------------------
 @function space($k)       { @return _get(tokens.$space,       $k, 'space'); }
@@ -33,10 +33,10 @@
 @function panel-width($k) { @return _get(tokens.$panel-width, $k, 'panel-width'); }
 
 // Type -------------------------------------------------------------------
-@function font-size($k) { @return _get(tokens.$font-size,   $k, 'font-size'); }
-@function weight($k)    { @return _get(tokens.$font-weight, $k, 'weight'); }
-@function tracking($k)  { @return _get(tokens.$tracking,    $k, 'tracking'); }
-@function leading($k)   { @return _get(tokens.$leading,     $k, 'leading'); }
+@function font-size($k)   { @return _get(tokens.$font-size,   $k, 'font-size'); }
+@function weight($k)      { @return _get(tokens.$font-weight, $k, 'weight'); }
+@function tracking($k)    { @return _get(tokens.$tracking,    $k, 'tracking'); }
+@function leading($k)     { @return _get(tokens.$leading,     $k, 'leading'); }
 
 // Effect ---------------------------------------------------------------
 @function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow'); }
@@ -46,12 +46,6 @@
 @function easing($k)      { @return _get(tokens.$easing,      $k, 'easing'); }
 @function timeout($k)     { @return _get(tokens.$timeout,     $k, 'timeout'); }
 
-// GTK named colours --------------------------------------------------------
-// styles/_theme.scss turns the palette into `@define-color` names so colours
-// can be re-themed at runtime (app.apply_css). Reference them from widget CSS
-// through this helper — sass can't take a bare `@name` in a value.
-//
-//   background: gtk(surface-glass);   ->  background: @surfaceGlass;
 @function gtk($name) {
   @return string.unquote("@#{$name}");
 }

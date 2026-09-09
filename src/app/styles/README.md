@@ -1,9 +1,5 @@
 # Design tokens
 
-Single source of truth for colour, spacing, radius, type, elevation and motion
-across the shell. Derived from the mock's own `IMPLEMENTATION SPEC`
-(`Shell v2 - bare widgets.dc.html`).
-
 ## Layout
 
 | File | Emits CSS | Purpose |
@@ -78,13 +74,3 @@ app.apply_css(`
   @define-color accentWash alpha(${hex}, 0.13);
 `, false) // false = merge onto the base sheet, don't reset it
 ```
-
-## GTK4 caveats
-
-- **No blur.** `backdrop-filter` doesn't exist in GTK CSS. `$blur` is kept as
-  documentation; the frosted look is approximated by `$surface-opacity`
-  (`surfaceGlass` / `barGlass`).
-- **No `transform`, `filter`, flex/grid, `z-index`.** Layout is widgets, not CSS;
-  entrance animations only touch `opacity`.
-- Colours in widget CSS go through `s.gtk(name)` — sass can't take a bare
-  `@name` in a value.

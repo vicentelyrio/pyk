@@ -1,0 +1,29 @@
+@use '../index' as s;
+
+.workspaces {
+  padding: 0 s.space(lg);
+}
+
+.workspaces-workspace {
+  background-color: rgba(s.color(text-soft), 0.18);
+  border-radius: s.radius(sm);
+  min-width: s.size(icon);
+  min-height: s.size(icon);
+  line-height: 0;
+  padding: 0;
+  margin: 0 s.space(xs);
+  transition:
+    min-width s.duration(pill) s.easing(standard),
+    background-color s.duration(pill) s.easing(standard);
+
+  &:hover {
+    background-color: rgba(s.color(text-soft), 0.4);
+  }
+  &.occupied {
+    background-color: rgba(s.color(text-soft), 0.55);
+  }
+  &.focused {
+    min-width: s.size(swatch);
+    background-color: s.gtk(accent);
+  }
+}

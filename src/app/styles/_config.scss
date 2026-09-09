@@ -1,29 +1,13 @@
-// -----------------------------------------------------------------------------
-// App-level knobs
-// -----------------------------------------------------------------------------
-// Every value here is `!default`, so an app can redefine it at compile time:
-//
-//   // src/app/style.scss  — BEFORE anything @uses the token layer
-//   @use 'styles/config' with (
-//     $accent: #9ecfb0,
-//     $panel-radius: 12px,
-//     $surface-opacity: 0.82,
-//   );
-//
-// These map 1:1 to the mock's own Settings > Appearance / Bar panels.
-// Colours can also be swapped at *runtime* — see styles/_theme.scss.
-// -----------------------------------------------------------------------------
-
 // Settings > Appearance
-$accent:          #c9a7f0 !default; // fixed brand accent, never sampled from wallpaper
+$accent:          #c9a7f0 !default;
 $accent-hover:    #e0c9ff !default;
 $accent-press:    #b892e6 !default;
-$panel-radius:    16px    !default; // every popout / overlay
-$surface-opacity: 0.9     !default; // stand-in for the (impossible) backdrop blur
+$panel-radius:    16px    !default;
+$surface-opacity: 0.9     !default;
 
 // Settings > Appearance — typography
 $font-family:      'IBM Plex Sans', system-ui, sans-serif !default;
-$font-family-mono: 'IBM Plex Mono', monospace             !default; // all numerals
+$font-family-mono: 'IBM Plex Mono', monospace             !default;
 
 // Settings > Bar
 $bar-height:   44px !default;
