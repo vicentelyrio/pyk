@@ -1,13 +1,20 @@
 import '@/infraestructure/polyfill'
-import { Effect } from 'effect'
 import app from 'ags/gtk4/app'
 import style from './style.scss'
-import Bar from './widget/Bar'
 
-console.log(Effect.runSync(Effect.succeed("effect ok")))
+import { Bar } from '@/app/modules'
 
 app.start({
+  instanceName: 'pyk',
   css: style,
+  requestHandler(argv, res) {
+    const [cmd, arg] = argv
+    if (cmd === 'css' && arg) {
+      app.apply_css(arg, true)
+      return res('css applied')
+    }
+    res(`unknown request: ${argv.join(' ')}`)
+  },
   main() {
     app.get_monitors().map(Bar)
   },

@@ -11,6 +11,9 @@ importers:
       ags:
         specifier: link:/usr/share/ags/js
         version: link:../../../../../usr/share/ags/js
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       effect:
         specifier: ^3.22.1
         version: 3.22.1
@@ -199,6 +202,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
+
   effect@3.22.1:
     resolution: {integrity: sha512-TNoXushmPOBAjJlthF5d2QwnX2xBPEtcNJr5XKNKbRLbDvBcOYkXlYDfvGfSA0zriwLFuCll5MDtNMAdZL17PQ==}
 
@@ -320,6 +327,8 @@ snapshots:
 
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
+
+  clsx@2.1.1: {}
 
   effect@3.22.1:
     dependencies:
