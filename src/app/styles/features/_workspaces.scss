@@ -1,17 +1,22 @@
 @use '../index' as s;
 
 .workspaces {
-  padding: 0 s.space(lg);
+  padding: 0;
 }
 
 .workspaces-workspace {
+  background-color: transparent;
+  outline: transparent;
+  border-radius: 0;
+  padding: 0 s.space(xs);
+}
+
+.workspaces-workspace-icon {
   background-color: rgba(s.color(text-soft), 0.18);
   border-radius: s.radius(sm);
-  min-width: s.size(icon);
-  min-height: s.size(icon);
-  line-height: 0;
+  min-width: s.size(ws-icon);
+  min-height: s.size(ws-icon);
   padding: 0;
-  margin: 0 s.space(xs);
   transition:
     min-width s.duration(pill) s.easing(standard),
     background-color s.duration(pill) s.easing(standard);
@@ -19,11 +24,11 @@
   &:hover {
     background-color: rgba(s.color(text-soft), 0.4);
   }
-  &.occupied {
+  &--occupied {
     background-color: rgba(s.color(text-soft), 0.55);
   }
-  &.focused {
-    min-width: s.size(swatch);
+  &--focused {
+    min-width: s.size(ws-icon-active);
     background-color: s.gtk(accent);
   }
 }
