@@ -41,6 +41,7 @@ const reconnect = Schedule.exponential('500 millis', 2).pipe(
 export const stateChanges: Stream.Stream<NiriState, NiriIpcError> = lines.pipe(
   Stream.filterMap(decodeEvent),
   Stream.scan(emptyState, reduce),
+  Stream.changes,
   Stream.retry(reconnect),
 )
 
