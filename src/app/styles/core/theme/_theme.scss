@@ -8,12 +8,12 @@
 @define-color raised        #{color(raised)};
 @define-color raisedWarm    #{color(raised-warm)};
 
-// Composited surfaces (the "glass" look, minus the blur GTK can't do) -------
+// Composited surfaces -----------------------------------------------------
 @define-color surfaceGlass  #{rgba(color(surface), config.$surface-opacity)};
 @define-color barGlass      #{rgba(color(base), 0.72)};
 @define-color scrim         #{rgba(color(page), 0.82)};
 
-// Text / icons -----------------------------------------------------------
+// Text / icons ------------------------------------------------------------
 @define-color text          #{color(text)};
 @define-color textHi        #{color(text-hi)};
 @define-color textSoft      #{color(text-soft)};
@@ -21,7 +21,7 @@
 @define-color faint         #{color(faint)};
 @define-color ink           #{color(ink)};
 
-// Accent + status --------------------------------------------------------
+// Accent + status ---------------------------------------------------------
 @define-color accent        #{color(accent)};
 @define-color accentHover   #{config.$accent-hover};
 @define-color accentPress   #{config.$accent-press};
@@ -32,7 +32,7 @@
 @define-color warnWash      #{fill(warn-wash)};
 @define-color attention     #{color(attention)};
 
-// Hairlines + fills -----------------------------------------------------
+// Hairlines + fills -------------------------------------------------------
 @define-color line          #{line(hairline)};
 @define-color lineSubtle    #{line(subtle)};
 @define-color lineStrong    #{line(strong)};

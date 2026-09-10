@@ -4,23 +4,22 @@
 $size: (
   bar:        config.$bar-height, // 44
   bar-hit:    config.$bar-hit,    // 30
-  bar-hit-sm: 28px,               // media transport
+  bar-hit-sm: 28px,
   icon:       15px,
   icon-sm:    13px,
   icon-lg:    20px,
-  toggle:     58px,               // control-centre toggle tile
+  toggle:     58px,
   swatch:     32px,
   avatar:     38px,
 
-  ws-item-w: 14px,
-  ws-item-h: 6px,
-
+  // Workspaces
+  ws-item-w: 18px,
+  ws-item-h: 4px,
   ws-item-w-active: 30px,
-  ws-item-h-active: 10px,
+  ws-item-h-active: 8px,
 
   ws-icon-w: 14px,
-  ws-icon-h: 10px,
-
+  ws-icon-h: 8px,
   ws-icon-w-active: 30px,
-  ws-icon-h-active: 10px
+  ws-icon-h-active: 8px
 );

@@ -13,16 +13,15 @@
   min-width: s.size(ws-item-w);
   min-height: s.size(ws-item-h);
   padding: 0;
-  margin: s.space(xs);
-  transition:
-    background-color s.duration(pill) s.easing(standard);
+  margin: s.space(xxs) 0;
+  transition: background-color s.duration(pill) s.easing(standard);
 
   &.--occupied {
     background-color: rgba(s.color(text-soft), 0.32);
   }
 
   &.--focused {
-    background-color: s.gtk(accent);
+    background-color: s.gtk(accentWash);
     min-width: s.size(ws-item-w-active);
     min-height: s.size(ws-item-h-active);
   }
