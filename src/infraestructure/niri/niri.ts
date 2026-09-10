@@ -2,9 +2,9 @@ import { createMemo } from 'ags'
 
 import { niriState } from './bridge'
 
-import { sameEntries, sameIds, sameLanes, sameShape } from './equality'
+import { sameEntries, sameIds, sameWorkspaces } from './equality'
 
-import { buildLanes } from './lanes'
+import { buildWorkspaces } from './workspaces'
 
 import {
   selectActiveWindowIds,
@@ -22,8 +22,7 @@ import {
 } from './actions'
 
 export const niri = {
-  workspaces: createMemo(() => niriState().workspaces, { equals: sameShape }),
-  lanes: createMemo(() => buildLanes(niriState()), { equals: sameLanes }),
+  workspaces: createMemo(() => buildWorkspaces(niriState()), { equals: sameWorkspaces }),
   occupiedIds: createMemo(() => selectOccupiedIds(niriState()), { equals: sameIds }),
   activeWindowIds: createMemo(() => selectActiveWindowIds(niriState()), { equals: sameEntries }),
   focusedWorkspaceId: createMemo(() => niriState().focusedWorkspaceId),

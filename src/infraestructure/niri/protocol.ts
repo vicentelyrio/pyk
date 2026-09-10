@@ -1,6 +1,6 @@
 import { Option } from 'effect'
 
-export interface Workspace {
+export interface NiriWorkspace {
   readonly id: number
   readonly idx: number
   readonly name: string | null
@@ -42,7 +42,7 @@ export interface NiriWindow {
 
 export type NiriWorkspaceChangedEvent = {
   readonly kind: 'WorkspacesChanged'
-  readonly workspaces: readonly Workspace[]
+  readonly workspaces: readonly NiriWorkspace[]
 }
 
 export type NiriWorkspaceActivatedEvent = {

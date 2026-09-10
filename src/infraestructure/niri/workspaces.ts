@@ -1,7 +1,7 @@
 import type { NiriState } from './state'
 import type { NiriWindow } from './protocol'
 
-export interface LaneWindow {
+export interface WorkspaceWindow {
   readonly id: number
   readonly appId: string | null
   readonly title: string | null
@@ -10,13 +10,13 @@ export interface LaneWindow {
   readonly tile: number | null
 }
 
-export interface WorkspaceLane {
+export interface Workspace {
   readonly id: number
   readonly idx: number
   readonly name: string | null
   readonly output: string | null
   readonly isUrgent: boolean
-  readonly windows: readonly LaneWindow[]
+  readonly windows: readonly WorkspaceWindow[]
 }
 
 function groupByWorkspace(windows: ReadonlyMap<number, NiriWindow>): Map<number, NiriWindow[]> {
@@ -41,7 +41,7 @@ function byScrollPosition(a: NiriWindow, b: NiriWindow): number {
   return left[0] - right[0] || left[1] - right[1]
 }
 
-function toLaneWindow(window: NiriWindow): LaneWindow {
+function toWorkspaceWindow(window: NiriWindow): WorkspaceWindow {
   const pos = window.layout?.pos_in_scrolling_layout ?? null
 
   return {
@@ -54,7 +54,7 @@ function toLaneWindow(window: NiriWindow): LaneWindow {
   }
 }
 
-export function buildLanes(state: NiriState): readonly WorkspaceLane[] {
+export function buildWorkspaces(state: NiriState): readonly Workspace[] {
   const grouped = groupByWorkspace(state.windows)
 
   return state.workspaces.map((workspace) => ({
@@ -63,6 +63,6 @@ export function buildLanes(state: NiriState): readonly WorkspaceLane[] {
     name: workspace.name,
     output: workspace.output,
     isUrgent: workspace.is_urgent,
-    windows: (grouped.get(workspace.id) ?? []).sort(byScrollPosition).map(toLaneWindow),
+    windows: (grouped.get(workspace.id) ?? []).sort(byScrollPosition).map(toWorkspaceWindow),
   }))
 }

@@ -1,12 +1,12 @@
 import {
   NiriEventKind,
-  type Workspace,
+  type NiriWorkspace,
   type NiriEvent,
   type NiriWindow,
 } from './protocol'
 
 export interface NiriState {
-  readonly workspaces: readonly Workspace[]
+  readonly workspaces: readonly NiriWorkspace[]
   readonly focusedWorkspaceId: number
   readonly windows: ReadonlyMap<number, NiriWindow>
   readonly focusedWindowId: number | null
