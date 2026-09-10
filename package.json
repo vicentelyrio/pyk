@@ -2,9 +2,10 @@
   "scripts": {
     "prepare": "effect-tsgo patch --typescript --no-oxlint && bin/gen-vendor-types.sh",
     "start": "ags run src/app/app.ts",
+    "icons": "bin/build-icons.sh",
     "watch": "bin/watch.sh",
     "typecheck": "tsc",
-    "build": "tsc && mkdir -p dist && ags bundle src/app/app.ts dist/pyk --gtk 4",
+    "build": "tsc && bin/build-icons.sh && mkdir -p dist && ags bundle src/app/app.ts dist/pyk --gtk 4",
     "typesafe-i18n": "typesafe-i18n"
   },
   "dependencies": {

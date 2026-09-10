@@ -5,6 +5,7 @@ import style from './style.scss'
 import { Bar } from '@/app/modules'
 
 app.start({
+  icons: `${SRC}/icons`,
   instanceName: 'pyk',
   css: style,
   requestHandler(argv, res) {
