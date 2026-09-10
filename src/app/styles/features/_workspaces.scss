@@ -1,34 +1,64 @@
-@use '../index' as s;
+@use 'styles' as s;
 
-.workspaces {
-  padding: 0;
+.ws {
+  min-height: s.size(bar-hit);
+  padding: s.space(sm);
 }
 
-.workspaces-workspace {
-  background-color: transparent;
-  outline: transparent;
-  border-radius: 0;
-  padding: 0 s.space(xs);
+.ws-workspaces {
 }
 
-.workspaces-workspace-icon {
+.ws-workspaces-item {
   background-color: rgba(s.color(text-soft), 0.18);
   border-radius: s.radius(sm);
-  min-width: s.size(ws-icon);
-  min-height: s.size(ws-icon);
+  min-width: s.size(ws-item-w);
+  min-height: s.size(ws-item-h);
   padding: 0;
+  margin: s.space(xs);
+  transition:
+    background-color s.duration(pill) s.easing(standard);
+
+  &.--occupied {
+    background-color: rgba(s.color(text-soft), 0.32);
+  }
+
+  &.--focused {
+    background-color: s.gtk(accent);
+    min-width: s.size(ws-item-w-active);
+    min-height: s.size(ws-item-h-active);
+  }
+
+  &.--empty {
+    background-color: transparent;
+  }
+}
+
+.ws-windows {
+  margin-left: s.space(sm);
+}
+
+.ws-windows-item {
+  background-color: rgba(s.color(text-soft), 0.32);
+  border-radius: s.radius(sm);
+  min-width: s.size(ws-icon-w);
+  min-height: s.size(ws-icon-h);
+  padding: 0;
+  margin: 0 s.space(xxs);
   transition:
     min-width s.duration(pill) s.easing(standard),
     background-color s.duration(pill) s.easing(standard);
 
   &:hover {
-    background-color: rgba(s.color(text-soft), 0.4);
+    background-color: rgba(s.color(text-soft), 0.5);
   }
-  &--occupied {
-    background-color: rgba(s.color(text-soft), 0.55);
+
+  &.--floating {
+    border-radius: s.radius(sm);
   }
-  &--focused {
-    min-width: s.size(ws-icon-active);
+
+  &.--focused {
     background-color: s.gtk(accent);
+    min-width: s.size(ws-icon-w-active);
+    min-height: s.size(ws-icon-h-active);
   }
 }

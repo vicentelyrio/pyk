@@ -23,7 +23,6 @@ export function reduce(state: NiriState, event: NiriEvent): NiriState {
   switch (event.kind) {
     // Workspace Changed
     case NiriEventKind.WorkspacesChanged: {
-      // niri emits workspaces in id order, not display order.
       const workspaces = [...event.workspaces].sort(
         (a, b) => (a.output ?? '').localeCompare(b.output ?? '') || a.idx - b.idx,
       )
@@ -82,5 +81,18 @@ export function reduce(state: NiriState, event: NiriEvent): NiriState {
     // Window Focus Changed
     case NiriEventKind.WindowFocusChanged:
       return { ...state, focusedWindowId: event.id }
+
+    // Window Layouts Changed
+    case NiriEventKind.WindowLayoutsChanged: {
+      const windows = new Map(state.windows)
+      let touched = false
+      for (const [id, layout] of event.changes) {
+        const window = windows.get(id)
+        if (!window) continue
+        windows.set(id, { ...window, layout })
+        touched = true
+      }
+      return touched ? { ...state, windows } : state
+    }
   }
 }

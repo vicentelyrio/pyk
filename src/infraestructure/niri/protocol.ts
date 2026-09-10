@@ -19,11 +19,16 @@ export const NiriEventKind = {
   WindowOpenedOrChanged: 'WindowOpenedOrChanged',
   WindowClosed: 'WindowClosed',
   WindowFocusChanged: 'WindowFocusChanged',
+  WindowLayoutsChanged: 'WindowLayoutsChanged',
 } as const
 
 export type NiriEventKind = typeof NiriEventKind[keyof typeof NiriEventKind]
 
 export const NiriEventHandled = new Set<NiriEvent['kind']>(Object.values(NiriEventKind))
+
+export interface WindowLayout {
+  readonly pos_in_scrolling_layout: readonly [number, number] | null
+}
 
 export interface NiriWindow {
   readonly id: number
@@ -31,6 +36,8 @@ export interface NiriWindow {
   readonly app_id: string | null
   readonly workspace_id: number | null
   readonly is_focused: boolean
+  readonly is_floating: boolean
+  readonly layout: WindowLayout | null
 }
 
 export type NiriWorkspaceChangedEvent = {
@@ -70,6 +77,11 @@ export type NiriWindowFocusChangedEvent = {
   readonly id: number | null
 }
 
+export type NiriWindowLayoutsChangedEvent = {
+  readonly kind: 'WindowLayoutsChanged'
+  readonly changes: readonly (readonly [number, WindowLayout])[]
+}
+
 export type NiriEvent =
   NiriWorkspaceChangedEvent |
   NiriWorkspaceActivatedEvent |
@@ -77,7 +89,8 @@ export type NiriEvent =
   NiriWindowsChangedEvent |
   NiriWindowOpenedOrChangedEvent |
   NiriWindowClosedEvent |
-  NiriWindowFocusChangedEvent
+  NiriWindowFocusChangedEvent |
+  NiriWindowLayoutsChangedEvent
 
 export function decodeEvent(line: string): Option.Option<NiriEvent> {
   let raw: unknown

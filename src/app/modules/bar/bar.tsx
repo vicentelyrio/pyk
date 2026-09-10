@@ -1,6 +1,10 @@
 import app from 'ags/gtk4/app'
-import { Astal, Gdk } from 'ags/gtk4'
-import { Media, Tray, Workspaces } from '@/app/features'
+import { Astal, Gdk, Gtk } from 'ags/gtk4'
+import { Workspaces } from '@/app/features'
+
+const cs = {
+  root: 'bar',
+}
 
 export function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
@@ -9,16 +13,14 @@ export function Bar(gdkmonitor: Gdk.Monitor) {
     <window
       visible
       name={`bar-${gdkmonitor.connector}`}
-      class="Bar"
+      class={cs.root}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | LEFT | RIGHT}
-      application={app}
-    >
+      valign={Gtk.Align.CENTER}
+      application={app}>
       <centerbox>
         <Workspaces $type="start" />
-        <Media $type="center" />
-        <Tray $type="end" />
       </centerbox>
     </window>
   )

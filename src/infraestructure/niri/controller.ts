@@ -16,15 +16,17 @@ export class Niri extends Effect.Service<Niri>()('pyk/Niri', {
     const send = (args: ReadonlyArray<string>) =>
       Effect.tryPromise({
         try: () => execAsync(['niri', 'msg', ...args]),
-        catch: (cause) =>
-          new NiriActionError({ command: `niri msg ${args.join(' ')}`, cause }),
+        catch: (cause) => new NiriActionError({
+          command: `niri msg ${args.join(' ')}`,
+          cause
+        }),
       })
 
     return {
       changes: state.changes,
       snapshot: SubscriptionRef.get(state),
-      focusWorkspace: (reference: number | string) =>
-        send(['action', 'focus-workspace', String(reference)]),
+      action: (name: string, ...args: ReadonlyArray<string>) => send(['action', name, ...args]),
+      focusWorkspace: (reference: number | string) => send(['action', 'focus-workspace', String(reference)]),
     } as const
   }),
 }) {}

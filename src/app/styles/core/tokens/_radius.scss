@@ -2,6 +2,7 @@
 @use 'styles/core/config';
 
 $radius: (
+  xxs:  2px,                  // ws
   xs:   6px,                  // swatches, tiny chips
   sm:   8px,                  // icon buttons, list rows
   md:   12px,                 // toggle tiles, inputs

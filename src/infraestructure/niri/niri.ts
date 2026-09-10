@@ -1,29 +1,38 @@
 import { createMemo } from 'ags'
-import { Effect } from 'effect'
 
-import { niriState, sameIds, sameShape, runtime } from './bridge'
-import { Niri } from './controller'
+import { niriState } from './bridge'
+
+import { sameEntries, sameIds, sameLanes, sameShape } from './equality'
+
+import { buildLanes } from './lanes'
+
+import {
+  selectActiveWindowIds,
+  selectFocusedWindowTitle,
+  selectOccupiedIds
+} from './selectors'
+
+import {
+  focusColumnLeft,
+  focusColumnRight,
+  focusWindow,
+  focusWorkspace,
+  focusWorkspaceDown,
+  focusWorkspaceUp,
+} from './actions'
 
 export const niri = {
   workspaces: createMemo(() => niriState().workspaces, { equals: sameShape }),
-  occupiedIds: createMemo(() => (
-    new Set(
-      niriState()
-      .workspaces.filter((w) => w.active_window_id !== null)
-      .map((w) => w.id),
-    )),
-    { equals: sameIds },
-  ),
+  lanes: createMemo(() => buildLanes(niriState()), { equals: sameLanes }),
+  occupiedIds: createMemo(() => selectOccupiedIds(niriState()), { equals: sameIds }),
+  activeWindowIds: createMemo(() => selectActiveWindowIds(niriState()), { equals: sameEntries }),
   focusedWorkspaceId: createMemo(() => niriState().focusedWorkspaceId),
-  focusedWindowTitle: createMemo(() => {
-    const { windows, focusedWindowId } = niriState()
-    return focusedWindowId === null ? '' : (windows.get(focusedWindowId)?.title ?? '')
-  }),
-  focusWorkspace(reference: number | string): void {
-    runtime.runFork(
-      Effect.flatMap(Niri, (n) => n.focusWorkspace(reference)).pipe(
-        Effect.catchAll((error) => Effect.logError(error)),
-      ),
-    )
-  },
+  focusedWindowId: createMemo(() => niriState().focusedWindowId),
+  focusedWindowTitle: createMemo(() => selectFocusedWindowTitle(niriState())),
+  focusWorkspace,
+  focusWorkspaceUp,
+  focusWorkspaceDown,
+  focusColumnLeft,
+  focusColumnRight,
+  focusWindow,
 } as const
