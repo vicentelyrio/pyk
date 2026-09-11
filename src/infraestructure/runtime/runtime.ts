@@ -1,10 +1,12 @@
 import { createExternal, type Accessor } from 'ags'
 import { Effect, Fiber, Layer, ManagedRuntime, Stream } from 'effect'
 
+import { type PykError, report } from '@/infraestructure/effect'
+import { Platform } from '@/infraestructure/effect/logger'
 import { NiriLayer } from '@/infraestructure/niri/store/controller'
 import { MprisLayer } from '@/infraestructure/mpris/store/controller'
 
-const MainLayer = Layer.mergeAll(NiriLayer, MprisLayer)
+const MainLayer = Layer.mergeAll(NiriLayer, MprisLayer).pipe(Layer.provideMerge([Platform]))
 
 export type Services = Layer.Success<typeof MainLayer>
 
@@ -28,13 +30,9 @@ export function createServiceAccessor<Shape, T>(
   })
 }
 
-export function dispatch<Shape>(
+export function dispatch<Shape, E extends PykError>(
   service: Effect.Effect<Shape, never, Services>,
-  action: (svc: Shape) => Effect.Effect<unknown, unknown>,
+  action: (svc: Shape) => Effect.Effect<unknown, E>,
 ): void {
-  runtime.runFork(
-    Effect.flatMap(service, action).pipe(
-      Effect.catchCause((cause) => Effect.logError('dispatch failed', cause)),
-    ),
-  )
+  runtime.runFork(Effect.flatMap(service, action).pipe(Effect.catchCause(report)))
 }

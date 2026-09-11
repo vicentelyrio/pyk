@@ -1,8 +1,10 @@
 import { execAsync } from 'ags/process'
-import { Context, Effect, Layer, Stream, SubscriptionRef } from 'effect'
+import { Context, Effect, Layer, Stream } from 'effect'
+
+import { type ActionError, attemptPromise, makeStore } from '@/infraestructure/effect'
 
 import { emptyState, type NiriState } from './state'
-import { NiriActionError, stateChanges } from './connection'
+import { stateChanges } from './connection'
 
 export class Niri extends Context.Service<Niri, {
   readonly changes: Stream.Stream<NiriState>
@@ -10,36 +12,26 @@ export class Niri extends Context.Service<Niri, {
   readonly action: (
     name: string,
     ...args: ReadonlyArray<string>
-  ) => Effect.Effect<unknown, NiriActionError>
+  ) => Effect.Effect<unknown, ActionError>
   readonly focusWorkspace: (
     reference: number | string,
-  ) => Effect.Effect<unknown, NiriActionError>
+  ) => Effect.Effect<unknown, ActionError>
 }>()('pyk/Niri') {}
 
 export const NiriLayer = Layer.effect(
   Niri,
   Effect.gen(function* () {
-    const state = yield* SubscriptionRef.make(emptyState)
+    const store = yield* makeStore('niri', emptyState, stateChanges)
 
-    yield* Stream.runForEach(stateChanges, (next) => SubscriptionRef.set(state, next)).pipe(
-      Effect.tapCause((cause) => Effect.logError('niri: event stream stopped', cause)),
-      Effect.forkScoped,
-    )
-
-    const send = (args: ReadonlyArray<string>) =>
-      Effect.tryPromise({
-        try: () => execAsync(['niri', 'msg', ...args]),
-        catch: (cause) => new NiriActionError({
-          command: `niri msg ${args.join(' ')}`,
-          cause
-        }),
-      })
+    const send = (action: string, args: ReadonlyArray<string>) =>
+      attemptPromise('niri', action, () => execAsync(['niri', 'msg', ...args]))
 
     return {
-      changes: SubscriptionRef.changes(state),
-      snapshot: SubscriptionRef.get(state),
-      action: (name: string, ...args: ReadonlyArray<string>) => send(['action', name, ...args]),
-      focusWorkspace: (reference: number | string) => send(['action', 'focus-workspace', String(reference)]),
+      ...store,
+      action: (name: string, ...args: ReadonlyArray<string>) =>
+        send(name, ['action', name, ...args]),
+      focusWorkspace: (reference: number | string) =>
+        send('focus-workspace', ['action', 'focus-workspace', String(reference)]),
     }
   }),
 )
