@@ -3,10 +3,15 @@ import { Effect, Fiber, Layer, ManagedRuntime, Stream } from 'effect'
 
 import { type PykError, report } from '@/infraestructure/effect'
 import { Platform } from '@/infraestructure/effect/logger'
+import { NiriIpcLive } from '@/infraestructure/niri/gjs/ipc'
 import { NiriLayer } from '@/infraestructure/niri/store/controller'
+import { MprisBackendLive } from '@/infraestructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infraestructure/mpris/store/controller'
 
-const MainLayer = Layer.mergeAll(NiriLayer, MprisLayer).pipe(Layer.provideMerge([Platform]))
+const MainLayer = Layer.mergeAll(
+  NiriLayer.pipe(Layer.provide([NiriIpcLive])),
+  MprisLayer.pipe(Layer.provide([MprisBackendLive])),
+).pipe(Layer.provideMerge([Platform]))
 
 export type Services = Layer.Success<typeof MainLayer>
 
