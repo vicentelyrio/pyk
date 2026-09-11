@@ -10,6 +10,8 @@ import { BluetoothLayer } from '@/infrastructure/bluetooth/store/controller'
 import { NetworkBackendLive } from '@/infrastructure/network/gjs/backend'
 import { NetworkLayer } from '@/infrastructure/network/store/controller'
 import { NiriIpcLive } from '@/infrastructure/niri/gjs/ipc'
+import { NotificationsBackendLive } from '@/infrastructure/notifications/gjs/backend'
+import { NotificationsLayer } from '@/infrastructure/notifications/store/controller'
 import { NiriLayer } from '@/infrastructure/niri/store/controller'
 import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infrastructure/mpris/store/controller'
@@ -20,6 +22,7 @@ const MainLayer = Layer.mergeAll(
   NetworkLayer.pipe(Layer.provide([NetworkBackendLive])),
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
+  NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
 ).pipe(Layer.provideMerge([Platform]))
 
 export type Services = Layer.Success<typeof MainLayer>
