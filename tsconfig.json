@@ -27,5 +27,6 @@
       }
     ]
   },
-  "include": ["src", "env.d.ts", "@girs"]
+  "include": ["src", "env.d.ts", "@girs"],
+  "exclude": ["src/**/*.test.ts"]
 }
