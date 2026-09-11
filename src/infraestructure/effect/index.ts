@@ -1,4 +1,5 @@
 export * from './errors'
+export * from './gobject'
 export * from './instrument'
 export * from './report'
 export * from './store'

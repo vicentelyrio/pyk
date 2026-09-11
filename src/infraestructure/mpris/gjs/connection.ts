@@ -1,40 +1,28 @@
 import AstalMpris from 'gi://AstalMpris'
-import { Effect, Queue, Stream } from 'effect'
+import { Schedule, Stream } from 'effect'
 
-import { activePlayer, snapshot } from './player'
+import { fromSignal, logFailure, type SourceError } from '@/infraestructure/effect'
+
 import { sameMprisState, type MprisState } from '../store/state'
+import { activePlayer, snapshot } from './player'
 
-export const stateChanges: Stream.Stream<MprisState> = Stream.callback<MprisState>(
-  (queue) =>
-    Effect.acquireRelease(
-      Effect.sync(() => {
-        const mpris = AstalMpris.get_default()
-        let bound: (readonly [AstalMpris.Player, number])[] = []
+const reconnect = Schedule.spaced('5 seconds').pipe(Schedule.jittered)
 
-        const push = () => {
-          Queue.offerUnsafe(queue, snapshot(activePlayer(mpris)))
-        }
+export function stateChanges(mpris: AstalMpris.Mpris): Stream.Stream<MprisState, SourceError> {
+  const snap = () => snapshot(activePlayer(mpris))
 
-        const unbind = () => {
-          for (const [player, handler] of bound) player.disconnect(handler)
-          bound = []
-        }
-
-        const rebind = () => {
-          unbind()
-          bound = mpris.get_players().map((p) => [p, p.connect('notify', push)] as const)
-          push()
-        }
-
-        const handler = mpris.connect('notify::players', rebind)
-        rebind()
-
-        return { mpris, handler, unbind }
-      }),
-      ({ mpris, handler, unbind }) => Effect.sync(() => {
-        mpris.disconnect(handler)
-        unbind()
-      }),
+  return fromSignal('mpris', mpris, 'notify::players', () => mpris.get_players()).pipe(
+    Stream.switchMap((players) =>
+      Stream.mergeAll(
+        [
+          Stream.sync(snap),
+          ...players.map((player) => fromSignal('mpris', player, 'notify', snap)),
+        ],
+        { concurrency: 'unbounded' },
+      ),
     ),
-  { bufferSize: 1, strategy: 'sliding' },
-).pipe(Stream.changesWith(sameMprisState))
+    Stream.changesWith(sameMprisState),
+    Stream.tapError((error) => logFailure(error)),
+    Stream.retry(reconnect),
+  )
+}
