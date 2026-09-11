@@ -1,23 +1,10 @@
-import type { NiriState } from './state'
-import type { NiriWindow } from './protocol'
+import { Accessor, createMemo } from 'ags'
 
-export interface WorkspaceWindow {
-  readonly id: number
-  readonly appId: string | null
-  readonly title: string | null
-  readonly isFloating: boolean
-  readonly column: number | null
-  readonly tile: number | null
-}
-
-export interface Workspace {
-  readonly id: number
-  readonly idx: number
-  readonly name: string | null
-  readonly output: string | null
-  readonly isUrgent: boolean
-  readonly windows: readonly WorkspaceWindow[]
-}
+import type { NiriWindow } from '../schema'
+import type { NiriState } from '../store/state'
+import type { WorkspaceWindow, Workspace } from './types'
+import { sameEntries, sameIds, sameWorkspaces } from './equality'
+import { selectActiveWindowIds, selectFocusedWindowTitle, selectOccupiedIds } from './selectors'
 
 function groupByWorkspace(windows: ReadonlyMap<number, NiriWindow>): Map<number, NiriWindow[]> {
   const grouped = new Map<number, NiriWindow[]>()
@@ -54,7 +41,7 @@ function toWorkspaceWindow(window: NiriWindow): WorkspaceWindow {
   }
 }
 
-export function buildWorkspaces(state: NiriState): readonly Workspace[] {
+function buildWorkspaces(state: NiriState): readonly Workspace[] {
   const grouped = groupByWorkspace(state.windows)
 
   return state.workspaces.map((workspace) => ({
@@ -65,4 +52,15 @@ export function buildWorkspaces(state: NiriState): readonly Workspace[] {
     isUrgent: workspace.is_urgent,
     windows: (grouped.get(workspace.id) ?? []).sort(byScrollPosition).map(toWorkspaceWindow),
   }))
+}
+
+export function workspaces(state: Accessor<NiriState>) {
+  return {
+    workspaces: createMemo(() => buildWorkspaces(state()), { equals: sameWorkspaces }),
+    occupiedIds: createMemo(() => selectOccupiedIds(state()), { equals: sameIds }),
+    activeWindowIds: createMemo(() => selectActiveWindowIds(state()), { equals: sameEntries }),
+    focusedWorkspaceId: createMemo(() => state().focusedWorkspaceId),
+    focusedWindowId: createMemo(() => state().focusedWindowId),
+    focusedWindowTitle: createMemo(() => selectFocusedWindowTitle(state())),
+  }
 }

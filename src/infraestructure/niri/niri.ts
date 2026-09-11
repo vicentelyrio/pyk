@@ -1,17 +1,3 @@
-import { createMemo } from 'ags'
-
-import { niriState } from './bridge'
-
-import { sameEntries, sameIds, sameWorkspaces } from './equality'
-
-import { buildWorkspaces } from './workspaces'
-
-import {
-  selectActiveWindowIds,
-  selectFocusedWindowTitle,
-  selectOccupiedIds
-} from './selectors'
-
 import {
   focusColumnLeft,
   focusColumnRight,
@@ -19,15 +5,13 @@ import {
   focusWorkspace,
   focusWorkspaceDown,
   focusWorkspaceUp,
-} from './actions'
+  niriState,
+} from './store'
+
+import { workspaces } from './derived'
 
 export const niri = {
-  workspaces: createMemo(() => buildWorkspaces(niriState()), { equals: sameWorkspaces }),
-  occupiedIds: createMemo(() => selectOccupiedIds(niriState()), { equals: sameIds }),
-  activeWindowIds: createMemo(() => selectActiveWindowIds(niriState()), { equals: sameEntries }),
-  focusedWorkspaceId: createMemo(() => niriState().focusedWorkspaceId),
-  focusedWindowId: createMemo(() => niriState().focusedWindowId),
-  focusedWindowTitle: createMemo(() => selectFocusedWindowTitle(niriState())),
+  ...workspaces(niriState),
   focusWorkspace,
   focusWorkspaceUp,
   focusWorkspaceDown,

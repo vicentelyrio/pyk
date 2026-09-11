@@ -1,4 +1,4 @@
-import type { Workspace, WorkspaceWindow } from './workspaces'
+import type { WorkspaceWindow, Workspace } from './types'
 
 export function sameIds(a: ReadonlySet<number>, b: ReadonlySet<number>): boolean {
   return a.size === b.size && [...a].every((id) => b.has(id))

@@ -1,23 +1,5 @@
-import {
-  NiriEventKind,
-  type NiriWorkspace,
-  type NiriEvent,
-  type NiriWindow,
-} from './protocol'
-
-export interface NiriState {
-  readonly workspaces: readonly NiriWorkspace[]
-  readonly focusedWorkspaceId: number
-  readonly windows: ReadonlyMap<number, NiriWindow>
-  readonly focusedWindowId: number | null
-}
-
-export const emptyState: NiriState = {
-  workspaces: [],
-  focusedWorkspaceId: -1,
-  windows: new Map(),
-  focusedWindowId: null,
-}
+import { NiriEventKind, type NiriEvent } from '../schema'
+import type { NiriState } from './state'
 
 export function reduce(state: NiriState, event: NiriEvent): NiriState {
   switch (event.kind) {

@@ -1,4 +1,4 @@
-import type { NiriState } from './state'
+import type { NiriState } from '../store/state'
 
 export function selectOccupiedIds(state: NiriState): ReadonlySet<number> {
   return new Set(

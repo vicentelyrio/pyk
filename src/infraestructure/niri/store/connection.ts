@@ -1,8 +1,9 @@
 import { subprocess } from 'ags/process'
 import { Data, Effect, Schedule, Stream } from 'effect'
 
+import { emptyState, NiriState } from './state'
 import { decodeEvent } from './protocol'
-import { emptyState, NiriState, reduce } from './state'
+import { reduce } from './reducer'
 
 class NiriIpcError extends Data.TaggedError('NiriIpcError')<{
   readonly reason: string
