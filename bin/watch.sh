@@ -30,7 +30,7 @@ start() {
 }
 
 stop() {
-  ags quit -i "$INSTANCE" >/dev/null 2>&1 || true
+  ags request -i "$INSTANCE" quit >/dev/null 2>&1 || ags quit -i "$INSTANCE" >/dev/null 2>&1 || true
   [ -n "$app_pid" ] && wait "$app_pid" 2>/dev/null || true
   app_pid=""
 }

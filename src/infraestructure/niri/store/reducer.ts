@@ -62,7 +62,9 @@ export function reduce(state: NiriState, event: NiriEvent): NiriState {
 
     // Window Focus Changed
     case NiriEventKind.WindowFocusChanged:
-      return { ...state, focusedWindowId: event.id }
+      return state.focusedWindowId === event.id
+        ? state
+        : { ...state, focusedWindowId: event.id }
 
     // Window Layouts Changed
     case NiriEventKind.WindowLayoutsChanged: {

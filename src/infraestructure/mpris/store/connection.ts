@@ -34,5 +34,5 @@ export const stateChanges: Stream.Stream<MprisState> = Stream.asyncPush<MprisSta
         unbind()
       }),
     ),
-  { bufferSize: 16 },
+  { bufferSize: 1, strategy: 'sliding' },
 ).pipe(Stream.changesWith(sameMprisState))

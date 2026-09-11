@@ -30,7 +30,7 @@ const lines = Stream.asyncPush<string, NiriIpcError>(
       }),
       (proc) => Effect.sync(() => proc.kill()),
     ),
-  { bufferSize: 256 },
+  { bufferSize: 'unbounded' },
 )
 
 const reconnect = Schedule.exponential('500 millis', 2).pipe(
@@ -40,9 +40,8 @@ const reconnect = Schedule.exponential('500 millis', 2).pipe(
 )
 
 export const stateChanges: Stream.Stream<NiriState, NiriIpcError> = lines.pipe(
+  Stream.retry(reconnect),
   Stream.filterMap(decodeEvent),
   Stream.scan(emptyState, reduce),
   Stream.changes,
-  Stream.retry(reconnect),
 )
-
