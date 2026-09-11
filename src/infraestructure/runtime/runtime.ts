@@ -1,32 +1,19 @@
 import { createExternal, type Accessor } from 'ags'
-import { timeout } from 'ags/time'
-import { Effect, Fiber, Layer, LogLevel, ManagedRuntime, Option, Stream } from 'effect'
+import { Effect, Fiber, Layer, ManagedRuntime, Stream } from 'effect'
 
-import { Niri } from '@/infraestructure/niri/store/controller'
-import { Mpris } from '@/infraestructure/mpris/store/controller'
+import { NiriLayer } from '@/infraestructure/niri/store/controller'
+import { MprisLayer } from '@/infraestructure/mpris/store/controller'
 
-export type Services = Niri | Mpris
+const MainLayer = Layer.mergeAll(NiriLayer, MprisLayer)
 
-const DISPOSE_TIMEOUT = 2000
-
-const Platform = Layer.setUnhandledErrorLogLevel(Option.some(LogLevel.Error))
-
-const MainLayer = Layer.mergeAll(Niri.Default, Mpris.Default).pipe(Layer.provideMerge(Platform))
+export type Services = Layer.Success<typeof MainLayer>
 
 export const runtime = ManagedRuntime.make(MainLayer)
 
-export function shutdown(quit: () => void): void {
-  const deadline = new Promise<void>((resolve) => {
-    timeout(DISPOSE_TIMEOUT, resolve)
-  })
-
-  Promise.race([runtime.dispose(), deadline]).then(quit, quit)
-}
-
-export function createServiceAccessor<Svc extends Services, T>(
+export function createServiceAccessor<Shape, T>(
   init: T,
-  service: Effect.Effect<Svc, never, Svc>,
-  changes: (svc: Svc) => Stream.Stream<T>,
+  service: Effect.Effect<Shape, never, Services>,
+  changes: (svc: Shape) => Stream.Stream<T>,
 ): Accessor<T> {
   return createExternal(init, (set) => {
     const fiber = runtime.runFork(
@@ -41,13 +28,13 @@ export function createServiceAccessor<Svc extends Services, T>(
   })
 }
 
-export function dispatch<Svc extends Services>(
-  service: Effect.Effect<Svc, never, Svc>,
-  action: (svc: Svc) => Effect.Effect<unknown, unknown>,
+export function dispatch<Shape>(
+  service: Effect.Effect<Shape, never, Services>,
+  action: (svc: Shape) => Effect.Effect<unknown, unknown>,
 ): void {
   runtime.runFork(
     Effect.flatMap(service, action).pipe(
-      Effect.catchAllCause((cause) => Effect.logError('dispatch failed', cause)),
+      Effect.catchCause((cause) => Effect.logError('dispatch failed', cause)),
     ),
   )
 }

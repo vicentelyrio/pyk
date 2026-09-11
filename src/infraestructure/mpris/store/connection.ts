@@ -1,17 +1,19 @@
 import AstalMpris from 'gi://AstalMpris'
-import { Effect, Stream } from 'effect'
+import { Effect, Queue, Stream } from 'effect'
 
 import { activePlayer, snapshot } from './player'
 import { sameMprisState, type MprisState } from './state'
 
-export const stateChanges: Stream.Stream<MprisState> = Stream.asyncPush<MprisState>(
-  (emit) =>
+export const stateChanges: Stream.Stream<MprisState> = Stream.callback<MprisState>(
+  (queue) =>
     Effect.acquireRelease(
       Effect.sync(() => {
         const mpris = AstalMpris.get_default()
         let bound: (readonly [AstalMpris.Player, number])[] = []
 
-        const push = () => emit.single(snapshot(activePlayer(mpris)))
+        const push = () => {
+          Queue.offerUnsafe(queue, snapshot(activePlayer(mpris)))
+        }
 
         const unbind = () => {
           for (const [player, handler] of bound) player.disconnect(handler)

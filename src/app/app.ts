@@ -3,7 +3,7 @@ import app from 'ags/gtk4/app'
 import style from './style.scss'
 
 import { Bar } from '@/app/modules'
-import { runtime, shutdown } from '@/infraestructure/runtime'
+import { runtime } from '@/infraestructure/runtime'
 
 app.connect('shutdown', () => {
   runtime.dispose().catch(() => {})
@@ -18,10 +18,6 @@ app.start({
     if (cmd === 'css' && arg) {
       app.apply_css(arg, true)
       return res('css applied')
-    }
-    if (cmd === 'quit') {
-      res('bye')
-      return shutdown(() => app.quit())
     }
     res(`unknown request: ${argv.join(' ')}`)
   },

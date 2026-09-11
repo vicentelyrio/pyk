@@ -15,8 +15,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       effect:
-        specifier: ^3.22.1
-        version: 3.22.1
+        specifier: ^4.0.0-rc.113
+        version: 4.0.0-rc.113
       gnim:
         specifier: ^1.9.1
         version: 1.9.1
@@ -78,9 +78,6 @@ packages:
   '@effect/tsgo@0.43.0':
     resolution: {integrity: sha512-Xpe9UNrQ4JGNXbk2YHE8r6Z575pswKcU4HS53CSHcT8obGAN14KmMh4a+A29Ky6TDdKaI4nwalkRwSizJi+9tw==}
     hasBin: true
-
-  '@standard-schema/spec@1.1.0':
-    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -206,19 +203,12 @@ packages:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
 
-  effect@3.22.1:
-    resolution: {integrity: sha512-TNoXushmPOBAjJlthF5d2QwnX2xBPEtcNJr5XKNKbRLbDvBcOYkXlYDfvGfSA0zriwLFuCll5MDtNMAdZL17PQ==}
-
-  fast-check@3.23.2:
-    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
-    engines: {node: '>=8.0.0'}
+  effect@4.0.0-rc.113:
+    resolution: {integrity: sha512-uZ4Bh7KSlw2sdVdNDHPLSNjLGH+MWap7cheIHZoB/1T/ZJ3pvI4KiN3kUp50MpFKXhygOMmReJJOwWMQPwpPAg==}
 
   gnim@1.9.1:
     resolution: {integrity: sha512-WttkzzZg17qrJKGk87HlE1zHKUdYoimSqjmsULt4C6DNq3JfYSPhYNjwUjBMHFpzZMbyUVHgpTTW6IIehme9tQ==}
     engines: {gjs: '>=1.79.0'}
-
-  pure-rand@6.1.0:
-    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   typesafe-i18n@5.27.1:
     resolution: {integrity: sha512-749uWo2ZXETT//kWjVYPm8QPYR8xLh8G0wLfoAyCAtAmysX67uCaAyLjAjAWojL6fuJpE5B6yIjwvO9orXzUPg==}
@@ -265,8 +255,6 @@ snapshots:
       '@effect/tsgo-linux-x64': 0.43.0
       '@effect/tsgo-win32-arm64': 0.43.0
       '@effect/tsgo-win32-x64': 0.43.0
-
-  '@standard-schema/spec@1.1.0': {}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true
@@ -330,18 +318,9 @@ snapshots:
 
   clsx@2.1.1: {}
 
-  effect@3.22.1:
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      fast-check: 3.23.2
-
-  fast-check@3.23.2:
-    dependencies:
-      pure-rand: 6.1.0
+  effect@4.0.0-rc.113: {}
 
   gnim@1.9.1: {}
-
-  pure-rand@6.1.0: {}
 
   typesafe-i18n@5.27.1(typescript@7.0.2):
     dependencies:

@@ -30,8 +30,17 @@ start() {
 }
 
 stop() {
-  ags request -i "$INSTANCE" quit >/dev/null 2>&1 || ags quit -i "$INSTANCE" >/dev/null 2>&1 || true
-  [ -n "$app_pid" ] && wait "$app_pid" 2>/dev/null || true
+  ags quit -i "$INSTANCE" >/dev/null 2>&1 || true
+
+  if [ -n "$app_pid" ]; then
+    for _ in $(seq 1 15); do
+      kill -0 "$app_pid" 2>/dev/null || break
+      sleep 0.2
+    done
+    kill -0 "$app_pid" 2>/dev/null && kill "$app_pid" 2>/dev/null || true
+    wait "$app_pid" 2>/dev/null || true
+  fi
+
   app_pid=""
 }
 

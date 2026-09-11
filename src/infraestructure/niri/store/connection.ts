@@ -1,5 +1,5 @@
 import { subprocess } from 'ags/process'
-import { Data, Effect, Schedule, Stream } from 'effect'
+import { Cause, Data, Effect, Queue, Schedule, Stream } from 'effect'
 
 import { emptyState, NiriState } from './state'
 import { decodeEvent } from './protocol'
@@ -14,29 +14,34 @@ export class NiriActionError extends Data.TaggedError('NiriActionError')<{
   readonly cause: unknown
 }> {}
 
-const lines = Stream.asyncPush<string, NiriIpcError>(
-  (emit) =>
-    Effect.acquireRelease(
-      Effect.sync(() => {
-        const proc = subprocess({
-          cmd: ['niri', 'msg', '--json', 'event-stream'],
-          out: (line) => emit.single(line),
-          err: (msg) => console.error('niri ipc (stderr):', msg),
-        })
-        proc.connect('exit', (_proc, code) =>
-          emit.fail(new NiriIpcError({ reason: `event-stream exited (code ${code})` })),
+const lines = Stream.callback<string, NiriIpcError>((queue) =>
+  Effect.acquireRelease(
+    Effect.sync(() => {
+      const proc = subprocess({
+        cmd: ['niri', 'msg', '--json', 'event-stream'],
+        out: (line) => {
+          Queue.offerUnsafe(queue, line)
+        },
+        err: (msg) => console.error('niri ipc (stderr):', msg),
+      })
+      proc.connect('exit', (_proc, code) => {
+        Queue.failCauseUnsafe(
+          queue,
+          Cause.fail(new NiriIpcError({ reason: `event-stream exited (code ${code})` })),
         )
-        return proc
-      }),
-      (proc) => Effect.sync(() => proc.kill()),
-    ),
-  { bufferSize: 'unbounded' },
+      })
+      return proc
+    }),
+    (proc) => Effect.sync(() => proc.kill()),
+  ),
 )
 
-const reconnect = Schedule.exponential('500 millis', 2).pipe(
-  Schedule.union(Schedule.spaced('5 seconds')),
+const reconnect = Schedule.min([
+  Schedule.exponential('500 millis', 2),
+  Schedule.spaced('5 seconds'),
+]).pipe(
   Schedule.jittered,
-  Schedule.tapOutput(() => Effect.logWarning('niri: reconnecting to event-stream')),
+  Schedule.tap(() => Effect.logWarning('niri: reconnecting to event-stream')),
 )
 
 export const stateChanges: Stream.Stream<NiriState, NiriIpcError> = lines.pipe(

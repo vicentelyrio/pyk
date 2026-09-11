@@ -11,7 +11,7 @@
   "dependencies": {
     "ags": "link:/usr/share/ags/js",
     "clsx": "^2.1.1",
-    "effect": "^3.22.1",
+    "effect": "^4.0.0-rc.113",
     "gnim": "^1.9.1"
   },
   "devDependencies": {
