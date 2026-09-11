@@ -1,6 +1,6 @@
 import { dispatch } from '@/infraestructure/runtime'
 
-import { Mpris } from './controller'
+import { Mpris } from './store'
 
 export function playPause(): void {
   dispatch(Mpris, (mpris) => mpris.playPause)

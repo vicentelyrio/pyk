@@ -1,5 +1,5 @@
-import { mprisState, nextTrack, playPause, previousTrack } from './store'
-
+import { nextTrack, playPause, previousTrack } from './actions'
+import { mprisState } from './bridge'
 import { player } from './derived'
 
 export const mpris = {

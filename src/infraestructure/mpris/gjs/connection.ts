@@ -2,7 +2,7 @@ import AstalMpris from 'gi://AstalMpris'
 import { Effect, Queue, Stream } from 'effect'
 
 import { activePlayer, snapshot } from './player'
-import { sameMprisState, type MprisState } from './state'
+import { sameMprisState, type MprisState } from '../store/state'
 
 export const stateChanges: Stream.Stream<MprisState> = Stream.callback<MprisState>(
   (queue) =>

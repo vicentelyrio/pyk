@@ -1,6 +1,6 @@
 import AstalMpris from 'gi://AstalMpris'
 
-import { emptyState, type MprisState } from './state'
+import { emptyState, type MprisState } from '../store/state'
 
 export function activePlayer(mpris: AstalMpris.Mpris): AstalMpris.Player | null {
   const players = mpris.get_players()

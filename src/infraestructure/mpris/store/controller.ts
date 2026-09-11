@@ -1,10 +1,8 @@
-import AstalMpris from 'gi://AstalMpris'
 import { Context, Effect, Layer, Stream } from 'effect'
 
-import { type ActionError, attempt, makeStore } from '@/infraestructure/effect'
+import { type ActionError, makeStore } from '@/infraestructure/effect'
 
-import { stateChanges } from './connection'
-import { activePlayer } from './player'
+import { MprisBackend } from './backend'
 import { emptyState, type MprisState } from './state'
 
 export class Mpris extends Context.Service<Mpris, {
@@ -18,19 +16,14 @@ export class Mpris extends Context.Service<Mpris, {
 export const MprisLayer = Layer.effect(
   Mpris,
   Effect.gen(function* () {
-    const store = yield* makeStore('mpris', emptyState, stateChanges)
-
-    const onPlayer = (action: string, run: (player: AstalMpris.Player) => void) =>
-      attempt('mpris', action, () => {
-        const player = activePlayer(AstalMpris.get_default())
-        if (player) run(player)
-      })
+    const backend = yield* MprisBackend
+    const store = yield* makeStore('mpris', emptyState, backend.changes)
 
     return {
       ...store,
-      playPause: onPlayer('playPause', (p) => p.play_pause()),
-      next: onPlayer('next', (p) => p.next()),
-      previous: onPlayer('previous', (p) => p.previous()),
+      playPause: backend.playPause,
+      next: backend.next,
+      previous: backend.previous,
     }
   }),
 )
