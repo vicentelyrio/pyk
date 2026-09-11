@@ -1,7 +1,7 @@
 import { For, createComputed, type Accessor } from 'ags'
 import { Gtk } from 'ags/gtk4'
 import { clsx } from 'clsx'
-import { niri, type WorkspaceWindow, type Workspace } from '@/infraestructure/niri'
+import { niri, type WorkspaceWindow, type Workspace } from '@/infrastructure/niri'
 
 const cs = {
   root: 'ws',

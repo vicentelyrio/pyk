@@ -1,6 +1,6 @@
 import type { Accessor } from 'ags'
 
-import { createServiceAccessor } from '@/infraestructure/runtime'
+import { createServiceAccessor } from '@/infrastructure/runtime'
 
 import { emptyState, Niri, type NiriState } from './store'
 

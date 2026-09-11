@@ -1,6 +1,6 @@
 import { Effect, Schedule, Stream } from 'effect'
 
-import { logFailure, type SourceError } from '@/infraestructure/effect'
+import { logFailure, type SourceError } from '@/infrastructure/effect'
 
 import { NiriIpc } from './ipc'
 import { decodeEvent } from './protocol'

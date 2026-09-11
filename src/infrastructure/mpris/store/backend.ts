@@ -1,6 +1,6 @@
 import { Context, Effect, Stream } from 'effect'
 
-import type { ActionError, SourceError } from '@/infraestructure/effect'
+import type { ActionError, SourceError } from '@/infrastructure/effect'
 
 import type { MprisState } from './state'
 

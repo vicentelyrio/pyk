@@ -1,7 +1,7 @@
 import AstalMpris from 'gi://AstalMpris'
 import { Layer } from 'effect'
 
-import { attempt } from '@/infraestructure/effect'
+import { attempt } from '@/infrastructure/effect'
 
 import { MprisBackend } from '../store/backend'
 import { stateChanges } from './connection'

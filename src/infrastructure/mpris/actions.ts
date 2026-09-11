@@ -1,4 +1,4 @@
-import { dispatch } from '@/infraestructure/runtime'
+import { dispatch } from '@/infrastructure/runtime'
 
 import { Mpris } from './store'
 

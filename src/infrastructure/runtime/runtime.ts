@@ -1,12 +1,12 @@
 import { createExternal, type Accessor } from 'ags'
 import { Effect, Fiber, Layer, ManagedRuntime, Stream } from 'effect'
 
-import { type PykError, report } from '@/infraestructure/effect'
-import { Platform } from '@/infraestructure/effect/logger'
-import { NiriIpcLive } from '@/infraestructure/niri/gjs/ipc'
-import { NiriLayer } from '@/infraestructure/niri/store/controller'
-import { MprisBackendLive } from '@/infraestructure/mpris/gjs/backend'
-import { MprisLayer } from '@/infraestructure/mpris/store/controller'
+import { type PykError, report } from '@/infrastructure/effect'
+import { Platform } from '@/infrastructure/effect/logger'
+import { NiriIpcLive } from '@/infrastructure/niri/gjs/ipc'
+import { NiriLayer } from '@/infrastructure/niri/store/controller'
+import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
+import { MprisLayer } from '@/infrastructure/mpris/store/controller'
 
 const MainLayer = Layer.mergeAll(
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),

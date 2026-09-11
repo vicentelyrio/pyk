@@ -1,9 +1,9 @@
-import '@/infraestructure/polyfill'
+import '@/infrastructure/polyfill'
 import app from 'ags/gtk4/app'
 import style from './style.scss'
 
 import { Bar } from '@/app/modules'
-import { runtime } from '@/infraestructure/runtime'
+import { runtime } from '@/infrastructure/runtime'
 
 app.connect('shutdown', () => {
   runtime.dispose().catch(() => {})

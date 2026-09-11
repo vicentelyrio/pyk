@@ -15,7 +15,6 @@
     "gnim": "^1.9.1"
   },
   "devDependencies": {
-    "@effect/language-service": "^0.87.2",
     "@effect/tsgo": "0.43.0",
     "typesafe-i18n": "^5.27.1",
     "typescript": "7.0.2"

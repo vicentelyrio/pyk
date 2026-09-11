@@ -1,6 +1,6 @@
 import { Context, Effect, Layer, Stream } from 'effect'
 
-import { type ActionError, makeStore } from '@/infraestructure/effect'
+import { type ActionError, makeStore } from '@/infrastructure/effect'
 
 import { MprisBackend } from './backend'
 import { emptyState, type MprisState } from './state'

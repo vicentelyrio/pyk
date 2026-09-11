@@ -1,6 +1,6 @@
 import { Effect, Result, Schema } from 'effect'
 
-import { DecodeError, logFailure } from '@/infraestructure/effect'
+import { DecodeError, logFailure } from '@/infrastructure/effect'
 
 import { NiriEvent, NiriEventHandled } from '../schema'
 

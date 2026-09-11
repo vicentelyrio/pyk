@@ -1,6 +1,6 @@
 {
    "esmImports": true,
-   "outputPath": "./src/infraestructure/i18n",
+   "outputPath": "./src/infrastructure/i18n",
    "adapters": [],
    "$schema": "https://unpkg.com/typesafe-i18n@5.27.1/schema/typesafe-i18n.json"
 }

@@ -1,7 +1,7 @@
 import { execAsync, subprocess } from 'ags/process'
 import { Cause, Effect, Layer, Queue, Stream } from 'effect'
 
-import { attemptPromise, SourceError } from '@/infraestructure/effect'
+import { attemptPromise, SourceError } from '@/infrastructure/effect'
 
 import { NiriIpc } from '../store/ipc'
 

@@ -1,5 +1,5 @@
 import { IconButton } from '@/ui/components'
-import { mpris } from '@/infraestructure/mpris'
+import { mpris } from '@/infrastructure/mpris'
 
 const icons = {
   overview: 'view-grid-symbolic',

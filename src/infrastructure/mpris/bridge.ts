@@ -1,6 +1,6 @@
 import type { Accessor } from 'ags'
 
-import { createServiceAccessor } from '@/infraestructure/runtime'
+import { createServiceAccessor } from '@/infrastructure/runtime'
 
 import { Mpris } from './store'
 import { emptyState, type MprisState } from './store'

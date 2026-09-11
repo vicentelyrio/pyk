@@ -101,4 +101,6 @@ export const NiriEvent = Schema.Union([
 
 export type NiriEvent = typeof NiriEvent.Type
 
-export const NiriEventHandled = new Set<NiriEvent['kind']>(Object.values(NiriEventKind))
+export const NiriEventHandled: ReadonlySet<NiriEvent['kind']> = new Set(
+  NiriEvent.members.map((member) => member.fields.kind.literal),
+)

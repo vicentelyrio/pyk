@@ -1,6 +1,6 @@
 import { Context, Effect, Stream } from 'effect'
 
-import type { ActionError, SourceError } from '@/infraestructure/effect'
+import type { ActionError, SourceError } from '@/infrastructure/effect'
 
 export class NiriIpc extends Context.Service<NiriIpc, {
   readonly events: Stream.Stream<string, SourceError>

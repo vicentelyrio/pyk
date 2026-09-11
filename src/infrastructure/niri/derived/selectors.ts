@@ -6,17 +6,6 @@ export function selectOccupiedIds(state: NiriState): ReadonlySet<number> {
   )
 }
 
-export function selectActiveWindowIds(state: NiriState): ReadonlyMap<number, number> {
-  const active = new Map<number, number>()
-
-  for (const workspace of state.workspaces) {
-    if (workspace.active_window_id === null) continue
-    active.set(workspace.id, workspace.active_window_id)
-  }
-
-  return active
-}
-
 export function selectFocusedWindowTitle(state: NiriState): string {
   const { windows, focusedWindowId } = state
 
