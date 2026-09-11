@@ -1,6 +1,6 @@
 import { Data } from 'effect'
 
-export type Domain = 'audio' | 'mpris' | 'niri'
+export type Domain = 'audio' | 'mpris' | 'network' | 'niri'
 
 export class ActionError extends Data.TaggedError('ActionError')<{
   readonly domain: Domain
