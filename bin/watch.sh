@@ -24,12 +24,28 @@ app_pid=""
 # but noisy — the GL renderer doesn't do it. Override by exporting GSK_RENDERER.
 export GSK_RENDERER="${GSK_RENDERER:-gl}"
 
+export PYK_LOG="${PYK_LOG:-pretty}"
+export PYK_LOG_LEVEL="${PYK_LOG_LEVEL:-Debug}"
+
 start() {
   ags run "$ENTRY" &
   app_pid=$!
 }
 
+process_tree() {
+  local pid=$1 kid
+  echo "$pid"
+  for kid in $(pgrep -P "$pid" 2>/dev/null || true); do
+    process_tree "$kid"
+  done
+}
+
 stop() {
+  local doomed="" pid
+  if [ -n "$app_pid" ]; then
+    doomed=$(process_tree "$app_pid")
+  fi
+
   ags quit -i "$INSTANCE" >/dev/null 2>&1 || true
 
   if [ -n "$app_pid" ]; then
@@ -37,7 +53,11 @@ stop() {
       kill -0 "$app_pid" 2>/dev/null || break
       sleep 0.2
     done
-    kill -0 "$app_pid" 2>/dev/null && kill "$app_pid" 2>/dev/null || true
+
+    for pid in $doomed; do
+      kill "$pid" 2>/dev/null || true
+    done
+
     wait "$app_pid" 2>/dev/null || true
   fi
 
