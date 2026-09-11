@@ -1,18 +1,12 @@
-import { createExternal, type Accessor } from 'ags'
-import { Effect, Fiber, ManagedRuntime, Stream } from 'effect'
+import type { Accessor } from 'ags'
+
+import { createServiceAccessor } from '@/infraestructure/runtime'
 
 import { Niri } from './controller'
-import { emptyState, NiriState } from './state'
+import { emptyState, type NiriState } from './state'
 
-export const runtime = ManagedRuntime.make(Niri.Default)
-
-export const niriState: Accessor<NiriState> = createExternal(emptyState, (set) => {
-  const fiber = runtime.runFork(
-    Effect.flatMap(Niri, (niri) =>
-      Stream.runForEach(niri.changes, (next) => Effect.sync(() => set(next))),
-    ),
-  )
-  return () => {
-    Effect.runFork(Fiber.interrupt(fiber))
-  }
-})
+export const niriState: Accessor<NiriState> = createServiceAccessor(
+  emptyState,
+  Niri,
+  (niri) => niri.changes,
+)

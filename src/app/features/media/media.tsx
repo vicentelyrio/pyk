@@ -1,5 +1,5 @@
-import { createState } from 'ags'
 import { IconButton } from '@/ui/components'
+import { mpris } from '@/infraestructure/mpris'
 
 const icons = {
   overview: 'view-grid-symbolic',
@@ -20,21 +20,19 @@ const icons = {
 const todo = (what: string) => () => console.info(`[bar] TODO: open ${what}`)
 
 // Centre cluster — media transport. Icon-only, hidden-when-idle per spec.
-// TODO: wire to MPRIS (gi://AstalMpris) — play state, prev/next, art, source.
+// TODO: album art and source badge — mpris.hasPlayer drives hidden-when-idle.
 export function Media() {
-  const [playing, setPlaying] = createState(false)
-
   return (
     <box class="media">
-      <IconButton icon={icons.prev} tooltip="Previous" onClicked={todo('previous track')} />
+      <IconButton icon={icons.prev} tooltip="Previous" onClicked={mpris.previousTrack} />
       <button
         class="bar-btn play"
         tooltipText="Play / pause"
-        onClicked={() => setPlaying((p) => !p)}
+        onClicked={mpris.playPause}
       >
-        <image iconName={playing.as((p) => (p ? icons.pause : icons.play))} />
+        <image iconName={mpris.isPlaying.as((p) => (p ? icons.pause : icons.play))} />
       </button>
-      <IconButton icon={icons.next} tooltip="Next" onClicked={todo('next track')} />
+      <IconButton icon={icons.next} tooltip="Next" onClicked={mpris.nextTrack} />
       <IconButton
         icon={icons.media}
         tooltip="Now playing"
