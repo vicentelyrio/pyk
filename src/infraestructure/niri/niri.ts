@@ -5,13 +5,12 @@ import {
   focusWorkspace,
   focusWorkspaceDown,
   focusWorkspaceUp,
-  niriState,
-} from './store'
-
-import { workspaces } from './derived'
+} from './actions'
+import { niriState } from './bridge'
+import { workspaceMemos } from './derived/memos'
 
 export const niri = {
-  ...workspaces(niriState),
+  ...workspaceMemos(niriState),
   focusWorkspace,
   focusWorkspaceUp,
   focusWorkspaceDown,

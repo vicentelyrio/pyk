@@ -1,13 +1,11 @@
-import { subprocess } from 'ags/process'
-import { Cause, Effect, Queue, Schedule, Stream } from 'effect'
+import { execAsync, subprocess } from 'ags/process'
+import { Cause, Effect, Layer, Queue, Stream } from 'effect'
 
-import { logFailure, SourceError } from '@/infraestructure/effect'
+import { attemptPromise, SourceError } from '@/infraestructure/effect'
 
-import { emptyState, NiriState } from './state'
-import { decodeEvent } from './protocol'
-import { reduce } from './reducer'
+import { NiriIpc } from '../store/ipc'
 
-const lines = Stream.callback<string, SourceError>((queue) =>
+const events = Stream.callback<string, SourceError>((queue) =>
   Effect.acquireRelease(
     Effect.sync(() => {
       const stderr: string[] = []
@@ -39,14 +37,8 @@ const lines = Stream.callback<string, SourceError>((queue) =>
   ),
 )
 
-const reconnect = Schedule.min([
-  Schedule.exponential('500 millis', 2),
-  Schedule.spaced('5 seconds'),
-]).pipe(Schedule.jittered)
-
-export const stateChanges: Stream.Stream<NiriState, SourceError> = lines.pipe(
-  Stream.tapError((error) => logFailure(error)),
-  Stream.retry(reconnect),
-  Stream.filterMapEffect(decodeEvent),
-  Stream.scan(emptyState, reduce),
-)
+export const NiriIpcLive = Layer.succeed(NiriIpc, {
+  events,
+  send: (action, args) =>
+    attemptPromise('niri', action, () => execAsync(['niri', 'msg', ...args])),
+})

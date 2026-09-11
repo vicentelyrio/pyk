@@ -1,6 +1,6 @@
 import { dispatch } from '@/infraestructure/runtime'
 
-import { Niri } from './controller'
+import { Niri } from './store'
 
 export function focusWorkspace(reference: number | string): void {
   dispatch(Niri, (niri) => niri.focusWorkspace(reference))

@@ -1,10 +1,10 @@
-import { execAsync } from 'ags/process'
 import { Context, Effect, Layer, Stream } from 'effect'
 
-import { type ActionError, attemptPromise, makeStore } from '@/infraestructure/effect'
+import { type ActionError, makeStore } from '@/infraestructure/effect'
 
+import { stateChanges } from './events'
+import { NiriIpc } from './ipc'
 import { emptyState, type NiriState } from './state'
-import { stateChanges } from './connection'
 
 export class Niri extends Context.Service<Niri, {
   readonly changes: Stream.Stream<NiriState>
@@ -21,17 +21,15 @@ export class Niri extends Context.Service<Niri, {
 export const NiriLayer = Layer.effect(
   Niri,
   Effect.gen(function* () {
+    const ipc = yield* NiriIpc
     const store = yield* makeStore('niri', emptyState, stateChanges)
-
-    const send = (action: string, args: ReadonlyArray<string>) =>
-      attemptPromise('niri', action, () => execAsync(['niri', 'msg', ...args]))
 
     return {
       ...store,
       action: (name: string, ...args: ReadonlyArray<string>) =>
-        send(name, ['action', name, ...args]),
+        ipc.send(name, ['action', name, ...args]),
       focusWorkspace: (reference: number | string) =>
-        send('focus-workspace', ['action', 'focus-workspace', String(reference)]),
+        ipc.send('focus-workspace', ['action', 'focus-workspace', String(reference)]),
     }
   }),
 )
