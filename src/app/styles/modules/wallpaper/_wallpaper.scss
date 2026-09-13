@@ -3,3 +3,10 @@
 window.wallpaper-window {
   background-color: s.gtk(surface);
 }
+
+.wallpaper-picture {
+  opacity: 0;
+  transition: opacity s.duration(crossfade) s.easing(standard);
+
+  &.--shown { opacity: 1; }
+}

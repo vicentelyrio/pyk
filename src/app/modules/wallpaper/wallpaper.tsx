@@ -7,6 +7,8 @@ import { wallpaper } from '@/infrastructure/wallpaper'
 const cs = {
   root: 'wallpaper-window',
   picture: 'wallpaper-picture',
+
+  shown: '--shown',
 }
 
 const FIT: Record<string, Gtk.ContentFit> = {
@@ -20,19 +22,35 @@ export function WallpaperWindow(gdkmonitor: Gdk.Monitor) {
   const image = wallpaper.forOutput(gdkmonitor.connector ?? '')
 
   const attach = (self: Astal.Window) => {
-    const picture = new Gtk.Picture({ cssClasses: [cs.picture], canShrink: true, hexpand: true, vexpand: true })
+    const layers = [0, 1].map(() =>
+      new Gtk.Picture({ cssClasses: [cs.picture], canShrink: true, hexpand: true, vexpand: true }))
 
-    const sync = () => {
-      const path = image()
-      picture.set_file(path ? Gio.File.new_for_path(path) : null)
-      picture.set_content_fit(FIT[wallpaper.fit()] ?? Gtk.ContentFit.COVER)
+    const overlay = new Gtk.Overlay({ child: layers[0] })
+    overlay.add_overlay(layers[1]!)
+    self.set_child(overlay)
+
+    let front = 0
+
+    const fit = () => {
+      for (const layer of layers) layer.set_content_fit(FIT[wallpaper.fit()] ?? Gtk.ContentFit.COVER)
     }
 
-    self.set_child(picture)
-    sync()
+    const show = () => {
+      const path = image()
+      const incoming = layers[1 - front]!
+      const outgoing = layers[front]!
 
-    const disposeImage = image.subscribe(sync)
-    const disposeFit = wallpaper.fit.subscribe(sync)
+      incoming.set_file(path ? Gio.File.new_for_path(path) : null)
+      incoming.add_css_class(cs.shown)
+      outgoing.remove_css_class(cs.shown)
+      front = 1 - front
+    }
+
+    fit()
+    show()
+
+    const disposeImage = image.subscribe(show)
+    const disposeFit = wallpaper.fit.subscribe(fit)
 
     onCleanup(() => {
       disposeImage()
