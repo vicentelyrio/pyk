@@ -1,0 +1,24 @@
+@use 'styles' as s;
+
+.clock {
+  @include s.numeric;
+  min-height: s.size(bar-hit);
+  padding: 0 s.space(md);
+  border-radius: s.radius(sm);
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.clock-date,
+.clock-time {
+  font-size: s.font-size(sm);
+  letter-spacing: s.tracking(numeric);
+}
+
+.clock-date {
+  color: s.gtk(muted);
+}
+
+.clock-time {
+  color: s.gtk(text);
+}

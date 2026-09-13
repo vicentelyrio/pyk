@@ -29,6 +29,7 @@
 @function font-stack($k)  { @return _get(tokens.$font-stack,  $k, 'font-stack'); }
 @function weight($k)      { @return _get(tokens.$font-weight, $k, 'weight'); }
 @function leading($k)     { @return _get(tokens.$leading,     $k, 'leading'); }
+@function tracking($k)    { @return _get(tokens.$tracking,    $k, 'tracking'); }
 
 @function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow') gtk(shadow); }
 @function shadow-room($k) { @return _get(tokens.$shadow-room, $k, 'shadow-room'); }

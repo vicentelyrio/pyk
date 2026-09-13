@@ -1,3 +1,4 @@
+export * from './clock'
 export * from './launcher'
 export * from './media'
 export * from './notifications'
