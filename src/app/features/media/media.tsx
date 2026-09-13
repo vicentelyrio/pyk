@@ -7,6 +7,7 @@ import { mpris } from '@/infrastructure/mpris'
 
 const cs = {
   root: 'media',
+  disabled: 'media-disabled',
   controls: 'media-controls',
   control: 'media-control',
   play: 'media-play',
@@ -37,9 +38,8 @@ export function Media({ className }: { className?: string }) {
   return (
     <Popover
       on="hover"
-      className={clsx(cs.root, className)}
+      className={clsx(cs.root, !mpris.hasPlayer && cs.disabled, className)}
       contentClassName={cs.card}
-      visible={mpris.hasPlayer}
       trigger={<MediaControls />}>
       <MediaCard />
     </Popover>
