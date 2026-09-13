@@ -15,7 +15,7 @@
   -gtk-icon-size: s.size(icon);
 }
 
-.wallpaper-panel > contents {
+popover.wallpaper-panel > contents {
   min-width: s.panel-width(wallpaper);
   padding: 0;
 }
