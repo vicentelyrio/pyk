@@ -16,12 +16,14 @@ export type ColorLeaf = LeafBase<'color', string>
 export type TextLeaf = LeafBase<'text', string>
 export type ToggleLeaf = LeafBase<'toggle', boolean>
 export type ShortcutLeaf = LeafBase<'shortcut', readonly string[]>
+export type PathLeaf = LeafBase<'path', string>
+export type RecordLeaf = LeafBase<'record', Readonly<Record<string, string>>>
 
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
   readonly options: readonly T[]
 }
 
-export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | ToggleLeaf | ShortcutLeaf | ChoiceLeaf<string>
+export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | RecordLeaf | ChoiceLeaf<string>
 
 export interface Spec {
   readonly [key: string]: Leaf | Spec
@@ -32,7 +34,8 @@ export type Value<S> =
     : S extends NumberLeaf ? number
       : S extends ToggleLeaf ? boolean
         : S extends ShortcutLeaf ? readonly string[]
-        : S extends ColorLeaf | TextLeaf ? string
+          : S extends RecordLeaf ? Readonly<Record<string, string>>
+        : S extends ColorLeaf | TextLeaf | PathLeaf ? string
           : S extends Spec ? { readonly [K in keyof S]: Value<S[K]> }
             : never
 
@@ -57,6 +60,14 @@ export function text(fallback: string, options: Options = {}): TextLeaf {
 
 export function toggle(fallback: boolean, options: Options = {}): ToggleLeaf {
   return { kind: 'toggle', default: fallback, apply: options.apply ?? 'live' }
+}
+
+export function path(fallback: string, options: Options = {}): PathLeaf {
+  return { kind: 'path', default: fallback, apply: options.apply ?? 'live' }
+}
+
+export function record(options: Options = {}): RecordLeaf {
+  return { kind: 'record', default: {}, apply: options.apply ?? 'live' }
 }
 
 export function shortcut(fallback: readonly string[], options: Options = {}): ShortcutLeaf {
@@ -90,6 +101,10 @@ function accepts(leaf: Leaf, input: unknown): boolean {
       return typeof input === 'string' && HEX.test(input)
     case 'text':
       return typeof input === 'string' && input.trim().length > 0
+    case 'path':
+      return typeof input === 'string'
+    case 'record':
+      return isRecord(input) && Object.values(input).every((it) => typeof it === 'string')
     case 'toggle':
       return typeof input === 'boolean'
     case 'shortcut':
@@ -147,6 +162,14 @@ export function defaults<S extends Spec>(spec: S): Value<S> {
   return decode(spec, {}).value
 }
 
+export function expandHome(value: string, home: string): string {
+  return value === '~' || value.startsWith('~/') ? `${home}${value.slice(1)}` : value
+}
+
+export function collapseHome(value: string, home: string): string {
+  return value === home || value.startsWith(`${home}/`) ? `~${value.slice(home.length)}` : value
+}
+
 export function merge<T>(base: T, patch: NoInfer<Patch<T>>): T {
   if (!isRecord(base) || !isRecord(patch)) return (patch === undefined ? base : patch) as T
 
@@ -160,9 +183,14 @@ export function merge<T>(base: T, patch: NoInfer<Patch<T>>): T {
 }
 
 function same(a: unknown, b: unknown): boolean {
-  return Array.isArray(a) && Array.isArray(b)
-    ? a.length === b.length && a.every((it, i) => it === b[i])
-    : a === b
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((it, i) => it === b[i])
+  }
+  if (isRecord(a) && isRecord(b)) {
+    const keys = Object.keys(a)
+    return keys.length === Object.keys(b).length && keys.every((key) => a[key] === b[key])
+  }
+  return a === b
 }
 
 export function overrides<S extends Spec>(spec: S, value: Value<S>): Patch<Value<S>> {

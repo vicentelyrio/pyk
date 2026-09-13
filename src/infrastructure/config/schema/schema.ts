@@ -1,4 +1,4 @@
-import { choice, color, defaults, number, shortcut, text, toggle, type Patch, type Value } from './spec'
+import { choice, color, defaults, number, path, record, shortcut, text, toggle, type Patch, type Value } from './spec'
 
 export const configSpec = {
   appearance: {
@@ -22,6 +22,12 @@ export const configSpec = {
   launcher: {
     resultLimit: number(8, { min: 1, max: 20 }),
     closeOnLaunch: toggle(true),
+  },
+  wallpaper: {
+    directory: path('~/Pictures/Wallpapers'),
+    image: path(''),
+    outputs: record(),
+    fit: choice(['cover', 'contain', 'fill'], 'cover'),
   },
   shortcuts: {
     niriBinds: toggle(true),
@@ -56,6 +62,7 @@ export type NotificationsConfig = Config['notifications']
 export type PopoverConfig = Config['popover']
 export type LauncherConfig = Config['launcher']
 export type ShortcutsConfig = Config['shortcuts']
+export type WallpaperConfig = Config['wallpaper']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 

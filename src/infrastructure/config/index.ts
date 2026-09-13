@@ -12,6 +12,7 @@ export type {
   ShortcutsConfig,
   Spec,
   SystemConfig,
+  WallpaperConfig,
 } from './schema'
-export { configSpec, defaultConfig } from './schema'
+export { collapseHome, configSpec, defaultConfig, expandHome } from './schema'
 export { Configuration, StartupConfig } from './store'

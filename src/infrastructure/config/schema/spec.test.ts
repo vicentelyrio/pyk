@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, test } from 'node:test'
 
 import { configSpec, defaultConfig } from './schema'
-import { decode, merge, overrides } from './spec'
+import { collapseHome, decode, expandHome, merge, overrides } from './spec'
 
 describe('config spec', () => {
   test('an empty file decodes to defaults without issues', () => {
@@ -51,5 +51,32 @@ describe('config spec', () => {
   test('overrides round-trip through decode', () => {
     const next = merge(defaultConfig, { system: { logFormat: 'pretty' }, media: { progressInterval: 500 } })
     assert.deepEqual(decode(configSpec, overrides(configSpec, next)).value, next)
+  })
+
+  test('paths may be empty and records keep string values only', () => {
+    const { value, issues } = decode(configSpec, {
+      wallpaper: { image: '', outputs: { 'DP-3': '/walls/a.png' } },
+    })
+    assert.equal(value.wallpaper.image, '')
+    assert.deepEqual(value.wallpaper.outputs, { 'DP-3': '/walls/a.png' })
+    assert.deepEqual(issues, [])
+
+    const bad = decode(configSpec, { wallpaper: { outputs: { 'DP-3': 3 } } })
+    assert.deepEqual(bad.value.wallpaper.outputs, {})
+    assert.equal(bad.issues.length, 1)
+  })
+
+  test('record overrides merge per key and compare by content', () => {
+    const one = merge(defaultConfig, { wallpaper: { outputs: { 'DP-3': '/a.png' } } })
+    const two = merge(one, { wallpaper: { outputs: { 'HDMI-A-1': '/b.png' } } })
+    assert.deepEqual(two.wallpaper.outputs, { 'DP-3': '/a.png', 'HDMI-A-1': '/b.png' })
+    assert.deepEqual(overrides(configSpec, merge(defaultConfig, { wallpaper: { outputs: {} } })), {})
+  })
+
+  test('home expansion round-trips', () => {
+    assert.equal(expandHome('~/Pictures', '/home/me'), '/home/me/Pictures')
+    assert.equal(expandHome('/etc/walls', '/home/me'), '/etc/walls')
+    assert.equal(collapseHome('/home/me/Pictures', '/home/me'), '~/Pictures')
+    assert.equal(collapseHome('/home/meow', '/home/me'), '/home/meow')
   })
 })
