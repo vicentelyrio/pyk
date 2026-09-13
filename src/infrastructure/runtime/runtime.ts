@@ -11,6 +11,8 @@ import { AudioBackendLive } from '@/infrastructure/audio/gjs/backend'
 import { AudioLayer } from '@/infrastructure/audio/store/controller'
 import { BluetoothBackendLive } from '@/infrastructure/bluetooth/gjs/backend'
 import { BluetoothLayer } from '@/infrastructure/bluetooth/store/controller'
+import { ClockBackendLive } from '@/infrastructure/clock/gjs/backend'
+import { ClockLayer } from '@/infrastructure/clock/store/controller'
 import { NetworkBackendLive } from '@/infrastructure/network/gjs/backend'
 import { NetworkLayer } from '@/infrastructure/network/store/controller'
 import { NiriIpcLive } from '@/infrastructure/niri/gjs/ipc'
@@ -27,6 +29,7 @@ const MainLayer = Layer.mergeAll(
   AppsLayer.pipe(Layer.provide([AppsBackendLive])),
   AudioLayer.pipe(Layer.provide([AudioBackendLive])),
   BluetoothLayer.pipe(Layer.provide([BluetoothBackendLive])),
+  ClockLayer.pipe(Layer.provide([ClockBackendLive])),
   NetworkLayer.pipe(Layer.provide([NetworkBackendLive])),
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),

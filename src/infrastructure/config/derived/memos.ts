@@ -11,6 +11,7 @@ export function sections(state: Accessor<Config>) {
     launcher: createMemo(() => state().launcher, { equals: Equal.equals }),
     shortcuts: createMemo(() => state().shortcuts, { equals: Equal.equals }),
     wallpaper: createMemo(() => state().wallpaper, { equals: Equal.equals }),
+    clock: createMemo(() => state().clock, { equals: Equal.equals }),
     media: createMemo(() => state().media, { equals: Equal.equals }),
     system: createMemo(() => state().system, { equals: Equal.equals }),
   }

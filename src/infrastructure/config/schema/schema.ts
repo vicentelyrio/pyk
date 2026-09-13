@@ -23,6 +23,12 @@ export const configSpec = {
     resultLimit: number(8, { min: 1, max: 20 }),
     closeOnLaunch: toggle(true),
   },
+  clock: {
+    hourFormat: choice(['24h', '12h'], '24h'),
+    showSeconds: toggle(false),
+    showDate: toggle(true),
+    dateFormat: text('%a %-d %b'),
+  },
   wallpaper: {
     directory: path('~/Pictures/Wallpapers'),
     image: path(''),
@@ -63,6 +69,7 @@ export type PopoverConfig = Config['popover']
 export type LauncherConfig = Config['launcher']
 export type ShortcutsConfig = Config['shortcuts']
 export type WallpaperConfig = Config['wallpaper']
+export type ClockConfig = Config['clock']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 
