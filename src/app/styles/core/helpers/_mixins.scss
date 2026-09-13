@@ -55,6 +55,12 @@
 
   min-width: $t;
   min-height: $t;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
   @include hover-fill(radius(sm));
 }
 
