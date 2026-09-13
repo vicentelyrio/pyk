@@ -29,6 +29,10 @@ export const configSpec = {
     showDate: toggle(true),
     dateFormat: text('%a %-d %b'),
   },
+  calendar: {
+    weekStart: choice(['monday', 'sunday'], 'monday'),
+    showWeekNumber: toggle(true),
+  },
   wallpaper: {
     directory: path('~/Pictures/Wallpapers'),
     image: path(''),
@@ -70,6 +74,7 @@ export type LauncherConfig = Config['launcher']
 export type ShortcutsConfig = Config['shortcuts']
 export type WallpaperConfig = Config['wallpaper']
 export type ClockConfig = Config['clock']
+export type CalendarConfig = Config['calendar']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 

@@ -1,6 +1,7 @@
 export * from './config'
 export type {
   AppearanceConfig,
+  CalendarConfig,
   ClockConfig,
   Apply,
   Config,
