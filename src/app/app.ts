@@ -5,6 +5,7 @@ import style from './style.scss'
 import { applyAppearance } from '@/app/appearance'
 import { launcher } from '@/app/features'
 import { Bar, LauncherWindow, NotificationToasts } from '@/app/modules'
+import { INSTANCE_NAME } from '@/infrastructure/instance'
 import { runtime } from '@/infrastructure/runtime'
 
 app.connect('shutdown', () => {
@@ -13,7 +14,7 @@ app.connect('shutdown', () => {
 
 app.start({
   icons: `${SRC}/icons`,
-  instanceName: 'pyk',
+  instanceName: INSTANCE_NAME,
   css: style,
   requestHandler(argv, res) {
     const [cmd, arg] = argv

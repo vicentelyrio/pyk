@@ -15,12 +15,13 @@ export interface NumberLeaf extends LeafBase<'number', number> {
 export type ColorLeaf = LeafBase<'color', string>
 export type TextLeaf = LeafBase<'text', string>
 export type ToggleLeaf = LeafBase<'toggle', boolean>
+export type ShortcutLeaf = LeafBase<'shortcut', readonly string[]>
 
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
   readonly options: readonly T[]
 }
 
-export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | ToggleLeaf | ChoiceLeaf<string>
+export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | ToggleLeaf | ShortcutLeaf | ChoiceLeaf<string>
 
 export interface Spec {
   readonly [key: string]: Leaf | Spec
@@ -30,11 +31,12 @@ export type Value<S> =
   S extends ChoiceLeaf<infer T> ? T
     : S extends NumberLeaf ? number
       : S extends ToggleLeaf ? boolean
+        : S extends ShortcutLeaf ? readonly string[]
         : S extends ColorLeaf | TextLeaf ? string
           : S extends Spec ? { readonly [K in keyof S]: Value<S[K]> }
             : never
 
-export type Patch<T> = T extends object ? { readonly [K in keyof T]?: Patch<T[K]> } : T
+export type Patch<T> = T extends readonly unknown[] ? T : T extends object ? { readonly [K in keyof T]?: Patch<T[K]> } : T
 
 type Options = { readonly apply?: Apply }
 
@@ -57,6 +59,10 @@ export function toggle(fallback: boolean, options: Options = {}): ToggleLeaf {
   return { kind: 'toggle', default: fallback, apply: options.apply ?? 'live' }
 }
 
+export function shortcut(fallback: readonly string[], options: Options = {}): ShortcutLeaf {
+  return { kind: 'shortcut', default: fallback, apply: options.apply ?? 'live' }
+}
+
 export function choice<const T extends string>(
   options: readonly T[],
   fallback: NoInfer<T>,
@@ -66,6 +72,7 @@ export function choice<const T extends string>(
 }
 
 const HEX = /^#(?:[0-9a-f]{6}|[0-9a-f]{8})$/i
+const KEY = /^(?:(?:Mod|Super|Ctrl|Control|Alt|Shift)\+)*[A-Za-z0-9_]+$/
 
 function isLeaf(node: Leaf | Spec): node is Leaf {
   return typeof node.kind === 'string'
@@ -85,6 +92,8 @@ function accepts(leaf: Leaf, input: unknown): boolean {
       return typeof input === 'string' && input.trim().length > 0
     case 'toggle':
       return typeof input === 'boolean'
+    case 'shortcut':
+      return Array.isArray(input) && input.every((key) => typeof key === 'string' && KEY.test(key))
     case 'choice':
       return typeof input === 'string' && leaf.options.includes(input)
   }
@@ -138,7 +147,7 @@ export function defaults<S extends Spec>(spec: S): Value<S> {
   return decode(spec, {}).value
 }
 
-export function merge<T>(base: T, patch: Patch<T>): T {
+export function merge<T>(base: T, patch: NoInfer<Patch<T>>): T {
   if (!isRecord(base) || !isRecord(patch)) return (patch === undefined ? base : patch) as T
 
   const out: Record<string, unknown> = { ...base }
@@ -150,13 +159,19 @@ export function merge<T>(base: T, patch: Patch<T>): T {
   return out as T
 }
 
+function same(a: unknown, b: unknown): boolean {
+  return Array.isArray(a) && Array.isArray(b)
+    ? a.length === b.length && a.every((it, i) => it === b[i])
+    : a === b
+}
+
 export function overrides<S extends Spec>(spec: S, value: Value<S>): Patch<Value<S>> {
   const walk = (node: Spec, current: Record<string, unknown>): Record<string, unknown> | undefined => {
     const out: Record<string, unknown> = {}
 
     for (const [key, child] of Object.entries(node)) {
       if (isLeaf(child)) {
-        if (current[key] !== child.default) out[key] = current[key]
+        if (!same(current[key], child.default)) out[key] = current[key]
         continue
       }
 

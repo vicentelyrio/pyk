@@ -9,6 +9,7 @@ export function sections(state: Accessor<Config>) {
     notifications: createMemo(() => state().notifications, { equals: Equal.equals }),
     popover: createMemo(() => state().popover, { equals: Equal.equals }),
     launcher: createMemo(() => state().launcher, { equals: Equal.equals }),
+    shortcuts: createMemo(() => state().shortcuts, { equals: Equal.equals }),
     media: createMemo(() => state().media, { equals: Equal.equals }),
     system: createMemo(() => state().system, { equals: Equal.equals }),
   }

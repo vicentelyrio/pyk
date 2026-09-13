@@ -1,4 +1,4 @@
-import { choice, color, defaults, number, text, toggle, type Patch, type Value } from './spec'
+import { choice, color, defaults, number, shortcut, text, toggle, type Patch, type Value } from './spec'
 
 export const configSpec = {
   appearance: {
@@ -23,6 +23,18 @@ export const configSpec = {
     resultLimit: number(8, { min: 1, max: 20 }),
     closeOnLaunch: toggle(true),
   },
+  shortcuts: {
+    niriBinds: toggle(true),
+    global: {
+      launcher: shortcut(['Mod+Space']),
+    },
+    launcher: {
+      close: shortcut(['Escape']),
+      next: shortcut(['Down', 'Tab', 'Ctrl+J']),
+      previous: shortcut(['Up', 'Shift+Tab', 'Ctrl+K']),
+      launch: shortcut(['Return', 'KP_Enter']),
+    },
+  },
   media: {
     progressInterval: number(1000, { min: 100, max: 10_000, unit: 'ms', apply: 'restart' }),
   },
@@ -43,6 +55,7 @@ export type AppearanceConfig = Config['appearance']
 export type NotificationsConfig = Config['notifications']
 export type PopoverConfig = Config['popover']
 export type LauncherConfig = Config['launcher']
+export type ShortcutsConfig = Config['shortcuts']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 

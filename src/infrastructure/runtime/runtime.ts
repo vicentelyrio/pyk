@@ -19,6 +19,7 @@ import { NotificationsLayer } from '@/infrastructure/notifications/store/control
 import { NiriLayer } from '@/infrastructure/niri/store/controller'
 import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infrastructure/mpris/store/controller'
+import { NiriBindsLayer } from '@/infrastructure/shortcuts/gjs/layer'
 
 const MainLayer = Layer.mergeAll(
   AppsLayer.pipe(Layer.provide([AppsBackendLive])),
@@ -28,8 +29,9 @@ const MainLayer = Layer.mergeAll(
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
   NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
-  ConfigurationLayer,
+  NiriBindsLayer,
 ).pipe(
+  Layer.provideMerge([ConfigurationLayer]),
   Layer.provideMerge([Platform]),
   Layer.provideMerge([StartupConfigLayer]),
   Layer.provideMerge([ConfigBackendLive]),

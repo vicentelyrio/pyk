@@ -9,6 +9,7 @@ export type {
   MediaConfig,
   NotificationsConfig,
   PopoverConfig,
+  ShortcutsConfig,
   Spec,
   SystemConfig,
 } from './schema'

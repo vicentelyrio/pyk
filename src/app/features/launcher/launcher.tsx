@@ -1,10 +1,11 @@
 import Pango from 'gi://Pango'
-import { Gdk, Gtk } from 'ags/gtk4'
+import { Gtk } from 'ags/gtk4'
 import { For, createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { AppIcon } from '@/ui/components'
 import { apps, type AppEntry } from '@/infrastructure/apps'
-import { config } from '@/infrastructure/config'
+import { config, type ShortcutsConfig } from '@/infrastructure/config'
+import { handleShortcut, type ShortcutHandlers } from '@/infrastructure/shortcuts'
 
 import { launcher } from './state'
 
@@ -54,28 +55,18 @@ export function Launcher() {
     setCursor(0)
   }
 
+  const actions: ShortcutHandlers<keyof ShortcutsConfig['launcher']> = {
+    close: () => launcher.hide(),
+    next: () => move(1),
+    previous: () => move(-1),
+    launch: () => launch(results()[selected()]),
+  }
+
   const attach = (self: Gtk.Widget) => {
     const keys = new Gtk.EventControllerKey({ propagationPhase: Gtk.PropagationPhase.CAPTURE })
 
-    keys.connect('key-pressed', (_controller, keyval) => {
-      switch (keyval) {
-        case Gdk.KEY_Escape:
-          launcher.hide()
-          return true
-        case Gdk.KEY_Up:
-          move(-1)
-          return true
-        case Gdk.KEY_Down:
-        case Gdk.KEY_Tab:
-          move(1)
-          return true
-        case Gdk.KEY_ISO_Left_Tab:
-          move(-1)
-          return true
-        default:
-          return false
-      }
-    })
+    keys.connect('key-pressed', (_controller, keyval, _keycode, state) =>
+      handleShortcut(config.shortcuts().launcher, actions, keyval, state))
 
     self.add_controller(keys)
 
@@ -110,7 +101,6 @@ export function Launcher() {
             setQuery(self.text)
             setCursor(0)
           }}
-          onActivate={() => launch(results()[selected()])}
         />
         <label class={cs.count} label={createComputed(() => `${results().length}/${apps.count()}`)} />
       </box>
