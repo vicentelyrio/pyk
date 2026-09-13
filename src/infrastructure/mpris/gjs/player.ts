@@ -2,6 +2,8 @@ import AstalMpris from 'gi://AstalMpris'
 
 import { emptyState, type MprisState } from '../store/state'
 
+const positive = (value: number) => (Number.isFinite(value) && value > 0 ? value : 0)
+
 export function activePlayer(mpris: AstalMpris.Mpris): AstalMpris.Player | null {
   const players = mpris.get_players()
 
@@ -19,6 +21,9 @@ export function snapshot(player: AstalMpris.Player | null): MprisState {
     identity: player.identity ?? '',
     title: player.title ?? '',
     artist: player.artist ?? '',
+    coverArt: player.coverArt ?? '',
+    position: positive(player.position),
+    length: positive(player.length),
     canPlay: player.canPlay,
     canGoNext: player.canGoNext,
     canGoPrevious: player.canGoPrevious,
