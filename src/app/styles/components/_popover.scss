@@ -1,24 +1,5 @@
 @use 'styles' as s;
 
-menubutton.popover {
-  padding: 0;
-
-  > button {
-    @include s.icon-button(bar-hit-sm);
-    padding: 0;
-    color: s.gtk(muted);
-
-    &:hover { color: s.gtk(text); }
-
-    &:checked {
-      background-color: s.gtk(fillActive);
-      color: s.gtk(text);
-    }
-  }
-
-  image { -gtk-icon-size: s.size(icon); }
-}
-
 popover.popover-content {
   background-color: transparent;
 
