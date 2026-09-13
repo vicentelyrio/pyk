@@ -21,6 +21,8 @@ import { NotificationsLayer } from '@/infrastructure/notifications/store/control
 import { NiriLayer } from '@/infrastructure/niri/store/controller'
 import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infrastructure/mpris/store/controller'
+import { ScheduleBackendLive } from '@/infrastructure/schedule/gjs/backend'
+import { ScheduleLayer } from '@/infrastructure/schedule/store/controller'
 import { NiriBindsLayer } from '@/infrastructure/shortcuts/gjs/layer'
 import { WallpaperBackendLive } from '@/infrastructure/wallpaper/gjs/backend'
 import { WallpaperLayer } from '@/infrastructure/wallpaper/store/controller'
@@ -29,7 +31,7 @@ const MainLayer = Layer.mergeAll(
   AppsLayer.pipe(Layer.provide([AppsBackendLive])),
   AudioLayer.pipe(Layer.provide([AudioBackendLive])),
   BluetoothLayer.pipe(Layer.provide([BluetoothBackendLive])),
-  ClockLayer.pipe(Layer.provide([ClockBackendLive])),
+  ScheduleLayer.pipe(Layer.provide([ScheduleBackendLive])),
   NetworkLayer.pipe(Layer.provide([NetworkBackendLive])),
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
@@ -37,6 +39,7 @@ const MainLayer = Layer.mergeAll(
   NiriBindsLayer,
   WallpaperLayer.pipe(Layer.provide([WallpaperBackendLive])),
 ).pipe(
+  Layer.provideMerge([ClockLayer.pipe(Layer.provide([ClockBackendLive]))]),
   Layer.provideMerge([ConfigurationLayer]),
   Layer.provideMerge([Platform]),
   Layer.provideMerge([StartupConfigLayer]),

@@ -13,6 +13,7 @@ export function sections(state: Accessor<Config>) {
     wallpaper: createMemo(() => state().wallpaper, { equals: Equal.equals }),
     clock: createMemo(() => state().clock, { equals: Equal.equals }),
     calendar: createMemo(() => state().calendar, { equals: Equal.equals }),
+    schedule: createMemo(() => state().schedule, { equals: Equal.equals }),
     media: createMemo(() => state().media, { equals: Equal.equals }),
     system: createMemo(() => state().system, { equals: Equal.equals }),
   }

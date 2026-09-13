@@ -31,6 +31,11 @@ function weekdayInitials(weekStart: 'monday' | 'sunday'): readonly string[] {
 
 const now = createMemo(() => clockState().now)
 
+function timePattern(): string {
+  const { hourFormat } = config.clock()
+  return hourFormat === '12h' ? '%-I:%M %p' : '%H:%M'
+}
+
 const today = createMemo((): CalendarDate => {
   const date = local(now())
   return { year: date?.get_year() ?? 1970, month: date?.get_month() ?? 1, day: date?.get_day_of_month() ?? 1 }
@@ -52,5 +57,9 @@ export const clock = {
   weekdays: createComputed(() => weekdayInitials(config.calendar().weekStart)),
   monthView: (view: YearMonth) => monthView(view, today(), config.calendar().weekStart),
   monthTitle,
+  formatTime: (ms: number) => format(ms, timePattern()),
+  formatDay: (ms: number) => format(ms, config.clock().dateFormat),
+  formatDate: ({ year, month, day }: CalendarDate) =>
+    GLib.DateTime.new_local(year, month, day, 0, 0, 0)?.format(config.clock().dateFormat) ?? '',
   shiftMonth,
 } as const

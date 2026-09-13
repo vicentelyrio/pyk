@@ -33,6 +33,9 @@ export const configSpec = {
     weekStart: choice(['monday', 'sunday'], 'monday'),
     showWeekNumber: toggle(true),
   },
+  schedule: {
+    directory: path('~/.local/share/calendars'),
+  },
   wallpaper: {
     directory: path('~/Pictures/Wallpapers'),
     image: path(''),
@@ -75,6 +78,7 @@ export type ShortcutsConfig = Config['shortcuts']
 export type WallpaperConfig = Config['wallpaper']
 export type ClockConfig = Config['clock']
 export type CalendarConfig = Config['calendar']
+export type ScheduleConfig = Config['schedule']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 
