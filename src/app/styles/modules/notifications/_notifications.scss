@@ -1,0 +1,42 @@
+@use 'styles' as s;
+
+window.toasts {
+  background-color: transparent;
+}
+
+.toasts-stack {
+  margin: s.space(md) s.shadow-room(toast-x) s.shadow-room(toast-y);
+
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.toast {
+  @include s.popout(toast);
+  animation: pop-in s.duration(slow) s.easing(standard);
+  min-width: s.panel-width(toast);
+  padding: s.space(md) s.space(lg);
+  background-image: none;
+  outline: none;
+  border-radius: s.radius(md);
+
+  &:hover { background-color: s.gtk(raised); }
+
+  &.--critical { border-color: s.gtk(warn); }
+}
+
+.toast-meta {
+  margin-left: s.space(md);
+
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.toast-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.toast-body {
+  font-size: s.font-size(xs);
+  line-height: s.leading(normal);
+  color: s.gtk(faint);
+}

@@ -6,6 +6,8 @@ import { onCleanup, type Accessor } from 'ags'
 const cs = {
   root: 'popover',
   content: 'popover-content',
+
+  open: '--open',
 }
 
 const HOVER_CLOSE_DELAY = 220
@@ -37,39 +39,59 @@ export function Popover({
   hasArrow = false,
   halign = Gtk.Align.CENTER,
 }: PopoverProps) {
+  const hover = on === 'hover'
+
   const content = (
     <popover
       class={clsx(cs.content, contentClassName)}
       position={position}
       hasArrow={hasArrow}
-      autohide={on === 'click'}>
+      autohide={!hover}>
       {children}
     </popover>
   ) as Gtk.Popover
 
+  if (hover) {
+    return (
+      <box
+        class={clsx(cs.root, className)}
+        tooltipText={tooltip}
+        visible={visible}
+        halign={halign}
+        valign={Gtk.Align.CENTER}
+        $={(self) => attach(self as Gtk.Widget, content)}>
+        {trigger}
+      </box>
+    )
+  }
+
   return (
-    <box
+    <menubutton
       class={clsx(cs.root, className)}
+      child={trigger as Gtk.Widget}
       tooltipText={tooltip}
       visible={visible}
       halign={halign}
       valign={Gtk.Align.CENTER}
-      $={(self) => attach(self as Gtk.Widget, content, on)}>
-      {trigger}
-    </box>
+      $={(self) => track(self as Gtk.Widget, content)}>
+      {content}
+    </menubutton>
   )
 }
 
-function attach(anchor: Gtk.Widget, content: Gtk.Popover, on: PopoverTrigger) {
-  content.set_parent(anchor)
-  onCleanup(() => content.unparent())
+function track(anchor: Gtk.Widget, content: Gtk.Popover) {
+  const opened = content.connect('notify::visible', () => {
+    if (content.visible) anchor.add_css_class(cs.open)
+    else anchor.remove_css_class(cs.open)
+  })
 
-  if (on === 'click') {
-    const gesture = new Gtk.GestureClick()
-    gesture.connect('released', () => content.popup())
-    anchor.add_controller(gesture)
-    return
-  }
+  onCleanup(() => content.disconnect(opened))
+}
+
+function attach(anchor: Gtk.Widget, content: Gtk.Popover) {
+  content.set_parent(anchor)
+  track(anchor, content)
+  onCleanup(() => content.unparent())
 
   let pending = 0
 

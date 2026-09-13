@@ -6,6 +6,7 @@ $size: (
   bar-hit:    config.$bar-hit,    // 30
   bar-hit-sm: 28px,
   icon:       15px,
+  icon-xs:    11px,
   icon-sm:    13px,
   icon-lg:    20px,
   toggle:     58px,
@@ -25,8 +26,16 @@ $size: (
 
   media-cover: 62px,
   media-track: 3px,
+
+  badge:       5px,
+  badge-inset: 6px,
+
+  notif-avatar:  26px,
+  notif-dismiss: 18px,
 );
 
 $panel-width: (
   media: 320px,
+  notifications: 356px,
+  toast: 330px,
 );

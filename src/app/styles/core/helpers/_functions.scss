@@ -40,6 +40,7 @@
 
 // Effect ---------------------------------------------------------------
 @function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow'); }
+@function shadow-room($k) { @return _get(tokens.$shadow-room, $k, 'shadow-room'); }
 @function text-shadow($k) { @return _get(tokens.$text-shadow, $k, 'text-shadow'); }
 @function blur($k)        { @return _get(tokens.$blur,        $k, 'blur'); }
 @function duration($k)    { @return _get(tokens.$duration,    $k, 'duration'); }

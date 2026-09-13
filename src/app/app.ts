@@ -2,7 +2,7 @@ import '@/infrastructure/polyfill'
 import app from 'ags/gtk4/app'
 import style from './style.scss'
 
-import { Bar } from '@/app/modules'
+import { Bar, NotificationToasts } from '@/app/modules'
 import { runtime } from '@/infrastructure/runtime'
 
 app.connect('shutdown', () => {
@@ -23,5 +23,6 @@ app.start({
   },
   main() {
     app.get_monitors().map(Bar)
+    NotificationToasts()
   },
 })
