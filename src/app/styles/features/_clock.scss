@@ -4,7 +4,6 @@
   @include s.numeric;
   min-height: s.size(bar-hit);
   padding: 0 s.space(md);
-  border-radius: s.radius(sm);
 
   > *:not(:first-child) { margin-left: s.space(sm); }
 }

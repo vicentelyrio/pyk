@@ -1,0 +1,81 @@
+@use 'styles' as s;
+
+.calendar > button {
+  @include s.hover-fill(s.radius(sm));
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.calendar.--open > button {
+  background-color: s.gtk(fillHover);
+}
+
+popover.calendar-panel > contents {
+  min-width: s.panel-width(calendar);
+}
+
+.calendar-header {
+  margin-bottom: s.space(lg);
+}
+
+.calendar-title {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+
+  > label {
+    font-size: s.font-size(base);
+    color: s.gtk(text);
+    transition: color s.duration(toggle) s.easing(standard);
+  }
+
+  &:hover > label { color: s.gtk(accent); }
+}
+
+.calendar-week {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(muted);
+}
+
+.calendar-weekdays {
+  margin-bottom: s.space(xs);
+}
+
+.calendar-weekday {
+  font-size: s.font-size(xxs);
+  letter-spacing: s.tracking(label);
+  color: s.gtk(faint);
+}
+
+.calendar-grid {
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.calendar-row {
+  > *:not(:first-child) { margin-left: s.space(xxs); }
+}
+
+.calendar-day {
+  @include s.numeric;
+  min-height: s.size(calendar-day);
+  border-radius: s.radius(sm);
+  font-size: s.font-size(sm);
+  color: s.gtk(textSoft);
+
+  &.--today {
+    background-color: s.gtk(accent);
+    color: s.gtk(ink);
+  }
+}

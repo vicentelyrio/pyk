@@ -31,6 +31,8 @@ $size: scale.linear(config.$size-base, (
 
   wallpaper-thumb-w: 30,
   wallpaper-thumb-h: 19,
+
+  calendar-day: 8.5,
   notif-dismiss: 4.5,
 ));
 
@@ -40,4 +42,5 @@ $panel-width: scale.linear(config.$size-base, (
   toast:         82.5,
   launcher:      155,
   wallpaper:     101,
+  calendar:      80,
 ));
