@@ -2,10 +2,12 @@ import { Gtk } from 'ags/gtk4'
 import { For, createComputed, createState, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { Popover } from '@/ui/components'
-import { clock, type DayCell, type YearMonth } from '@/infrastructure/clock'
+import { clock, type CalendarDate, type DayCell, type YearMonth } from '@/infrastructure/clock'
 import { config } from '@/infrastructure/config'
+import { schedule } from '@/infrastructure/schedule'
 
 import { Clock } from '../clock'
+import { Agenda } from '../schedule'
 
 const cs = {
   root: 'calendar',
@@ -21,13 +23,22 @@ const cs = {
 
   today: '--today',
   empty: '--empty',
+  busy: '--busy',
+  selected: '--selected',
 }
 
 export function Calendar({ className }: { className?: string }) {
   const [view, setView] = createState<YearMonth>(clock.today())
+  const [selected, setSelected] = createState<CalendarDate>(clock.today())
   const month = createComputed(() => clock.monthView(view()))
+  const busy = createComputed(() => schedule.busyDays(view()))
 
-  const toToday = () => setView(clock.today())
+  const toToday = () => {
+    setView(clock.today())
+    setSelected(clock.today())
+  }
+
+  const select = (day: number) => setSelected({ ...view(), day })
   const shift = (delta: number) => setView(clock.shiftMonth(view(), delta))
 
   const attach = (self: Gtk.Widget) => {
@@ -54,7 +65,17 @@ export function Calendar({ className }: { className?: string }) {
       <box orientation={Gtk.Orientation.VERTICAL} $={attach}>
         <CalendarHeader month={month} onTitle={toToday} />
         <CalendarWeekdays />
-        <CalendarGrid rows={month.as((it) => it.rows)} />
+        <CalendarGrid
+          rows={month.as((it) => it.rows)}
+          busy={busy}
+          selected={createComputed(() => {
+            const it = selected()
+            const shown = view()
+            return it.year === shown.year && it.month === shown.month ? it.day : null
+          })}
+          onSelect={select}
+        />
+        <Agenda date={selected} />
       </box>
     </Popover>
   )
@@ -97,21 +118,50 @@ function CalendarWeekdays() {
   )
 }
 
-function CalendarGrid({ rows }: { readonly rows: Accessor<readonly (readonly DayCell[])[]> }) {
+type CalendarGridProps = {
+  readonly rows: Accessor<readonly (readonly DayCell[])[]>
+  readonly busy: Accessor<ReadonlySet<number>>
+  readonly selected: Accessor<number | null>
+  readonly onSelect: (day: number) => void
+}
+
+function CalendarGrid({ rows, busy, selected, onSelect }: CalendarGridProps) {
   return (
     <box class={cs.grid} orientation={Gtk.Orientation.VERTICAL}>
       <For each={rows} id={(row: readonly DayCell[]) => row.map((it) => `${it.key}${it.today ? '*' : ''}`).join('|')}>
         {(row: readonly DayCell[]) => (
           <box class={cs.row} homogeneous>
-            {row.map((cell) => (
-              <label
-                class={clsx(cs.day, cell.today && cs.today, cell.day === null && cs.empty)}
-                label={cell.day === null ? '' : String(cell.day)}
-              />
-            ))}
+            {row.map((cell) => <CalendarDay cell={cell} busy={busy} selected={selected} onSelect={onSelect} />)}
           </box>
         )}
       </For>
     </box>
+  )
+}
+
+type CalendarDayProps = {
+  readonly cell: DayCell
+  readonly busy: Accessor<ReadonlySet<number>>
+  readonly selected: Accessor<number | null>
+  readonly onSelect: (day: number) => void
+}
+
+function CalendarDay({ cell, busy, selected, onSelect }: CalendarDayProps) {
+  const { day } = cell
+
+  if (day === null) return <box class={clsx(cs.day, cs.empty)} />
+
+  return (
+    <button
+      class={createComputed(() => clsx(
+        cs.day,
+        cell.today && cs.today,
+        busy().has(day) && cs.busy,
+        selected() === day && !cell.today && cs.selected,
+      ))}
+      label={String(day)}
+      focusable={false}
+      onClicked={() => onSelect(day)}
+    />
   )
 }

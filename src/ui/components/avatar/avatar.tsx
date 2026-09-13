@@ -1,11 +1,10 @@
 import { Gtk } from 'ags/gtk4'
 import { clsx } from 'clsx'
+import { tintFor } from '@/ui/tint'
 
 const cs = {
   root: 'avatar',
 }
-
-const TINTS = ['--accent', '--info', '--ok', '--warn', '--attention'] as const
 
 export type AvatarProps = {
   readonly name: string
@@ -15,7 +14,7 @@ export type AvatarProps = {
 export function Avatar({ name, className }: AvatarProps) {
   return (
     <box
-      class={clsx(cs.root, tint(name), className)}
+      class={clsx(cs.root, tintFor(name), className)}
       valign={Gtk.Align.START}
       hexpand={false}
       vexpand={false}>
@@ -32,10 +31,4 @@ export function Avatar({ name, className }: AvatarProps) {
 
 function initial(name: string): string {
   return (name.trim().charAt(0) || '?').toUpperCase()
-}
-
-function tint(name: string): string {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) hash = (hash + name.charCodeAt(i)) % TINTS.length
-  return TINTS[hash]!
 }

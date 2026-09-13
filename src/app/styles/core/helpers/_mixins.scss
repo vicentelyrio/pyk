@@ -47,3 +47,22 @@
 @mixin enter-pop {
   animation: pop-in duration(base) easing(standard);
 }
+
+@mixin tint-fill {
+  &.--accent    { background-color: gtk(accent); }
+  &.--info      { background-color: gtk(info); }
+  &.--ok        { background-color: gtk(ok); }
+  &.--warn      { background-color: gtk(warn); }
+  &.--attention { background-color: gtk(attention); }
+}
+
+@mixin bare-button {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
