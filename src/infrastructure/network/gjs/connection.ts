@@ -1,12 +1,10 @@
 import AstalNetwork from 'gi://AstalNetwork'
-import { Schedule, Stream } from 'effect'
+import { Stream } from 'effect'
 
-import { fromSignal, logFailure, type SourceError } from '@/infrastructure/effect'
+import { fromSignal, reconnecting, type SourceError } from '@/infrastructure/effect'
 
 import type { NetworkState } from '../store/state'
 import { activeDevice, snapshot } from './device'
-
-const reconnect = Schedule.spaced('5 seconds').pipe(Schedule.jittered)
 
 export function stateChanges(
   network: AstalNetwork.Network,
@@ -23,7 +21,6 @@ export function stateChanges(
   )
 
   return Stream.mergeAll([fromNetwork, fromDevice], { concurrency: 'unbounded' }).pipe(
-    Stream.tapError((error) => logFailure(error)),
-    Stream.retry(reconnect),
+    reconnecting,
   )
 }

@@ -1,8 +1,8 @@
 import { Duration, Effect } from 'effect'
 
-import { ActionError, type Domain } from './errors'
+import { StartupConfig } from '@/infrastructure/config/store/references'
 
-const DEFAULT_TIMEOUT: Duration.Input = '3 seconds'
+import { ActionError, type Domain } from './errors'
 
 function instrument(domain: Domain, action: string) {
   const name = `${domain}.${action}`
@@ -34,16 +34,17 @@ export function attemptPromise<A>(
   domain: Domain,
   action: string,
   run: () => PromiseLike<A>,
-  timeout: Duration.Input = DEFAULT_TIMEOUT,
+  timeout?: Duration.Input,
 ): Effect.Effect<A, ActionError> {
-  return Effect.tryPromise({
-    try: () => run(),
-    catch: (cause) => new ActionError({ domain, action, cause }),
-  }).pipe(
-    Effect.timeout(timeout),
-    Effect.catchTag('TimeoutError', () =>
-      Effect.fail(new ActionError({ domain, action, cause: 'timeout' })),
+  return Effect.flatMap(StartupConfig, ({ system }) =>
+    Effect.tryPromise({
+      try: () => run(),
+      catch: (cause) => new ActionError({ domain, action, cause }),
+    }).pipe(
+      Effect.timeout(timeout ?? Duration.millis(system.actionTimeout)),
+      Effect.catchTag('TimeoutError', () =>
+        Effect.fail(new ActionError({ domain, action, cause: 'timeout' })),
+      ),
     ),
-    instrument(domain, action),
-  )
+  ).pipe(instrument(domain, action))
 }

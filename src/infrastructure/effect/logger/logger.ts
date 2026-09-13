@@ -3,11 +3,15 @@ import {
   Cause,
   Config,
   ConfigProvider,
+  Effect,
   Layer,
   Logger,
   LogLevel,
   References,
 } from 'effect'
+
+import { configSpec } from '@/infrastructure/config/schema'
+import { StartupConfig } from '@/infrastructure/config/store/references'
 
 const DOMAIN = 'pyk'
 
@@ -71,20 +75,24 @@ const journald = Logger.make<unknown, void>(({ cause, date, fiber, logLevel, mes
   GLib.log_structured(DOMAIN, toGLibLevel(logLevel), fields)
 })
 
-const SEVERITIES = ['Fatal', 'Error', 'Warn', 'Info', 'Debug', 'Trace'] as const
-
-const settings = Config.all({
-  format: Config.Literals(['journal', 'pretty'], 'PYK_LOG').pipe(Config.withDefault('journal')),
-  level: Config.Literals(SEVERITIES, 'PYK_LOG_LEVEL').pipe(Config.withDefault('Info')),
-})
-
 const LoggerLive = Layer.unwrap(
-  Config.map(settings, ({ format, level }) =>
-    Layer.mergeAll(
+  Effect.gen(function* () {
+    const { system } = yield* StartupConfig
+
+    const { format, level } = yield* Config.all({
+      format: Config.Literals(configSpec.system.logFormat.options, 'PYK_LOG').pipe(
+        Config.withDefault(system.logFormat),
+      ),
+      level: Config.Literals(configSpec.system.logLevel.options, 'PYK_LOG_LEVEL').pipe(
+        Config.withDefault(system.logLevel),
+      ),
+    })
+
+    return Layer.mergeAll(
       Logger.layer([format === 'pretty' ? Logger.consolePrettyTty() : journald]),
       Layer.succeed(References.CurrentLogLevel, level),
-    ),
-  ),
+    )
+  }),
 )
 
 export const Platform = LoggerLive.pipe(Layer.provideMerge([EnvConfig]))

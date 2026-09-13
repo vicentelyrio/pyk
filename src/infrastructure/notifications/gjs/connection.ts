@@ -1,12 +1,10 @@
 import AstalNotifd from 'gi://AstalNotifd'
-import { Schedule, Stream } from 'effect'
+import { Stream } from 'effect'
 
-import { fromSignal, logFailure, type SourceError } from '@/infrastructure/effect'
+import { fromSignal, reconnecting, type SourceError } from '@/infrastructure/effect'
 
 import type { NotificationsState } from '../store/state'
 import { snapshot } from './notifications'
-
-const reconnect = Schedule.spaced('5 seconds').pipe(Schedule.jittered)
 
 export function stateChanges(
   notifd: AstalNotifd.Notifd,
@@ -21,7 +19,6 @@ export function stateChanges(
     ],
     { concurrency: 'unbounded' },
   ).pipe(
-    Stream.tapError((error) => logFailure(error)),
-    Stream.retry(reconnect),
+    reconnecting,
   )
 }

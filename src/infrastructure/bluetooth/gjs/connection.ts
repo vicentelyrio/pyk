@@ -1,12 +1,10 @@
 import AstalBluetooth from 'gi://AstalBluetooth'
-import { Schedule, Stream } from 'effect'
+import { Stream } from 'effect'
 
-import { fromSignal, logFailure, type SourceError } from '@/infrastructure/effect'
+import { fromSignal, reconnecting, type SourceError } from '@/infrastructure/effect'
 
 import type { BluetoothState } from '../store/state'
 import { pairedDevices, snapshot } from './devices'
-
-const reconnect = Schedule.spaced('5 seconds').pipe(Schedule.jittered)
 
 export function stateChanges(
   bluetooth: AstalBluetooth.Bluetooth,
@@ -33,7 +31,6 @@ export function stateChanges(
   )
 
   return Stream.mergeAll([fromAdapter, fromDevices], { concurrency: 'unbounded' }).pipe(
-    Stream.tapError((error) => logFailure(error)),
-    Stream.retry(reconnect),
+    reconnecting,
   )
 }

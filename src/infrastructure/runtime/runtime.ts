@@ -3,6 +3,8 @@ import { Effect, Fiber, Layer, ManagedRuntime, Stream } from 'effect'
 
 import { type PykError, report } from '@/infrastructure/effect'
 import { Platform } from '@/infrastructure/effect/logger'
+import { ConfigBackendLive } from '@/infrastructure/config/gjs/backend'
+import { ConfigurationLayer, StartupConfigLayer } from '@/infrastructure/config/store/controller'
 import { AudioBackendLive } from '@/infrastructure/audio/gjs/backend'
 import { AudioLayer } from '@/infrastructure/audio/store/controller'
 import { BluetoothBackendLive } from '@/infrastructure/bluetooth/gjs/backend'
@@ -23,7 +25,12 @@ const MainLayer = Layer.mergeAll(
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
   NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
-).pipe(Layer.provideMerge([Platform]))
+  ConfigurationLayer,
+).pipe(
+  Layer.provideMerge([Platform]),
+  Layer.provideMerge([StartupConfigLayer]),
+  Layer.provideMerge([ConfigBackendLive]),
+)
 
 export type Services = Layer.Success<typeof MainLayer>
 
