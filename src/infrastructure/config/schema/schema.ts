@@ -19,6 +19,10 @@ export const configSpec = {
   popover: {
     hoverCloseDelay: number(220, { min: 0, max: 2000, unit: 'ms' }),
   },
+  launcher: {
+    resultLimit: number(8, { min: 1, max: 20 }),
+    closeOnLaunch: toggle(true),
+  },
   media: {
     progressInterval: number(1000, { min: 100, max: 10_000, unit: 'ms', apply: 'restart' }),
   },
@@ -38,6 +42,7 @@ export type ConfigPatch = Patch<Config>
 export type AppearanceConfig = Config['appearance']
 export type NotificationsConfig = Config['notifications']
 export type PopoverConfig = Config['popover']
+export type LauncherConfig = Config['launcher']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 

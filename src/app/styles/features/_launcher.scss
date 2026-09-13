@@ -1,0 +1,75 @@
+@use 'styles' as s;
+
+.launcher {
+  @include s.popout(raised);
+  @include s.enter-pop;
+  min-width: s.panel-width(launcher);
+}
+
+.launcher-search {
+  @include s.hairline(bottom);
+  padding: s.space(lg);
+
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.launcher-search-icon {
+  -gtk-icon-size: s.size(icon);
+  color: s.gtk(muted);
+}
+
+.launcher-input {
+  min-height: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  font-size: s.font-size(base);
+  color: s.gtk(text);
+  caret-color: s.gtk(accent);
+
+  > text > placeholder { color: s.gtk(faint); }
+  > text > selection { background-color: s.gtk(accentWash); }
+}
+
+.launcher-count {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.launcher-results {
+  padding: s.space(sm);
+}
+
+.launcher-row {
+  @include s.hover-fill(s.radius(md));
+  padding: s.space(sm) s.space(md);
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+
+  &.--selected { background-color: s.gtk(accentWash); }
+
+  > box > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.launcher-name {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.launcher-kind {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.launcher-empty {
+  padding: s.space(xxl);
+  font-size: s.font-size(sm);
+  color: s.gtk(faint);
+}

@@ -86,7 +86,7 @@ type MediaControlProps = {
 function MediaControl({ icon, tooltip, enabled, className, onClicked }: MediaControlProps) {
   return (
     <button
-      class={clsx(cs.control, className)}
+      class={clsx(cs.control, !mpris.hasPlayer && cs.disabled, className)}
       tooltipText={tooltip}
       sensitive={enabled}
       halign={Gtk.Align.CENTER}

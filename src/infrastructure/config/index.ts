@@ -4,6 +4,7 @@ export type {
   Apply,
   Config,
   ConfigPatch,
+  LauncherConfig,
   Leaf,
   MediaConfig,
   NotificationsConfig,

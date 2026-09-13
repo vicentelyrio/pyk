@@ -1,3 +1,5 @@
+export * from './app-icon'
+export * from './avatar'
 export * from './divider'
 export * from './icon-button'
 export * from './popover'

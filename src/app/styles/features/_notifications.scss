@@ -87,24 +87,6 @@
   > *:not(:first-child) { margin-left: s.space(md); }
 }
 
-.notifs-avatar {
-  min-width: s.size(notif-avatar);
-  min-height: s.size(notif-avatar);
-  border-radius: s.radius(sm);
-
-  label {
-    font-size: s.font-size(xs);
-    font-weight: s.weight(semibold);
-    color: s.gtk(ink);
-  }
-
-  &.--accent    { background-color: s.gtk(accent); }
-  &.--info      { background-color: s.gtk(info); }
-  &.--ok        { background-color: s.gtk(ok); }
-  &.--warn      { background-color: s.gtk(warn); }
-  &.--attention { background-color: s.gtk(attention); }
-}
-
 .notifs-meta {
   > *:not(:first-child) { margin-top: s.space(xxs); }
 }

@@ -7,7 +7,7 @@ import { clsx } from 'clsx'
 import { config } from '@/infrastructure/config'
 import { notifications, type Notification } from '@/infrastructure/notifications'
 
-import { NotificationAvatar } from '@/app/features/notifications/avatar'
+import { Avatar } from '@/ui/components'
 import { TOASTS_WINDOW } from './window'
 
 const cs = {
@@ -54,7 +54,7 @@ function Toast({ id, appName, summary, body, urgency }: Notification) {
       tooltipText="Dismiss"
       onClicked={() => notifications.dismiss(id)}>
       <box>
-        <NotificationAvatar appName={appName} />
+        <Avatar name={appName} />
         <box class={cs.meta} orientation={Gtk.Orientation.VERTICAL} hexpand>
           <label
             class={cs.title}

@@ -4,6 +4,7 @@
 $shadow: scale.linear(config.$size-base, (
   popout: 0 4.5 12.5,
   toast:  0 2 6,
+  raised: 0 8 22.5,
 ));
 
 $shadow-room: scale.linear(config.$size-base, (

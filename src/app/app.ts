@@ -3,7 +3,8 @@ import app from 'ags/gtk4/app'
 import style from './style.scss'
 
 import { applyAppearance } from '@/app/appearance'
-import { Bar, NotificationToasts } from '@/app/modules'
+import { launcher } from '@/app/features'
+import { Bar, LauncherWindow, NotificationToasts } from '@/app/modules'
 import { runtime } from '@/infrastructure/runtime'
 
 app.connect('shutdown', () => {
@@ -20,11 +21,16 @@ app.start({
       app.apply_css(arg, true)
       return res('css applied')
     }
+    if (cmd === 'launcher') {
+      launcher.toggle()
+      return res('launcher toggled')
+    }
     res(`unknown request: ${argv.join(' ')}`)
   },
   main() {
     applyAppearance()
     app.get_monitors().map(Bar)
     NotificationToasts()
+    LauncherWindow()
   },
 })

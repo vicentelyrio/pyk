@@ -3,10 +3,8 @@ import Pango from 'gi://Pango'
 import { Gtk } from 'ags/gtk4'
 import { For, createComputed } from 'ags'
 import { clsx } from 'clsx'
-import { Popover } from '@/ui/components'
+import { Avatar, Popover } from '@/ui/components'
 import { notifications, type Notification } from '@/infrastructure/notifications'
-
-import { NotificationAvatar } from './avatar'
 
 const cs = {
   root: 'notifs',
@@ -119,7 +117,7 @@ function NotificationsEmpty() {
 function NotificationRow({ id, appName, summary, body, time }: Notification) {
   return (
     <box class={cs.row}>
-      <NotificationAvatar appName={appName} />
+      <Avatar name={appName} />
       <box class={cs.meta} orientation={Gtk.Orientation.VERTICAL} hexpand>
         <box class={cs.headline}>
           <label

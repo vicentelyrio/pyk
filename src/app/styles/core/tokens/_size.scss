@@ -26,7 +26,8 @@ $size: scale.linear(config.$size-base, (
   badge:       1.25,
   badge-inset: 1.5,
 
-  notif-avatar:  6.5,
+  avatar:        6.5,
+  app-icon:      6.5,
   notif-dismiss: 4.5,
 ));
 
@@ -34,4 +35,5 @@ $panel-width: scale.linear(config.$size-base, (
   media:         80,
   notifications: 89,
   toast:         82.5,
+  launcher:      155,
 ));
