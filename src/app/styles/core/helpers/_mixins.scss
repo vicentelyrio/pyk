@@ -1,7 +1,6 @@
 @use 'sass:map';
 @use 'styles/core/helpers/functions' as *;
 @use 'styles/core/tokens';
-@use 'styles/core/config';
 
 @mixin popout($elevation: popout) {
   background-color: gtk(surfaceGlass);
@@ -41,7 +40,7 @@
 }
 
 @mixin numeric {
-  font-family: config.$font-family-mono;
+  font-family: font-stack(mono);
   font-feature-settings: "tnum" 1;
 }
 

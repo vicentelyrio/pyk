@@ -1,5 +1,7 @@
+@use 'sass:list';
 @use 'sass:map';
 @use 'sass:string';
+@use 'styles/core/config';
 @use 'styles/core/tokens';
 @use 'styles/core/theme/roles';
 
@@ -11,8 +13,8 @@
 }
 
 @function gtk($name) {
-  @if not map.has-key(tokens.$palette, $name) and not map.has-key(roles.$roles, $name) {
-    @error "gtk(): no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)} #{map.keys(roles.$roles)}.";
+  @if not map.has-key(tokens.$palette, $name) and not map.has-key(roles.$roles, $name) and not list.index(config.$colors, $name) {
+    @error "gtk(): no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)} #{config.$colors} #{map.keys(roles.$roles)}.";
   }
   @return string.unquote("@#{$name}");
 }
@@ -24,6 +26,7 @@
 @function panel-width($k) { @return _get(tokens.$panel-width, $k, 'panel-width'); }
 
 @function font-size($k)   { @return _get(tokens.$font-size,   $k, 'font-size'); }
+@function font-stack($k)  { @return _get(tokens.$font-stack,  $k, 'font-stack'); }
 @function weight($k)      { @return _get(tokens.$font-weight, $k, 'weight'); }
 @function leading($k)     { @return _get(tokens.$leading,     $k, 'leading'); }
 

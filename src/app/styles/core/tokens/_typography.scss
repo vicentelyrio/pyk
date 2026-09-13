@@ -9,6 +9,11 @@ $font-size: scale.geometric(config.$font-size-base, config.$type-scale, (
   md:   1,
 ));
 
+$font-stack: (
+  sans: (config.$font-family, system-ui, sans-serif),
+  mono: (config.$font-family-mono, monospace),
+);
+
 $font-weight: (
   regular:  400,
   semibold: 600,

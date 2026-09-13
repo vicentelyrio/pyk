@@ -1,10 +1,8 @@
-$accent:          #c9a7f0 !default;
-$surface-opacity: 0.9     !default;
+$colors: (accent, surfaceGlass);
 
-$font-family:      'IBM Plex Sans', system-ui, sans-serif !default;
-$font-family-mono: 'IBM Plex Mono', monospace             !default;
-$font-size-base:   16px                                   !default;
-$type-scale:       1.2                                    !default;
-
-$size-base:   4px !default;
-$radius-base: 4px !default;
+$font-family:      var(--font-family);
+$font-family-mono: var(--font-family-mono);
+$font-size-base:   var(--font-size-base);
+$type-scale:       var(--type-scale);
+$size-base:        var(--size-base);
+$radius-base:      var(--radius-base);

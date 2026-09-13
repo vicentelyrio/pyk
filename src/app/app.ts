@@ -2,6 +2,7 @@ import '@/infrastructure/polyfill'
 import app from 'ags/gtk4/app'
 import style from './style.scss'
 
+import { applyAppearance } from '@/app/appearance'
 import { Bar, NotificationToasts } from '@/app/modules'
 import { runtime } from '@/infrastructure/runtime'
 
@@ -22,6 +23,7 @@ app.start({
     res(`unknown request: ${argv.join(' ')}`)
   },
   main() {
+    applyAppearance()
     app.get_monitors().map(Bar)
     NotificationToasts()
   },

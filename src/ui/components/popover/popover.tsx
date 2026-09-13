@@ -2,6 +2,7 @@ import GLib from 'gi://GLib'
 import { Gtk } from 'ags/gtk4'
 import { clsx } from 'clsx'
 import { onCleanup, type Accessor } from 'ags'
+import { config } from '@/infrastructure/config'
 
 const cs = {
   root: 'popover',
@@ -9,8 +10,6 @@ const cs = {
 
   open: '--open',
 }
-
-const HOVER_CLOSE_DELAY = 220
 
 export type PopoverTrigger = 'click' | 'hover'
 
@@ -108,7 +107,7 @@ function attach(anchor: Gtk.Widget, content: Gtk.Popover) {
 
   const close = () => {
     cancel()
-    pending = GLib.timeout_add(GLib.PRIORITY_DEFAULT, HOVER_CLOSE_DELAY, () => {
+    pending = GLib.timeout_add(GLib.PRIORITY_DEFAULT, config.popover().hoverCloseDelay, () => {
       pending = 0
       content.popdown()
       return GLib.SOURCE_REMOVE

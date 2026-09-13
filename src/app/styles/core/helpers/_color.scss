@@ -1,22 +1,19 @@
+@use 'sass:list';
 @use 'sass:map';
-@use 'sass:math';
-@use 'sass:meta';
 @use 'sass:string';
+@use 'styles/core/config';
 @use 'styles/core/tokens';
 
 @function _step($step) {
   @if map.has-key(tokens.$alpha, $step) {
     @return map.get(tokens.$alpha, $step);
   }
-  @if meta.type-of($step) == number and math.is-unitless($step) and $step <= 1 {
-    @return $step;
-  }
   @error "alpha step `#{$step}` not in #{map.keys(tokens.$alpha)}.";
 }
 
 @function ref($name) {
-  @if not map.has-key(tokens.$palette, $name) {
-    @error "palette: no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)}.";
+  @if not map.has-key(tokens.$palette, $name) and not list.index(config.$colors, $name) {
+    @error "palette: no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)} #{config.$colors}.";
   }
   @return string.unquote("@#{$name}");
 }

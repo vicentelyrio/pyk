@@ -1,5 +1,3 @@
-@use 'styles/core/config';
-
 $palette: (
   surface:    #12121a,
   raised:     #2a2536,
@@ -11,7 +9,6 @@ $palette: (
   faint:    #8f8ba3,
   ink:      #12121a,
 
-  accent:    config.$accent,
   info:      #a7bff0,
   ok:        #9ecfb0,
   warn:      #e8a598,

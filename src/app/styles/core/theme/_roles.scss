@@ -1,9 +1,6 @@
-@use 'styles/core/config';
 @use 'styles/core/helpers/color' as *;
 
 $roles: (
-  surfaceGlass: alpha-of(surface, config.$surface-opacity),
-
   accentHover: mix-of(accent, light, 32),
   accentWash:  alpha-of(accent, 12),
 

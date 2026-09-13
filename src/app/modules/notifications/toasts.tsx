@@ -4,6 +4,7 @@ import Pango from 'gi://Pango'
 import { Astal, Gtk } from 'ags/gtk4'
 import { For, createExternal, type Accessor } from 'ags'
 import { clsx } from 'clsx'
+import { config } from '@/infrastructure/config'
 import { notifications, type Notification } from '@/infrastructure/notifications'
 
 import { NotificationAvatar } from '@/app/features/notifications/avatar'
@@ -19,9 +20,6 @@ const cs = {
 
   critical: '--critical',
 }
-
-const TIMEOUT = 3200
-const FRESH = 10
 
 export function NotificationToasts() {
   const { TOP, RIGHT } = Astal.WindowAnchor
@@ -104,6 +102,7 @@ function createToasts(): Accessor<readonly Notification[]> {
       const inbox = notifications.notifications()
       const live = new Set(inbox.map((it) => it.id))
       const now = GLib.DateTime.new_now_local().to_unix()
+      const { toastTimeout, toastMaxAge, criticalSticky } = config.notifications()
 
       for (const it of shown) if (!live.has(it.id)) stop(it.id)
       shown = shown.filter((it) => live.has(it.id))
@@ -112,12 +111,12 @@ function createToasts(): Accessor<readonly Notification[]> {
         if (seen.has(it.id)) continue
         seen.add(it.id)
 
-        if (notifications.dontDisturb() || now - it.time > FRESH) continue
+        if (notifications.dontDisturb() || (now - it.time) * 1000 > toastMaxAge) continue
 
         shown = [it, ...shown]
-        if (it.urgency === 'critical') continue
+        if (criticalSticky && it.urgency === 'critical') continue
 
-        timers.set(it.id, GLib.timeout_add(GLib.PRIORITY_DEFAULT, TIMEOUT, () => {
+        timers.set(it.id, GLib.timeout_add(GLib.PRIORITY_DEFAULT, toastTimeout, () => {
           expire(it.id)
           return GLib.SOURCE_REMOVE
         }))
