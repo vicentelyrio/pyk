@@ -1,18 +1,10 @@
-// Settings > Appearance
 $accent:          #c9a7f0 !default;
-$accent-hover:    #e0c9ff !default;
-$accent-press:    #b892e6 !default;
-$panel-radius:    16px    !default;
 $surface-opacity: 0.9     !default;
 
-// Settings > Appearance — typography
 $font-family:      'IBM Plex Sans', system-ui, sans-serif !default;
 $font-family-mono: 'IBM Plex Mono', monospace             !default;
+$font-size-base:   16px                                   !default;
+$type-scale:       1.2                                    !default;
 
-// Settings > Bar
-$bar-height:   44px !default;
-$bar-hit:      30px !default; // hit target inside the bar
-$bar-padding:  14px !default;
-
-// Spec — base grid unit. The spacing scale in _tokens.scss is derived from this.
-$grid: 4px !default;
+$size-base:   4px !default;
+$radius-base: 4px !default;

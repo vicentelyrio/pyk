@@ -1,0 +1,30 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'styles/core/tokens';
+
+@function _step($step) {
+  @if map.has-key(tokens.$alpha, $step) {
+    @return map.get(tokens.$alpha, $step);
+  }
+  @if meta.type-of($step) == number and math.is-unitless($step) and $step <= 1 {
+    @return $step;
+  }
+  @error "alpha step `#{$step}` not in #{map.keys(tokens.$alpha)}.";
+}
+
+@function ref($name) {
+  @if not map.has-key(tokens.$palette, $name) {
+    @error "palette: no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)}.";
+  }
+  @return string.unquote("@#{$name}");
+}
+
+@function alpha-of($name, $step) {
+  @return string.unquote("alpha(#{ref($name)}, #{_step($step)})");
+}
+
+@function mix-of($a, $b, $step) {
+  @return string.unquote("mix(#{ref($a)}, #{ref($b)}, #{_step($step)})");
+}

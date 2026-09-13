@@ -1,18 +1,7 @@
-// -----------------------------------------------------------------------------
-// Token accessors
-// -----------------------------------------------------------------------------
-// Fail-loud lookups into the maps in styles/_tokens.scss. A typo is a build
-// error with the list of valid keys, not a silently-dropped declaration.
-//
-//   @use 'styles' as s;
-//   .Panel { padding: s.space(lg); border-radius: s.radius(lg); }
-// -----------------------------------------------------------------------------
-
 @use 'sass:map';
-@use 'sass:list';
 @use 'sass:string';
 @use 'styles/core/tokens';
-@use 'styles/core/config';
+@use 'styles/core/theme/roles';
 
 @function _get($map, $key, $ns) {
   @if not map.has-key($map, $key) {
@@ -21,32 +10,24 @@
   @return map.get($map, $key);
 }
 
-// Colour ---------------------------------------------------------------------
-@function color($k)       { @return _get(tokens.$palette, $k, 'color'); }
-@function line($k)        { @return _get(tokens.$line,    $k, 'line'); }
-@function fill($k)        { @return _get(tokens.$fill,    $k, 'fill'); }
+@function gtk($name) {
+  @if not map.has-key(tokens.$palette, $name) and not map.has-key(roles.$roles, $name) {
+    @error "gtk(): no such color `#{$name}`. Valid: #{map.keys(tokens.$palette)} #{map.keys(roles.$roles)}.";
+  }
+  @return string.unquote("@#{$name}");
+}
 
-// Dimension ----------------------------------------------------------------
 @function space($k)       { @return _get(tokens.$space,       $k, 'space'); }
+@function stroke($k)      { @return _get(tokens.$stroke,      $k, 'stroke'); }
 @function radius($k)      { @return _get(tokens.$radius,      $k, 'radius'); }
 @function size($k)        { @return _get(tokens.$size,        $k, 'size'); }
 @function panel-width($k) { @return _get(tokens.$panel-width, $k, 'panel-width'); }
 
-// Type -------------------------------------------------------------------
 @function font-size($k)   { @return _get(tokens.$font-size,   $k, 'font-size'); }
 @function weight($k)      { @return _get(tokens.$font-weight, $k, 'weight'); }
-@function tracking($k)    { @return _get(tokens.$tracking,    $k, 'tracking'); }
 @function leading($k)     { @return _get(tokens.$leading,     $k, 'leading'); }
 
-// Effect ---------------------------------------------------------------
-@function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow'); }
+@function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow') gtk(shadow); }
 @function shadow-room($k) { @return _get(tokens.$shadow-room, $k, 'shadow-room'); }
-@function text-shadow($k) { @return _get(tokens.$text-shadow, $k, 'text-shadow'); }
-@function blur($k)        { @return _get(tokens.$blur,        $k, 'blur'); }
 @function duration($k)    { @return _get(tokens.$duration,    $k, 'duration'); }
 @function easing($k)      { @return _get(tokens.$easing,      $k, 'easing'); }
-@function timeout($k)     { @return _get(tokens.$timeout,     $k, 'timeout'); }
-
-@function gtk($name) {
-  @return string.unquote("@#{$name}");
-}

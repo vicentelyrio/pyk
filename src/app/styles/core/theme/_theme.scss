@@ -1,43 +1,10 @@
-@use 'styles/core/helpers/functions' as *;
-@use 'styles/core/config';
+@use 'styles/core/tokens';
+@use 'styles/core/theme/roles';
 
-// Ground -------------------------------------------------------------------
-@define-color base          #{color(base)};
-@define-color page          #{color(page)};
-@define-color surface       #{color(surface)};
-@define-color raised        #{color(raised)};
-@define-color raisedWarm    #{color(raised-warm)};
+@each $name, $value in tokens.$palette {
+  @define-color #{$name} #{"" + $value};
+}
 
-// Composited surfaces -----------------------------------------------------
-@define-color surfaceGlass  #{rgba(color(surface), config.$surface-opacity)};
-@define-color barGlass      #{rgba(color(base), 0.72)};
-@define-color scrim         #{rgba(color(page), 0.82)};
-
-// Text / icons ------------------------------------------------------------
-@define-color text          #{color(text)};
-@define-color textHi        #{color(text-hi)};
-@define-color textSoft      #{color(text-soft)};
-@define-color muted         #{color(muted)};
-@define-color faint         #{color(faint)};
-@define-color ink           #{color(ink)};
-
-// Accent + status ---------------------------------------------------------
-@define-color accent        #{color(accent)};
-@define-color accentHover   #{config.$accent-hover};
-@define-color accentPress   #{config.$accent-press};
-@define-color accentWash    #{fill(accent-wash)};
-@define-color info          #{color(info)};
-@define-color ok            #{color(ok)};
-@define-color warn          #{color(warn)};
-@define-color warnWash      #{fill(warn-wash)};
-@define-color attention     #{color(attention)};
-
-// Hairlines + fills -------------------------------------------------------
-@define-color line          #{line(hairline)};
-@define-color lineSubtle    #{line(subtle)};
-@define-color lineStrong    #{line(strong)};
-@define-color divider       #{line(divider)};
-@define-color fillHover     #{fill(hover)};
-@define-color fillHoverSoft #{fill(hover-soft)};
-@define-color fillActive    #{fill(active)};
-@define-color fillTrack     #{fill(track)};
+@each $name, $value in roles.$roles {
+  @define-color #{$name} #{"" + $value};
+}

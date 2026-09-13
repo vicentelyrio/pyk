@@ -2,7 +2,7 @@
 
 .media {
   min-height: s.size(bar-hit);
-  &:media-disabled .media-control { color: s.gtk(faint); }
+  &.media-disabled .media-control { color: s.gtk(faint); }
 }
 
 .media-controls {

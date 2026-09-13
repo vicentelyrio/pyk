@@ -5,7 +5,7 @@ popover.popover-content {
 
   > arrow {
     background-color: s.gtk(surfaceGlass);
-    border: 1px solid s.gtk(lineSubtle);
+    border: s.stroke(hairline) solid s.gtk(lineSubtle);
   }
 
   > contents {

@@ -1,13 +1,11 @@
-@use 'sass:map';
 @use 'styles/core/config';
+@use 'styles/core/helpers/scale';
 
-$radius: (
-  xxs:  2px,                  // ws
-  xs:   6px,                  // swatches, tiny chips
-  sm:   8px,                  // icon buttons, list rows
-  md:   12px,                 // toggle tiles, inputs
-  lg:   config.$panel-radius, // 16 — popouts, overlays  (the knob)
-  xl:   18px,                 // settings modal, power tiles
-  pill: 9999px,
+$radius: scale.linear(config.$radius-base, (
+  xxs:  0.5,
+  xs:   1.5,
+  sm:   2,
+  md:   3,
+  lg:   4,
   full: 50%,
-);
+));

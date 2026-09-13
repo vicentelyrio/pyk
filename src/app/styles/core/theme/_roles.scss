@@ -1,0 +1,22 @@
+@use 'styles/core/config';
+@use 'styles/core/helpers/color' as *;
+
+$roles: (
+  surfaceGlass: alpha-of(surface, config.$surface-opacity),
+
+  accentHover: mix-of(accent, light, 32),
+  accentWash:  alpha-of(accent, 12),
+
+  line:       alpha-of(light, 6),
+  lineSubtle: alpha-of(light, 8),
+  lineStrong: alpha-of(light, 12),
+
+  fillHover:     alpha-of(light, 8),
+  fillHoverSoft: alpha-of(light, 4),
+
+  indicator:       alpha-of(textSoft, 16),
+  indicatorStrong: alpha-of(textSoft, 32),
+  indicatorHover:  alpha-of(textSoft, 48),
+
+  shadow: alpha-of(dark, 32),
+);

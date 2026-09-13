@@ -1,17 +1,12 @@
-@use 'sass:map';
+@use 'styles/core/config';
+@use 'styles/core/helpers/scale';
 
-$shadow: (
-  popout: 0 18px 50px rgba(#000, 0.35), // control / calendar / notifs / …
-  raised: 0 12px 40px rgba(#000, 0.3),  // launcher
-  modal:  0 20px 40px rgba(#000, 0.35),// settings
-  toast:  0 8px 24px rgba(#000, 0.3),
-);
+$shadow: scale.linear(config.$size-base, (
+  popout: 0 4.5 12.5,
+  toast:  0 2 6,
+));
 
-$text-shadow: (
-  wallpaper: 0 1px 14px rgba(#06060c, 0.85), // bare widgets sitting on the image
-);
-
-$shadow-room: (
-  toast-x: 24px,
-  toast-y: 40px,
-);
+$shadow-room: scale.linear(config.$size-base, (
+  toast-x: 6,
+  toast-y: 10,
+));

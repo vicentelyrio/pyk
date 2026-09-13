@@ -1,0 +1,34 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+
+@function _times($unit, $factor, $precision) {
+  @if meta.type-of($factor) == list {
+    $out: ();
+    @each $f in $factor {
+      $out: list.append($out, _times($unit, $f, $precision), space);
+    }
+    @return $out;
+  }
+  @if meta.type-of($factor) != number or not math.is-unitless($factor) {
+    @return $factor;
+  }
+  @return math.round(math.div($unit * $factor, $precision)) * $precision;
+}
+
+@function linear($unit, $factors, $precision: 1) {
+  $out: ();
+  @each $key, $factor in $factors {
+    $out: map.set($out, $key, _times($unit, $factor, $precision));
+  }
+  @return $out;
+}
+
+@function geometric($base, $ratio, $steps, $precision: 0.5) {
+  $out: ();
+  @each $key, $step in $steps {
+    $out: map.set($out, $key, _times($base, math.pow($ratio, $step), $precision));
+  }
+  @return $out;
+}

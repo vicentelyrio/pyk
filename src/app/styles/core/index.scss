@@ -1,4 +1,4 @@
-@forward 'config';
+@forward 'config' hide $accent;
 @forward 'helpers';
 @forward 'theme';
-@forward 'tokens';
+@forward 'tokens' hide $palette, $alpha;

@@ -1,42 +1,20 @@
-// -----------------------------------------------------------------------------
-// Component mixins
-// -----------------------------------------------------------------------------
-// The recurring clusters from the spec, so widgets stay declarative:
-//
-//   @use 'styles' as s;
-//   .Launcher { @include s.popout(raised); min-width: s.panel-width(launcher); }
-// -----------------------------------------------------------------------------
-
 @use 'sass:map';
 @use 'styles/core/helpers/functions' as *;
 @use 'styles/core/tokens';
 @use 'styles/core/config';
 
-// A popout / overlay panel: glass surface, hairline, radius, elevation.
-// $elevation: popout | raised | modal  (see $shadow)
 @mixin popout($elevation: popout) {
   background-color: gtk(surfaceGlass);
-  border: 1px solid gtk(lineSubtle);
+  border: stroke(hairline) solid gtk(lineSubtle);
   border-radius: radius(lg);
   box-shadow: shadow($elevation);
   color: gtk(text);
 }
 
-// The top bar surface.
-@mixin bar-surface {
-  min-height: size(bar);
-  padding: 0 config.$bar-padding;
-  background-color: gtk(barGlass);
-  border-bottom: 1px solid gtk(line);
-}
-
-// One-pixel divider line on one side.
 @mixin hairline($side: bottom, $color: gtk(line)) {
-  border-#{$side}: 1px solid $color;
+  border-#{$side}: stroke(hairline) solid $color;
 }
 
-// Icon button / list row that lights up on hover.
-// $on: hover (0.07) | hover-soft (0.04)
 @mixin hover-fill($radius: radius(sm), $on: hover) {
   $bg: gtk(fillHover);
   @if $on == hover-soft { $bg: gtk(fillHoverSoft); }
@@ -47,8 +25,6 @@
   &:hover { background-color: $bg; }
 }
 
-// Square, centred hit target for a bar / panel icon.
-// $target: a $size key (bar-hit, bar-hit-sm, icon-lg…) or a raw length
 @mixin icon-button($target: bar-hit) {
   $t: $target;
   @if map.has-key(tokens.$size, $target) { $t: size($target); }
@@ -64,31 +40,11 @@
   @include hover-fill(radius(sm));
 }
 
-// Tabular figures — for every numeral in the shell (clocks, meters, values).
 @mixin numeric {
   font-family: config.$font-family-mono;
   font-feature-settings: "tnum" 1;
 }
 
-// A mono caps label (CPU, TUE SEP, W37).
-@mixin caps-label($size: xs) {
-  @include numeric;
-  font-size: font-size($size);
-  letter-spacing: tracking(label);
-  color: gtk(muted);
-}
-
-// Keyboard-focus ring, accent-tinted.
-@mixin focus-ring {
-  &:focus,
-  &:focus-within {
-    outline: 2px solid gtk(accent);
-    outline-offset: -1px;
-  }
-}
-
-// Standard popout entrance: fade + lift. Pair with the `pop-in` keyframes
-// emitted by styles/_reset.scss.
 @mixin enter-pop {
   animation: pop-in duration(base) easing(standard);
 }

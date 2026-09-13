@@ -1,18 +1,17 @@
-@use 'sass:map';
 @use 'styles/core/config';
+@use 'styles/core/helpers/scale';
 
-$g: config.$grid; // 4px
+$space: scale.linear(config.$size-base, (
+  xxs:  0.5,
+  xs:   1,
+  sm:   2,
+  md:   3,
+  lg:   4,
+  xl:   5,
+  xxl:  6,
+  xxxl: 8,
+));
 
-$space: (
-  0:    0,
-  px:   1px,
-  xxs:  $g * 0.5,  //  2
-  xs:   $g,        //  4
-  sm:   $g * 2,    //  8  — panel inset from bar, grid gap
-  md:   $g * 3,    // 12  — intra-panel gaps, row padding
-  lg:   $g * 4,    // 16  — section gaps
-  xl:   $g * 5,    // 20
-  xxl:  $g * 6,    // 24  — large section gaps
-  xxxl: $g * 8,    // 32
-  huge: $g * 10,   // 40
+$stroke: (
+  hairline: 1px,
 );

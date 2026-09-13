@@ -1,41 +1,37 @@
-@use 'sass:map';
 @use 'styles/core/config';
+@use 'styles/core/helpers/scale';
 
-$size: (
-  bar:        config.$bar-height, // 44
-  bar-hit:    config.$bar-hit,    // 30
-  bar-hit-sm: 28px,
-  icon:       15px,
-  icon-xs:    11px,
-  icon-sm:    13px,
-  icon-lg:    20px,
-  toggle:     58px,
-  swatch:     32px,
-  avatar:     38px,
+$size: scale.linear(config.$size-base, (
+  bar:        11,
+  bar-hit:    7.5,
+  bar-hit-sm: 7,
 
-  // Workspaces
-  ws-item-w: 18px,
-  ws-item-h: 4px,
-  ws-item-w-active: 30px,
-  ws-item-h-active: 8px,
+  icon-xs: 2.75,
+  icon:    3.75,
+  icon-lg: 5,
 
-  ws-icon-w: 14px,
-  ws-icon-h: 8px,
-  ws-icon-w-active: 30px,
-  ws-icon-h-active: 8px,
+  ws-item-w:        4.5,
+  ws-item-h:        1,
+  ws-item-w-active: 7.5,
+  ws-item-h-active: 2,
 
-  media-cover: 62px,
-  media-track: 3px,
+  ws-icon-w:        3.5,
+  ws-icon-h:        2,
+  ws-icon-w-active: 7.5,
+  ws-icon-h-active: 2,
 
-  badge:       5px,
-  badge-inset: 6px,
+  media-cover: 15.5,
+  media-track: 0.75,
 
-  notif-avatar:  26px,
-  notif-dismiss: 18px,
-);
+  badge:       1.25,
+  badge-inset: 1.5,
 
-$panel-width: (
-  media: 320px,
-  notifications: 356px,
-  toast: 330px,
-);
+  notif-avatar:  6.5,
+  notif-dismiss: 4.5,
+));
+
+$panel-width: scale.linear(config.$size-base, (
+  media:         80,
+  notifications: 89,
+  toast:         82.5,
+));

@@ -8,7 +8,7 @@
 .ws-workspaces { }
 
 .ws-workspaces-item {
-  background-color: rgba(s.color(text-soft), 0.18);
+  background-color: s.gtk(indicator);
   border-radius: s.radius(sm);
   min-width: s.size(ws-item-w);
   min-height: s.size(ws-item-h);
@@ -17,7 +17,7 @@
   transition: background-color s.duration(pill) s.easing(standard);
 
   &.--occupied {
-    background-color: rgba(s.color(text-soft), 0.32);
+    background-color: s.gtk(indicatorStrong);
   }
 
   &.--focused {
@@ -36,7 +36,7 @@
 }
 
 .ws-windows-item {
-  background-color: rgba(s.color(text-soft), 0.32);
+  background-color: s.gtk(indicatorStrong);
   border-radius: s.radius(sm);
   min-width: s.size(ws-icon-w);
   min-height: s.size(ws-icon-h);
@@ -47,7 +47,7 @@
     background-color s.duration(pill) s.easing(standard);
 
   &:hover {
-    background-color: rgba(s.color(text-soft), 0.5);
+    background-color: s.gtk(indicatorHover);
   }
 
   &.--floating {

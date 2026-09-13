@@ -1,18 +1,10 @@
-@use 'sass:map';
-
 $duration: (
-  fast:   140ms, // overlay cross-fade
-  base:   150ms, // popout fade + lift
-  toggle: 160ms, // control-centre toggles
-  slow:   180ms, // toast slide-in
-  pill:   200ms, // workspace pill grow
+  base:   150ms,
+  toggle: 160ms,
+  slow:   180ms,
+  pill:   200ms,
 );
 
 $easing: (
   standard: cubic-bezier(0.2, 0.8, 0.2, 1),
-  linear:   linear,
-);
-
-$timeout: (
-  toast: 3200ms, // non-critical toast auto-dismiss
 );

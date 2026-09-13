@@ -1,8 +1,7 @@
 @use 'styles' as s;
-@use 'styles/core/helpers' as *;
 
 window.bar {
-  background-color: gtk(surfaceGlass);
+  background-color: s.gtk(surfaceGlass);
   min-height: s.size(bar);
   padding: 0 s.space(md);
 }
