@@ -1,9 +1,10 @@
 import app from 'ags/gtk4/app'
 import { Astal, Gdk, Gtk } from 'ags/gtk4'
-import { Media, Notifications, Workspaces } from '@/app/features'
+import { Media, Notifications, Wallpaper, Workspaces } from '@/app/features'
 
 const cs = {
   root: 'bar',
+  tray: 'bar-tray',
 }
 
 export function Bar(gdkmonitor: Gdk.Monitor) {
@@ -22,7 +23,10 @@ export function Bar(gdkmonitor: Gdk.Monitor) {
       <centerbox>
         <Workspaces $type="start" />
         <Media $type="center" />
-        <Notifications $type="end" />
+        <box $type="end" class={cs.tray}>
+          <Wallpaper connector={gdkmonitor.connector ?? ''} />
+          <Notifications />
+        </box>
       </centerbox>
     </window>
   )

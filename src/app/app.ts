@@ -4,7 +4,7 @@ import style from './style.scss'
 
 import { applyAppearance } from '@/app/appearance'
 import { launcher } from '@/app/features'
-import { Bar, LauncherWindow, NotificationToasts } from '@/app/modules'
+import { Bar, LauncherWindow, NotificationToasts, WallpaperWindow } from '@/app/modules'
 import { INSTANCE_NAME } from '@/infrastructure/instance'
 import { runtime } from '@/infrastructure/runtime'
 
@@ -30,6 +30,7 @@ app.start({
   },
   main() {
     applyAppearance()
+    app.get_monitors().map(WallpaperWindow)
     app.get_monitors().map(Bar)
     NotificationToasts()
     LauncherWindow()

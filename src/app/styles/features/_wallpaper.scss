@@ -1,0 +1,91 @@
+@use 'styles' as s;
+
+.wallpaper > button {
+  @include s.icon-button(bar-hit);
+  color: s.gtk(muted);
+
+  &:hover { color: s.gtk(text); }
+}
+
+.wallpaper.--open > button {
+  color: s.gtk(accent);
+}
+
+.wallpaper-trigger {
+  -gtk-icon-size: s.size(icon);
+}
+
+.wallpaper-panel > contents {
+  min-width: s.panel-width(wallpaper);
+  padding: 0;
+}
+
+.wallpaper-header {
+  @include s.hairline(bottom);
+  padding: s.space(lg);
+
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.wallpaper-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.wallpaper-directory {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.wallpaper-grid {
+  padding: s.space(md);
+
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.wallpaper-row {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.wallpaper-thumb {
+  min-width: s.size(wallpaper-thumb-w);
+  min-height: s.size(wallpaper-thumb-h);
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: s.radius(md);
+  background-color: s.gtk(raised);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 s.stroke(hairline) s.gtk(lineSubtle);
+  transition: box-shadow s.duration(toggle) s.easing(standard);
+
+  &:hover { box-shadow: inset 0 0 0 s.stroke(hairline) s.gtk(lineStrong); }
+
+  &.--selected { box-shadow: inset 0 0 0 s.stroke(ring) s.gtk(accent); }
+}
+
+.wallpaper-empty {
+  padding: s.space(xxl);
+  font-size: s.font-size(sm);
+  color: s.gtk(faint);
+}
+
+.wallpaper-footer {
+  padding: 0 s.space(lg) s.space(lg);
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.wallpaper-name {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.wallpaper-size {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
