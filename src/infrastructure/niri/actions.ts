@@ -25,3 +25,11 @@ export function focusColumnRight(): void {
 export function focusWindow(id: number): void {
   dispatch(Niri, (niri) => niri.action('focus-window', '--id', String(id)))
 }
+
+export function screenshot(): void {
+  dispatch(Niri, (niri) => niri.action('screenshot'))
+}
+
+export function toggleOverview(): void {
+  dispatch(Niri, (niri) => niri.action('toggle-overview'))
+}

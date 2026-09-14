@@ -5,6 +5,8 @@ import {
   focusWorkspace,
   focusWorkspaceDown,
   focusWorkspaceUp,
+  screenshot,
+  toggleOverview,
 } from './actions'
 import { niriState } from './bridge'
 import { workspaceMemos } from './derived/memos'
@@ -17,4 +19,6 @@ export const niri = {
   focusColumnLeft,
   focusColumnRight,
   focusWindow,
+  screenshot,
+  toggleOverview,
 } as const

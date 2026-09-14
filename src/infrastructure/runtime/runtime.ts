@@ -9,8 +9,12 @@ import { AppsBackendLive } from '@/infrastructure/apps/gjs/backend'
 import { AppsLayer } from '@/infrastructure/apps/store/controller'
 import { AudioBackendLive } from '@/infrastructure/audio/gjs/backend'
 import { AudioLayer } from '@/infrastructure/audio/store/controller'
+import { BatteryBackendLive } from '@/infrastructure/battery/gjs/backend'
+import { BatteryLayer } from '@/infrastructure/battery/store/controller'
 import { BluetoothBackendLive } from '@/infrastructure/bluetooth/gjs/backend'
 import { BluetoothLayer } from '@/infrastructure/bluetooth/store/controller'
+import { BrightnessBackendLive } from '@/infrastructure/brightness/gjs/backend'
+import { BrightnessLayer } from '@/infrastructure/brightness/store/controller'
 import { ClockBackendLive } from '@/infrastructure/clock/gjs/backend'
 import { ClockLayer } from '@/infrastructure/clock/store/controller'
 import { NetworkBackendLive } from '@/infrastructure/network/gjs/backend'
@@ -30,7 +34,9 @@ import { WallpaperLayer } from '@/infrastructure/wallpaper/store/controller'
 const MainLayer = Layer.mergeAll(
   AppsLayer.pipe(Layer.provide([AppsBackendLive])),
   AudioLayer.pipe(Layer.provide([AudioBackendLive])),
+  BatteryLayer.pipe(Layer.provide([BatteryBackendLive])),
   BluetoothLayer.pipe(Layer.provide([BluetoothBackendLive])),
+  BrightnessLayer.pipe(Layer.provide([BrightnessBackendLive])),
   ScheduleLayer.pipe(Layer.provide([ScheduleBackendLive])),
   NetworkLayer.pipe(Layer.provide([NetworkBackendLive])),
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
