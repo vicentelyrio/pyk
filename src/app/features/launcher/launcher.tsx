@@ -7,7 +7,6 @@ import { apps, type AppEntry } from '@/infrastructure/apps'
 import { config, type ShortcutsConfig } from '@/infrastructure/config'
 import { handleShortcut, type ShortcutHandlers } from '@/infrastructure/shortcuts'
 
-import { launcher } from './state'
 
 const cs = {
   root: 'launcher',
@@ -28,7 +27,12 @@ const icons = {
   search: 'pyk-search-symbolic',
 }
 
-export function Launcher() {
+export type LauncherProps = {
+  readonly open: Accessor<boolean>
+  readonly onClose: () => void
+}
+
+export function Launcher({ open, onClose }: LauncherProps) {
   const [query, setQuery] = createState('')
   const [cursor, setCursor] = createState(0)
 
@@ -43,7 +47,7 @@ export function Launcher() {
   const launch = (entry: AppEntry | undefined) => {
     if (!entry) return
     apps.launch(entry.id)
-    if (config.launcher().closeOnLaunch) launcher.hide()
+    if (config.launcher().closeOnLaunch) onClose()
     else reset()
   }
 
@@ -56,7 +60,7 @@ export function Launcher() {
   }
 
   const actions: ShortcutHandlers<keyof ShortcutsConfig['launcher']> = {
-    close: () => launcher.hide(),
+    close: onClose,
     next: () => move(1),
     previous: () => move(-1),
     launch: () => launch(results()[selected()]),
@@ -70,8 +74,8 @@ export function Launcher() {
 
     self.add_controller(keys)
 
-    const dispose = launcher.open.subscribe(() => {
-      if (!launcher.open()) return
+    const dispose = open.subscribe(() => {
+      if (!open()) return
       apps.reload()
       reset()
       input?.grab_focus()

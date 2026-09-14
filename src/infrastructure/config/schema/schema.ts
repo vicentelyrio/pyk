@@ -6,7 +6,7 @@ export const configSpec = {
     surfaceOpacity: number(0.9, { min: 0, max: 1 }),
     fontFamily: text('IBM Plex Sans'),
     fontFamilyMono: text('IBM Plex Mono'),
-    fontSize: number(16, { min: 8, max: 32, unit: 'px' }),
+    fontSize: number(16, { min: 12, max: 32, unit: 'px' }),
     typeScale: number(1.2, { min: 1, max: 2 }),
     sizeBase: number(4, { min: 2, max: 8, unit: 'px' }),
     radiusBase: number(4, { min: 0, max: 12, unit: 'px' }),

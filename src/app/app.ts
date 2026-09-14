@@ -3,8 +3,7 @@ import app from 'ags/gtk4/app'
 import style from './style.scss'
 
 import { applyAppearance } from '@/app/appearance'
-import { launcher } from '@/app/features'
-import { Bar, LauncherWindow, NotificationToasts, WallpaperWindow } from '@/app/modules'
+import { Bar, launcher, LauncherWindow, NotificationToasts, WallpaperWindow } from '@/app/modules'
 import { INSTANCE_NAME } from '@/infrastructure/instance'
 import { runtime } from '@/infrastructure/runtime'
 
