@@ -59,21 +59,31 @@ popover.calendar-panel > contents {
   min-height: s.size(calendar-day);
   border-radius: s.radius(sm);
   font-size: s.font-size(sm);
-  color: s.gtk(textSoft);
   transition: background-color s.duration(toggle) s.easing(standard);
-
-  > label { color: inherit; }
 
   &:hover { background-color: s.gtk(fillHover); }
 
-  &.--busy { background-color: s.gtk(warnWash); }
-
   &.--selected { box-shadow: inset 0 0 0 s.stroke(hairline) s.gtk(lineStrong); }
 
-  &.--today {
-    background-color: s.gtk(accent);
-    color: s.gtk(ink);
-  }
+  &.--today { background-color: s.gtk(accent); }
 
+  &.--empty,
   &.--empty:hover { background-color: transparent; }
+}
+
+.calendar-number {
+  color: s.gtk(textSoft);
+
+  .calendar-day.--today & { color: s.gtk(ink); }
+}
+
+.calendar-dot {
+  min-width: s.size(calendar-dot);
+  min-height: s.size(calendar-dot);
+  margin: s.space(xs);
+  border-radius: s.radius(full);
+
+  &.--busy { background-color: s.gtk(muted); }
+
+  .calendar-day.--today &.--busy { background-color: s.gtk(ink); }
 }

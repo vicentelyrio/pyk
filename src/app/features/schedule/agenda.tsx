@@ -34,7 +34,7 @@ function timeLabel(event: ScheduleEvent): string {
 export function Agenda({ date }: { readonly date: Accessor<CalendarDate> }) {
   const events = createComputed(() => schedule.agendaFor(date()))
   const heading = createComputed(() =>
-    (sameDay(date(), clock.today()) ? 'Today' : clock.formatDate(date())).toUpperCase())
+    sameDay(date(), clock.today()) ? 'Today' : clock.formatDate(date()))
 
   return (
     <box

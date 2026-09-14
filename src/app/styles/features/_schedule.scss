@@ -9,9 +9,7 @@
 }
 
 .agenda-heading {
-  @include s.numeric;
-  font-size: s.font-size(xxs);
-  letter-spacing: s.tracking(label);
+  font-size: s.font-size(xs);
   color: s.gtk(muted);
 }
 

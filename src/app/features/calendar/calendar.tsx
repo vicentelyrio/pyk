@@ -20,12 +20,17 @@ const cs = {
   grid: 'calendar-grid',
   row: 'calendar-row',
   day: 'calendar-day',
+  number: 'calendar-number',
+  dot: 'calendar-dot',
 
   today: '--today',
   empty: '--empty',
   busy: '--busy',
   selected: '--selected',
 }
+
+const ROWS = 6
+const COLUMNS = 7
 
 export function Calendar({ className }: { className?: string }) {
   const [view, setView] = createState<YearMonth>(clock.today())
@@ -46,6 +51,7 @@ export function Calendar({ className }: { className?: string }) {
 
     const scroll = new Gtk.EventControllerScroll({
       flags: Gtk.EventControllerScrollFlags.VERTICAL | Gtk.EventControllerScrollFlags.DISCRETE,
+      propagationPhase: Gtk.PropagationPhase.CAPTURE,
     })
 
     scroll.connect('scroll', (_controller, _dx, dy) => {
@@ -66,7 +72,7 @@ export function Calendar({ className }: { className?: string }) {
         <CalendarHeader month={month} onTitle={toToday} />
         <CalendarWeekdays />
         <CalendarGrid
-          rows={month.as((it) => it.rows)}
+          month={month}
           busy={busy}
           selected={createComputed(() => {
             const it = selected()
@@ -119,49 +125,70 @@ function CalendarWeekdays() {
 }
 
 type CalendarGridProps = {
-  readonly rows: Accessor<readonly (readonly DayCell[])[]>
+  readonly month: Accessor<ReturnType<typeof clock.monthView>>
   readonly busy: Accessor<ReadonlySet<number>>
   readonly selected: Accessor<number | null>
   readonly onSelect: (day: number) => void
 }
 
-function CalendarGrid({ rows, busy, selected, onSelect }: CalendarGridProps) {
+function CalendarGrid({ month, busy, selected, onSelect }: CalendarGridProps) {
   return (
     <box class={cs.grid} orientation={Gtk.Orientation.VERTICAL}>
-      <For each={rows} id={(row: readonly DayCell[]) => row.map((it) => `${it.key}${it.today ? '*' : ''}`).join('|')}>
-        {(row: readonly DayCell[]) => (
-          <box class={cs.row} homogeneous>
-            {row.map((cell) => <CalendarDay cell={cell} busy={busy} selected={selected} onSelect={onSelect} />)}
-          </box>
-        )}
-      </For>
+      {Array.from({ length: ROWS }, (_, row) => (
+        <box class={cs.row} homogeneous visible={month.as((it) => it.rows.length > row)}>
+          {Array.from({ length: COLUMNS }, (_, column) => (
+            <CalendarDay
+              cell={month.as((it) => it.rows[row]?.[column] ?? null)}
+              busy={busy}
+              selected={selected}
+              onSelect={onSelect}
+            />
+          ))}
+        </box>
+      ))}
     </box>
   )
 }
 
 type CalendarDayProps = {
-  readonly cell: DayCell
+  readonly cell: Accessor<DayCell | null>
   readonly busy: Accessor<ReadonlySet<number>>
   readonly selected: Accessor<number | null>
   readonly onSelect: (day: number) => void
 }
 
 function CalendarDay({ cell, busy, selected, onSelect }: CalendarDayProps) {
-  const { day } = cell
+  const day = cell.as((it) => it?.day ?? null)
 
-  if (day === null) return <box class={clsx(cs.day, cs.empty)} />
+  const classes = createComputed(() => {
+    const it = cell()
+    const number = it?.day ?? null
+    return clsx(
+      cs.day,
+      number === null && cs.empty,
+      it?.today && cs.today,
+      number !== null && !it?.today && selected() === number && cs.selected,
+    )
+  })
+
+  const dot = createComputed(() => {
+    const number = day()
+    return clsx(cs.dot, number !== null && busy().has(number) && cs.busy)
+  })
 
   return (
     <button
-      class={createComputed(() => clsx(
-        cs.day,
-        cell.today && cs.today,
-        busy().has(day) && cs.busy,
-        selected() === day && !cell.today && cs.selected,
-      ))}
-      label={String(day)}
+      class={classes}
+      sensitive={day.as((it) => it !== null)}
       focusable={false}
-      onClicked={() => onSelect(day)}
-    />
+      onClicked={() => {
+        const number = day()
+        if (number !== null) onSelect(number)
+      }}>
+      <overlay>
+        <label class={cs.number} label={day.as((it) => (it === null ? '' : String(it)))} />
+        <box $type="overlay" class={dot} halign={Gtk.Align.END} valign={Gtk.Align.START} />
+      </overlay>
+    </button>
   )
 }

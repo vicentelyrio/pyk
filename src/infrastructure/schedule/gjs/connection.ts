@@ -6,18 +6,26 @@ import { fromSignal, reconnecting, type SourceError } from '@/infrastructure/eff
 import type { ScheduleState } from '../store/state'
 import { calendarsIn, parseCalendars, type Window } from './calendars'
 
-function watchers(directory: string): Stream.Stream<void, SourceError> {
+function changesIn<A>(path: string, read: () => A): Stream.Stream<A, SourceError> {
   return Stream.unwrap(
     Effect.sync(() => {
-      const paths = [directory, ...calendarsIn(directory).map((it) => it.path).filter((it) => it !== directory)]
-      const monitors = paths.map((path) =>
-        Gio.File.new_for_path(path).monitor_directory(Gio.FileMonitorFlags.WATCH_MOVES, null))
-
-      return Stream.mergeAll(
-        monitors.map((monitor) => fromSignal('schedule', monitor, 'changed', () => undefined)),
-        { concurrency: 'unbounded' },
-      )
+      const monitor = Gio.File.new_for_path(path).monitor_directory(Gio.FileMonitorFlags.WATCH_MOVES, null)
+      return fromSignal('schedule', monitor, 'changed', read)
     }),
+  )
+}
+
+function calendarPaths(directory: string): readonly string[] {
+  return calendarsIn(directory).map((it) => it.path).filter((it) => it !== directory)
+}
+
+function watchers(directory: string): Stream.Stream<void, SourceError> {
+  return changesIn(directory, () => calendarPaths(directory)).pipe(
+    Stream.switchMap((paths) =>
+      Stream.mergeAll(
+        [Stream.succeed(undefined), ...paths.map((path) => changesIn(path, () => undefined))],
+        { concurrency: 'unbounded' },
+      )),
   )
 }
 
