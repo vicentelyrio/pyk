@@ -37,6 +37,13 @@ $size: scale.linear(config.$size-base, (
   agenda-bar-w: 0.75,
   agenda-bar-h: 6.5,
   notif-dismiss: 4.5,
+
+  tile:               14.5,
+  avatar-lg:          9.5,
+  slider-track:       0.75,
+  slider-knob:        3,
+  slider-knob-offset: -1.125,
+  slider-value:       8.5,
 ));
 
 $panel-width: scale.linear(config.$size-base, (
@@ -46,4 +53,5 @@ $panel-width: scale.linear(config.$size-base, (
   launcher:      155,
   wallpaper:     101,
   calendar:      80,
+  control:       93,
 ));

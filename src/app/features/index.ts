@@ -1,5 +1,6 @@
 export * from './calendar'
 export * from './clock'
+export * from './control-center'
 export * from './launcher'
 export * from './media'
 export * from './notifications'
