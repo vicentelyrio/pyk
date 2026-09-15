@@ -16,6 +16,10 @@ export const configSpec = {
     toastMaxAge: number(10_000, { min: 0, max: 600_000, unit: 'ms' }),
     criticalSticky: toggle(true),
   },
+  osd: {
+    timeout: number(1600, { min: 300, max: 10_000, unit: 'ms' }),
+    settleDelay: number(2000, { min: 0, max: 30_000, unit: 'ms' }),
+  },
   popover: {
     hoverCloseDelay: number(220, { min: 0, max: 2000, unit: 'ms' }),
   },
@@ -72,6 +76,7 @@ export type ConfigPatch = Patch<Config>
 
 export type AppearanceConfig = Config['appearance']
 export type NotificationsConfig = Config['notifications']
+export type OsdConfig = Config['osd']
 export type PopoverConfig = Config['popover']
 export type LauncherConfig = Config['launcher']
 export type ShortcutsConfig = Config['shortcuts']

@@ -1,0 +1,50 @@
+@use 'styles' as s;
+
+window.osd {
+  background-color: transparent;
+}
+
+.osd-panel {
+  @include s.popout(toast);
+  @include s.enter-pop;
+  margin: s.shadow-room(osd);
+  min-width: s.panel-width(osd);
+  padding: s.space(md) s.space(lg);
+
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.osd-icon {
+  -gtk-icon-size: s.size(icon);
+  color: s.gtk(textSoft);
+}
+
+.osd-track {
+  min-height: s.size(slider-track);
+
+  trough {
+    min-height: s.size(slider-track);
+    border-radius: s.radius(xxs);
+    background-color: s.gtk(lineStrong);
+  }
+
+  block {
+    min-height: s.size(slider-track);
+    border-radius: s.radius(xxs);
+    background-color: transparent;
+
+    &.filled { background-color: s.gtk(accent); }
+  }
+}
+
+.osd-value {
+  @include s.numeric;
+  min-width: s.size(slider-value);
+  font-size: s.font-size(xs);
+  color: s.gtk(muted);
+}
+
+.osd-panel.--muted {
+  .osd-icon { color: s.gtk(muted); }
+  .osd-track block.filled { background-color: s.gtk(indicatorStrong); }
+}

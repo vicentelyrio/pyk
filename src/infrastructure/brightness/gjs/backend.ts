@@ -1,13 +1,14 @@
-import { Duration, Effect, Layer, Option, Queue, Ref, SubscriptionRef } from 'effect'
+import { Duration, Effect, Layer, Option, Queue, Ref, Stream, SubscriptionRef } from 'effect'
 
-import { attemptPromise, report } from '@/infrastructure/effect'
+import { attemptPromise, fromSignal, report } from '@/infrastructure/effect'
 
-import { clampLevel } from '../derived/ddcutil'
+import { clampLevel, toRaw } from '../derived/ddcutil'
 import { BrightnessBackend } from '../store/backend'
 import { emptyState } from '../store/state'
-import { detect, readLevel, writeLevel, type Device } from './devices'
+import { detect, monitorLevel, readLevel, writeLevel, type Device } from './devices'
 
 const TIMEOUT = Duration.seconds(10)
+const DEBOUNCE = Duration.millis(120)
 
 export const BrightnessBackendLive = Layer.effect(
   BrightnessBackend,
@@ -19,13 +20,34 @@ export const BrightnessBackendLive = Layer.effect(
     const sync = (target: Device) =>
       attemptPromise('brightness', 'read', () => readLevel(target), TIMEOUT).pipe(
         Effect.flatMap((level) =>
-          level === null ? Effect.void : SubscriptionRef.set(state, { source: target.kind, level })),
+          level === null
+            ? Effect.void
+            : SubscriptionRef.get(state).pipe(
+              Effect.flatMap((current) =>
+                current.source === target.kind && toRaw(current.level, target.max) === toRaw(level, target.max)
+                  ? Effect.void
+                  : SubscriptionRef.set(state, { source: target.kind, level })),
+            )),
       )
+
+    const watch = (target: Device) =>
+      Effect.gen(function* () {
+        const monitor = monitorLevel(target)
+        if (!monitor) return
+
+        yield* Effect.addFinalizer(() => Effect.sync(() => monitor.cancel()))
+
+        yield* fromSignal('brightness', monitor, 'changed', () => null).pipe(
+          Stream.drop(1),
+          Stream.debounce(DEBOUNCE),
+          Stream.runForEach(() => sync(target)),
+        )
+      })
 
     yield* attemptPromise('brightness', 'detect', () => detect(), TIMEOUT).pipe(
       Effect.flatMap((found) =>
         found
-          ? Ref.set(device, found).pipe(Effect.andThen(sync(found)))
+          ? Ref.set(device, found).pipe(Effect.andThen(sync(found)), Effect.andThen(watch(found)))
           : Effect.void),
       Effect.catchCause(report),
       Effect.forkScoped,

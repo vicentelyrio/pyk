@@ -9,6 +9,7 @@ export type Device =
   | { readonly kind: 'ddcutil', readonly bus: number, readonly max: number }
 
 const BACKLIGHT = '/sys/class/backlight'
+const RATE_LIMIT = 100
 
 function readNumber(path: string): number | null {
   try {
@@ -49,9 +50,20 @@ export async function detect(): Promise<Device | null> {
   return vcp ? { kind: 'ddcutil', bus, max: vcp.max } : null
 }
 
+export function monitorLevel(device: Device): Gio.FileMonitor | null {
+  if (device.kind !== 'backlight') return null
+
+  const monitor = Gio.File
+    .new_for_path(`${BACKLIGHT}/${device.name}/brightness`)
+    .monitor_file(Gio.FileMonitorFlags.NONE, null)
+  monitor.set_rate_limit(RATE_LIMIT)
+  return monitor
+}
+
 export async function readLevel(device: Device): Promise<number | null> {
   if (device.kind === 'backlight') {
-    const current = readNumber(`${BACKLIGHT}/${device.name}/brightness`)
+    const current = readNumber(`${BACKLIGHT}/${device.name}/actual_brightness`)
+      ?? readNumber(`${BACKLIGHT}/${device.name}/brightness`)
     return current === null ? null : current / device.max
   }
 

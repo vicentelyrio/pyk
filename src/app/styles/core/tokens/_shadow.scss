@@ -10,4 +10,5 @@ $shadow: scale.linear(config.$size-base, (
 $shadow-room: scale.linear(config.$size-base, (
   toast-x: 6,
   toast-y: 10,
+  osd:     10,
 ));
