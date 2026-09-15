@@ -17,6 +17,13 @@ export const BluetoothBackendLive = Layer.effect(BluetoothBackend, Effect.gen(fu
   return {
     changes: stateChanges(bluetooth),
     togglePower: attempt('bluetooth', 'togglePower', () => bluetooth.toggle()),
+    toggleScan: attempt('bluetooth', 'toggleScan', () => {
+      const adapter = bluetooth.get_adapter()
+      if (!adapter) return
+
+      if (adapter.discovering) adapter.stop_discovery()
+      else adapter.start_discovery()
+    }),
     toggleDevice: (address: string) =>
       attemptPromise(
         'bluetooth',
@@ -28,5 +35,15 @@ export const BluetoothBackendLive = Layer.effect(BluetoothBackend, Effect.gen(fu
         },
         Duration.millis(system.bluetoothConnectTimeout),
       ),
+    pair: (address: string) =>
+      attempt('bluetooth', 'pair', () => {
+        find(address)?.pair()
+      }),
+    remove: (address: string) =>
+      attempt('bluetooth', 'remove', () => {
+        const adapter = bluetooth.get_adapter()
+        const device = find(address)
+        if (adapter && device) adapter.remove_device(device)
+      }),
   }
 }))

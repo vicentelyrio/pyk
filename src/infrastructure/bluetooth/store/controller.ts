@@ -9,7 +9,10 @@ export class Bluetooth extends Context.Service<Bluetooth, {
   readonly changes: Stream.Stream<BluetoothState>
   readonly snapshot: Effect.Effect<BluetoothState>
   readonly togglePower: Effect.Effect<void, ActionError>
+  readonly toggleScan: Effect.Effect<void, ActionError>
   readonly toggleDevice: (address: string) => Effect.Effect<void, ActionError>
+  readonly pair: (address: string) => Effect.Effect<void, ActionError>
+  readonly remove: (address: string) => Effect.Effect<void, ActionError>
 }>()('pyk/Bluetooth') {}
 
 export const BluetoothLayer = Layer.effect(
@@ -21,7 +24,10 @@ export const BluetoothLayer = Layer.effect(
     return {
       ...store,
       togglePower: backend.togglePower,
+      toggleScan: backend.toggleScan,
       toggleDevice: backend.toggleDevice,
+      pair: backend.pair,
+      remove: backend.remove,
     }
   }),
 )

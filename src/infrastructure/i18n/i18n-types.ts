@@ -46,11 +46,15 @@ type RootTranslation = {
     offTitle: string
     offHint: string
     paired: string
+    noPairedTitle: string
+    noPairedHint: string
     available: string
     scan: string
     stopScan: string
     idleTitle: string
     idleHint: string
+    scanningTitle: string
+    scanningHint: string
     statusConnected: string
     statusDisconnected: string
     statusConnecting: string
@@ -58,6 +62,8 @@ type RootTranslation = {
     pairing: string
     remove: string
     confirmRemove: string
+    connectFailed: string
+    retry: string
   }
   settings: {
     title: string
@@ -329,11 +335,15 @@ export type TranslationFunctions = {
     offTitle: () => LocalizedString
     offHint: () => LocalizedString
     paired: () => LocalizedString
+    noPairedTitle: () => LocalizedString
+    noPairedHint: () => LocalizedString
     available: () => LocalizedString
     scan: () => LocalizedString
     stopScan: () => LocalizedString
     idleTitle: () => LocalizedString
     idleHint: () => LocalizedString
+    scanningTitle: () => LocalizedString
+    scanningHint: () => LocalizedString
     statusConnected: () => LocalizedString
     statusDisconnected: () => LocalizedString
     statusConnecting: () => LocalizedString
@@ -341,6 +351,8 @@ export type TranslationFunctions = {
     pairing: () => LocalizedString
     remove: () => LocalizedString
     confirmRemove: () => LocalizedString
+    connectFailed: () => LocalizedString
+    retry: () => LocalizedString
   }
   settings: {
     title: () => LocalizedString

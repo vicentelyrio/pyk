@@ -2,11 +2,21 @@ import AstalBluetooth from 'gi://AstalBluetooth'
 
 import type { BluetoothDevice, BluetoothState } from '../store/state'
 
+function displayName(device: AstalBluetooth.Device): string {
+  const alias = device.alias || device.name || ''
+  if (!alias) return device.address
+
+  const asAddress = alias.replace(/-/g, ':').toUpperCase()
+
+  return asAddress === device.address.toUpperCase() ? device.address : alias
+}
+
 function toDevice(device: AstalBluetooth.Device): BluetoothDevice {
   return {
     address: device.address,
-    name: device.alias || device.name,
-    icon: device.icon,
+    name: displayName(device),
+    icon: device.icon ?? '',
+    isPaired: device.paired,
     isConnected: device.connected,
     isConnecting: device.connecting,
     battery: device.batteryPercentage,
@@ -19,6 +29,10 @@ function byConnectionThenName(a: BluetoothDevice, b: BluetoothDevice): number {
   return a.name.localeCompare(b.name)
 }
 
+function byName(a: BluetoothDevice, b: BluetoothDevice): number {
+  return a.name.localeCompare(b.name)
+}
+
 export function pairedDevices(
   bluetooth: AstalBluetooth.Bluetooth,
 ): AstalBluetooth.Device[] {
@@ -26,10 +40,15 @@ export function pairedDevices(
 }
 
 export function snapshot(bluetooth: AstalBluetooth.Bluetooth): BluetoothState {
+  const adapter = bluetooth.get_adapter()
+  const devices = bluetooth.get_devices()
+
   return {
-    hasAdapter: bluetooth.get_adapter() !== null,
+    hasAdapter: adapter !== null,
     isPowered: bluetooth.isPowered,
     isConnected: bluetooth.isConnected,
-    devices: pairedDevices(bluetooth).map(toDevice).sort(byConnectionThenName),
+    isDiscovering: adapter?.discovering ?? false,
+    devices: devices.filter((it) => it.paired).map(toDevice).sort(byConnectionThenName),
+    discovered: devices.filter((it) => !it.paired).map(toDevice).sort(byName),
   }
 }

@@ -12,6 +12,7 @@ const device = (over: Partial<BluetoothDevice> = {}): BluetoothDevice => ({
   address: 'AA:BB:CC:DD:EE:FF',
   name: 'Headphones',
   icon: 'audio-headset-symbolic',
+  isPaired: true,
   isConnected: true,
   isConnecting: false,
   battery: 0.8,
@@ -19,6 +20,7 @@ const device = (over: Partial<BluetoothDevice> = {}): BluetoothDevice => ({
 })
 
 const powered = (over: Partial<BluetoothState> = {}): BluetoothState => ({
+  ...emptyState,
   hasAdapter: true,
   isPowered: true,
   isConnected: true,
@@ -32,7 +34,10 @@ function fakeBackend(changes: Stream.Stream<BluetoothState, SourceError>) {
   const layer = Layer.succeed(BluetoothBackend, {
     changes,
     togglePower: Effect.sync(() => { calls.push('togglePower') }),
+    toggleScan: Effect.sync(() => { calls.push('toggleScan') }),
     toggleDevice: (address: string) => Effect.sync(() => { calls.push(`toggleDevice:${address}`) }),
+    pair: (address: string) => Effect.sync(() => { calls.push(`pair:${address}`) }),
+    remove: (address: string) => Effect.sync(() => { calls.push(`remove:${address}`) }),
   })
 
   return { layer, calls }
@@ -115,6 +120,42 @@ describe('Bluetooth', () => {
     )
 
     assert.deepEqual(backend.calls, ['togglePower', 'toggleDevice:AA:BB:CC:DD:EE:FF'])
+  })
+
+  test('routes discovery and pairing to the backend', async () => {
+    const backend = fakeBackend(Stream.never)
+
+    await run(
+      Effect.gen(function* () {
+        const bluetooth = yield* Bluetooth
+        yield* bluetooth.toggleScan
+        yield* bluetooth.pair('11:22:33:44:55:66')
+        yield* bluetooth.remove('11:22:33:44:55:66')
+      }),
+      backend.layer,
+    )
+
+    assert.deepEqual(backend.calls, [
+      'toggleScan',
+      'pair:11:22:33:44:55:66',
+      'remove:11:22:33:44:55:66',
+    ])
+  })
+
+  test('keeps paired and discovered devices apart', async () => {
+    const found = device({ address: '11:22:33:44:55:66', name: 'JBL Go 4', isPaired: false, isConnected: false })
+
+    const backend = fakeBackend(
+      Stream.fromIterable([powered({ discovered: [found], isDiscovering: true })]).pipe(
+        Stream.concat(Stream.never),
+      ),
+    )
+
+    const state = await snapshotAfter(backend.layer)
+
+    assert.equal(state.isDiscovering, true)
+    assert.deepEqual(state.devices.map((it) => it.name), ['Headphones'])
+    assert.deepEqual(state.discovered.map((it) => it.name), ['JBL Go 4'])
   })
 
   test('keeps the last state when the source fails terminally', async () => {

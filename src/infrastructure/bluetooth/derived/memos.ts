@@ -8,6 +8,8 @@ export function adapter(state: Accessor<BluetoothState>) {
     hasAdapter: createMemo(() => state().hasAdapter),
     isPowered: createMemo(() => state().isPowered),
     isConnected: createMemo(() => state().isConnected),
+    isDiscovering: createMemo(() => state().isDiscovering),
     devices: createMemo(() => state().devices, { equals: Equal.equals }),
+    discovered: createMemo(() => state().discovered, { equals: Equal.equals }),
   }
 }
