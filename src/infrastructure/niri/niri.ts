@@ -5,6 +5,7 @@ import {
   focusWorkspace,
   focusWorkspaceDown,
   focusWorkspaceUp,
+  quit,
   screenshot,
   toggleOverview,
 } from './actions'
@@ -19,6 +20,7 @@ export const niri = {
   focusColumnLeft,
   focusColumnRight,
   focusWindow,
+  quit,
   screenshot,
   toggleOverview,
 } as const

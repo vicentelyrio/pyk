@@ -27,6 +27,7 @@ import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infrastructure/mpris/store/controller'
 import { ScheduleBackendLive } from '@/infrastructure/schedule/gjs/backend'
 import { ScheduleLayer } from '@/infrastructure/schedule/store/controller'
+import { SessionLive } from '@/infrastructure/session/gjs/backend'
 import { NiriBindsLayer } from '@/infrastructure/shortcuts/gjs/layer'
 import { WallpaperBackendLive } from '@/infrastructure/wallpaper/gjs/backend'
 import { WallpaperLayer } from '@/infrastructure/wallpaper/store/controller'
@@ -43,6 +44,7 @@ const MainLayer = Layer.mergeAll(
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
   NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
   NiriBindsLayer,
+  SessionLive,
   WallpaperLayer.pipe(Layer.provide([WallpaperBackendLive])),
 ).pipe(
   Layer.provideMerge([ClockLayer.pipe(Layer.provide([ClockBackendLive]))]),

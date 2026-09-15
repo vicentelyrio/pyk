@@ -33,3 +33,7 @@ export function screenshot(): void {
 export function toggleOverview(): void {
   dispatch(Niri, (niri) => niri.action('toggle-overview'))
 }
+
+export function quit(): void {
+  dispatch(Niri, (niri) => niri.action('quit', '--skip-confirmation'))
+}
