@@ -44,6 +44,9 @@ $size: scale.linear(config.$size-base, (
   slider-knob:        3,
   slider-knob-offset: -1.125,
   slider-value:       8.5,
+
+  avatar-sm:    7.5,
+  session-icon: 4.25,
 ));
 
 $panel-width: scale.linear(config.$size-base, (
@@ -54,4 +57,5 @@ $panel-width: scale.linear(config.$size-base, (
   wallpaper:     101,
   calendar:      80,
   control:       93,
+  session:       61,
 ));

@@ -1,0 +1,102 @@
+@use 'styles' as s;
+
+.session > button {
+  @include s.icon-button(bar-hit);
+  color: s.gtk(muted);
+
+  &:hover { color: s.gtk(text); }
+}
+
+.session.--open > button {
+  color: s.gtk(accent);
+}
+
+.session-trigger {
+  -gtk-icon-size: s.size(icon);
+}
+
+popover.session-panel > contents {
+  min-width: s.panel-width(session);
+  padding: 0;
+}
+
+.session-header {
+  @include s.hairline(bottom);
+  padding: s.space(md) s.space(lg);
+
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.session-avatar {
+  min-width: s.size(avatar-sm);
+  min-height: s.size(avatar-sm);
+  border-radius: s.radius(full);
+  background-color: s.gtk(raised);
+
+  > label {
+    font-size: s.font-size(xs);
+    color: s.gtk(accent);
+  }
+}
+
+.session-identity {
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.session-name {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.session-uptime {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(muted);
+}
+
+.session-actions {
+  padding: s.space(sm);
+}
+
+.session-action {
+  @include s.bare-button;
+  padding: s.space(sm) s.space(md);
+  border-radius: s.radius(md);
+  color: s.gtk(text);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  > box {
+    color: inherit;
+
+    > *:not(:first-child) { margin-left: s.space(md); }
+  }
+
+  image {
+    -gtk-icon-size: s.size(session-icon);
+    color: inherit;
+  }
+
+  label { color: inherit; }
+
+  &:hover { background-color: s.gtk(fillHover); }
+
+  &.--danger { color: s.gtk(textSoft); }
+
+  &.--armed,
+  &.--armed:hover {
+    background-color: s.gtk(warnWash);
+    color: s.gtk(warn);
+  }
+}
+
+.session-label {
+  font-size: s.font-size(sm);
+}
+
+.session-hint {
+  @include s.numeric;
+  font-size: s.font-size(xxs);
+  color: s.gtk(faint);
+
+  .session-action.--armed & { color: s.gtk(warn); }
+}
