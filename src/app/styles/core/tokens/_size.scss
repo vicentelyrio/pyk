@@ -47,6 +47,26 @@ $size: scale.linear(config.$size-base, (
 
   avatar-sm:    7.5,
   session-icon: 4.25,
+
+  icon-sm: 3.25,
+
+  switch-w:      9,
+  switch-h:      5,
+  switch-knob:   4,
+  switch-radius: 2.5,
+  switch-knob-radius: 2,
+
+  row:          9.5,
+  row-two-line: 11,
+  scroll-cap:   53.5,
+
+  entry:    7,
+  entry-lg: 7.5,
+  chip:     6,
+  back-hit: 6.5,
+
+  wifi-strength: 11.5,
+  device-batt:   9,
 ));
 
 $panel-width: scale.linear(config.$size-base, (

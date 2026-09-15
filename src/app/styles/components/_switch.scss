@@ -1,0 +1,31 @@
+@use 'styles' as s;
+
+.switch {
+  @include s.bare-button;
+  min-width: s.size(switch-w);
+  min-height: s.size(switch-h);
+  padding: s.space(xxs);
+  border-radius: s.size(switch-radius);
+  background-color: s.gtk(lineStrong);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  &:disabled { opacity: 0.4; }
+
+  &.--on { background-color: s.gtk(accent); }
+}
+
+.switch-knob {
+  min-width: s.size(switch-knob);
+  min-height: s.size(switch-knob);
+  margin-left: 0;
+  border-radius: s.size(switch-knob-radius);
+  background-color: s.gtk(muted);
+  transition:
+    margin-left s.duration(toggle) s.easing(standard),
+    background-color s.duration(toggle) s.easing(standard);
+
+  .switch.--on & {
+    margin-left: s.size(switch-knob);
+    background-color: s.gtk(ink);
+  }
+}

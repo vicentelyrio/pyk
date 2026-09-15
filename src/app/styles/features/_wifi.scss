@@ -1,0 +1,261 @@
+@use 'styles' as s;
+
+.wifi {
+  > *:not(:first-child) { margin-top: s.space(lg); }
+}
+
+.wifi-header {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.wifi-back {
+  @include s.icon-button(back-hit);
+
+  image {
+    -gtk-icon-size: s.size(icon);
+    color: s.gtk(muted);
+  }
+
+  &:hover image { color: s.gtk(text); }
+}
+
+.wifi-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.wifi-radio {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.wifi-body {
+  > *:not(:first-child) { margin-top: s.space(lg); }
+}
+
+.wifi-card {
+  padding: s.space(md);
+  border-radius: s.radius(md);
+  border: s.stroke(hairline) solid s.gtk(line);
+  background-color: s.gtk(fillHoverSoft);
+
+  > *:not(:first-child) { margin-top: s.space(md); }
+}
+
+.wifi-card-head {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.wifi-card-icon {
+  -gtk-icon-size: s.size(icon-lg);
+  color: s.gtk(accent);
+}
+
+.wifi-card-meta {
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.wifi-ssid {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.wifi-detail {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(muted);
+}
+
+.wifi-badge {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(label);
+  color: s.gtk(ok);
+}
+
+.wifi-actions {
+  > *:not(:first-child) { margin-left: s.space(xs); }
+}
+
+.wifi-action,
+.wifi-submit {
+  @include s.bare-button;
+  min-height: s.size(entry);
+  padding: 0 s.space(md);
+  border-radius: s.radius(sm);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  label { font-size: s.font-size(xs); }
+}
+
+.wifi-action {
+  background-color: s.gtk(fillHover);
+
+  label { color: s.gtk(textSoft); }
+
+  &:hover { background-color: s.gtk(lineStrong); }
+}
+
+.wifi-submit {
+  min-height: s.size(entry-lg);
+  background-color: s.gtk(accent);
+
+  label { color: s.gtk(ink); }
+
+  &:hover { background-color: s.gtk(accentHover); }
+}
+
+.wifi-section {
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.wifi-section-head {
+  padding: 0 s.space(xxs);
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+
+  .wifi-title {
+    @include s.numeric;
+    font-size: s.font-size(xs);
+    letter-spacing: s.tracking(label);
+    color: s.gtk(faint);
+  }
+}
+
+.wifi-scan {
+  @include s.bare-button;
+  min-height: s.size(chip);
+  padding: 0 s.space(sm);
+  border-radius: s.radius(sm);
+
+  label {
+    @include s.numeric;
+    font-size: s.font-size(xs);
+    color: s.gtk(accent);
+  }
+
+  &:hover { background-color: s.gtk(fillHover); }
+
+  &.--active label { color: s.gtk(faint); }
+  &:disabled { opacity: 1; }
+}
+
+.wifi-list {
+  border-radius: s.radius(md);
+  background-color: s.gtk(fillHoverSoft);
+}
+
+.wifi-row {
+  &:not(:first-child) { @include s.hairline(top); }
+
+  &.--open { background-color: s.gtk(accentWash); }
+}
+
+.wifi-pick {
+  @include s.bare-button;
+  min-height: s.size(row);
+  padding: 0 s.space(md);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  &:hover { background-color: s.gtk(fillHoverSoft); }
+
+  > box > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.wifi-icon {
+  -gtk-icon-size: s.size(icon);
+  color: s.gtk(textSoft);
+}
+
+.wifi-name {
+  font-size: s.font-size(sm);
+  color: s.gtk(textSoft);
+}
+
+.wifi-saved {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.wifi-lock {
+  -gtk-icon-size: s.size(icon-sm);
+  color: s.gtk(faint);
+}
+
+.wifi-strength {
+  @include s.numeric;
+  min-width: s.size(wifi-strength);
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.wifi-busy {
+  padding: 0 s.space(md) s.space(sm);
+  font-size: s.font-size(xs);
+  color: s.gtk(accent);
+}
+
+.wifi-form {
+  padding: 0 s.space(md) s.space(md);
+
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.wifi-field {
+  min-height: s.size(entry-lg);
+  padding: 0 s.space(sm);
+  border-radius: s.radius(sm);
+  border: s.stroke(hairline) solid s.gtk(lineStrong);
+  background-color: s.gtk(fillHover);
+
+  &.--failed { border-color: s.gtk(warn); }
+}
+
+.wifi-input {
+  @include s.numeric;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+  font-size: s.font-size(xs);
+  color: s.gtk(text);
+}
+
+.wifi-reveal {
+  @include s.icon-button(icon-lg);
+
+  image {
+    -gtk-icon-size: s.size(icon);
+    color: s.gtk(muted);
+  }
+
+  &:hover image { color: s.gtk(text); }
+}
+
+.wifi-error {
+  font-size: s.font-size(xs);
+  color: s.gtk(warn);
+}
+
+.wifi-empty {
+  padding: s.space(xxl) s.space(lg);
+  border-radius: s.radius(md);
+  background-color: s.gtk(fillHoverSoft);
+
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.wifi-empty-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(textSoft);
+}
+
+.wifi-empty-hint {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}

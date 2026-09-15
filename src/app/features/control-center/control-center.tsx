@@ -1,8 +1,9 @@
 import Pango from 'gi://Pango'
-import { Gtk } from 'ags/gtk4'
-import { createComputed, type Accessor } from 'ags'
+import { Gdk, Gtk } from 'ags/gtk4'
+import { createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { closePopover, Popover } from '@/ui/components'
+import { Wifi } from '@/app/features/wifi'
 import { audio } from '@/infrastructure/audio'
 import { battery } from '@/infrastructure/battery'
 import { bluetooth } from '@/infrastructure/bluetooth'
@@ -15,6 +16,7 @@ import { notifications } from '@/infrastructure/notifications'
 
 const cs = {
   root: 'control',
+  pages: 'control-pages',
   status: 'control-status',
   statusIcon: 'control-status-icon',
   panel: 'control-panel',
@@ -33,9 +35,11 @@ const cs = {
   device: 'control-device',
   deviceLabel: 'control-device-label',
   deviceValue: 'control-device-value',
+  deviceChevron: 'control-device-chevron',
 
   on: '--on',
   off: '--off',
+  drill: '--drill',
 }
 
 const icons = {
@@ -50,31 +54,61 @@ const icons = {
   brightness: 'pyk-brightness-symbolic',
   volume: 'pyk-volume-symbolic',
   volumeMuted: 'pyk-volume-muted-symbolic',
+  drill: 'pyk-chevron-right-symbolic',
 }
 
 const COLUMNS = 4
+const PAGE_FADE = 150
+
+type Page = 'root' | 'wifi'
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`
 }
 
 export function ControlCenter({ className }: { className?: string }) {
+  const [page, setPage] = createState<Page>('root')
+
+  const toRoot = () => setPage('root')
+  const toWifi = () => setPage('wifi')
+
+  const root = (
+    <box orientation={Gtk.Orientation.VERTICAL}>
+      <ControlUser />
+      <ControlTiles onWifi={toWifi} />
+      <ControlSliders />
+      <ControlDevices onWifi={toWifi} />
+    </box>
+  ) as Gtk.Widget
+
+  const wifi = (<Wifi onBack={toRoot} />) as Gtk.Widget
+
   return (
     <Popover
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
       tooltip="Control center"
       trigger={<ControlStatus />}>
-      <box
-        orientation={Gtk.Orientation.VERTICAL}
+      <stack
+        class={cs.pages}
+        transitionType={Gtk.StackTransitionType.CROSSFADE}
+        transitionDuration={PAGE_FADE}
+        vhomogeneous={false}
         $={(self) => {
-          self.connect('map', () => brightness.refresh())
+          const stack = self as Gtk.Stack
+
+          stack.connect('map', () => {
+            setPage('root')
+            brightness.refresh()
+          })
+
+          onCleanup(page.subscribe(() => {
+            stack.set_visible_child(page() === 'wifi' ? wifi : root)
+          }))
         }}>
-        <ControlUser />
-        <ControlTiles />
-        <ControlSliders />
-        <ControlDevices />
-      </box>
+        {root}
+        {wifi}
+      </stack>
     </Popover>
   )
 }
@@ -118,11 +152,12 @@ type Tile = {
   readonly on?: Accessor<boolean>
   readonly visible?: Accessor<boolean>
   readonly act: (self: Gtk.Widget) => void
+  readonly drill?: () => void
 }
 
-function ControlTiles() {
+function ControlTiles({ onWifi }: { readonly onWifi: () => void }) {
   const tiles: readonly Tile[] = [
-    { name: 'Wi-Fi', icon: icons.wifi, on: network.wifiEnabled, act: () => network.toggleWifi() },
+    { name: 'Wi-Fi', icon: icons.wifi, on: network.wifiEnabled, act: () => network.toggleWifi(), drill: onWifi },
     { name: 'Bluetooth', icon: icons.bluetooth, on: bluetooth.isPowered, visible: bluetooth.hasAdapter, act: () => bluetooth.togglePower() },
     { name: 'Do not disturb', icon: icons.bell, on: notifications.dontDisturb, act: () => notifications.toggleDontDisturb() },
     { name: 'Keep awake', icon: icons.keepAwake, on: idle.inhibited, act: () => idle.toggle() },
@@ -148,13 +183,23 @@ function ControlTiles() {
 function ControlTile({ tile }: { readonly tile: Tile }) {
   const on = tile.on ?? null
 
+  const secondary = (self: Gtk.Widget) => {
+    const { drill } = tile
+    if (!drill) return
+
+    const click = new Gtk.GestureClick({ button: Gdk.BUTTON_SECONDARY })
+    click.connect('pressed', () => drill())
+    self.add_controller(click)
+  }
+
   return (
     <button
       class={on ? on.as((it) => clsx(cs.tile, it ? cs.on : cs.off)) : clsx(cs.tile, cs.off)}
       tooltipText={tile.name}
       focusable={false}
       visible={tile.visible ?? true}
-      onClicked={(self: Gtk.Button) => tile.act(self)}>
+      onClicked={(self: Gtk.Button) => tile.act(self)}
+      $={secondary}>
       <image iconName={tile.icon} />
     </button>
   )
@@ -211,18 +256,44 @@ type DeviceRowProps = {
   readonly label: Accessor<string>
   readonly value: Accessor<string>
   readonly visible?: Accessor<boolean>
+  readonly onDrill?: () => void
+  readonly drillable?: Accessor<boolean>
 }
 
-function DeviceRow({ label, value, visible }: DeviceRowProps) {
+function DeviceLine({ label, value, drillable }: DeviceRowProps) {
   return (
-    <box class={cs.device} visible={visible ?? true}>
+    <box>
       <label class={cs.deviceLabel} label={label} xalign={0} hexpand ellipsize={Pango.EllipsizeMode.END} />
       <label class={cs.deviceValue} label={value} />
+      <image class={cs.deviceChevron} iconName={icons.drill} visible={drillable ?? false} />
     </box>
   )
 }
 
-function ControlDevices() {
+function DeviceRow(props: DeviceRowProps) {
+  const { visible, onDrill, drillable } = props
+
+  if (!onDrill) {
+    return (
+      <box class={cs.device} visible={visible ?? true}>
+        <DeviceLine {...props} />
+      </box>
+    )
+  }
+
+  return (
+    <button
+      class={clsx(cs.device, cs.drill)}
+      visible={visible ?? true}
+      sensitive={drillable ?? true}
+      focusable={false}
+      onClicked={onDrill}>
+      <DeviceLine {...props} />
+    </button>
+  )
+}
+
+function ControlDevices({ onWifi }: { readonly onWifi: () => void }) {
   const networkLabel = createComputed(() => {
     if (network.kind() === 'wifi') return network.ssid() || 'Wi-Fi'
     if (network.kind() === 'wired') return 'Wired'
@@ -252,7 +323,12 @@ function ControlDevices() {
 
   return (
     <box class={cs.devices} orientation={Gtk.Orientation.VERTICAL}>
-      <DeviceRow label={networkLabel} value={networkValue} />
+      <DeviceRow
+        label={networkLabel}
+        value={networkValue}
+        onDrill={onWifi}
+        drillable={network.hasWifi}
+      />
       <DeviceRow label={bluetoothLabel} value={bluetoothValue} visible={bluetooth.hasAdapter} />
       <DeviceRow label={createComputed(() => 'Battery')} value={battery.label} visible={battery.isPresent} />
     </box>

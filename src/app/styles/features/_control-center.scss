@@ -170,8 +170,30 @@ popover.control-panel > contents {
   padding: s.space(md);
 
   > *:not(:first-child) { margin-left: s.space(md); }
+  > box > *:not(:first-child) { margin-left: s.space(md); }
 
   &:not(:first-child) { @include s.hairline(top); }
+
+  &.--drill {
+    min-width: 0;
+    min-height: 0;
+    padding: s.space(md);
+    border: none;
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+    outline: none;
+    transition: background-color s.duration(toggle) s.easing(standard);
+
+    &:not(:first-child) { @include s.hairline(top); }
+    &:hover { background-color: s.gtk(fillHoverSoft); }
+    &:disabled { opacity: 1; }
+  }
+}
+
+.control-device-chevron {
+  -gtk-icon-size: s.size(icon-sm);
+  color: s.gtk(faint);
 }
 
 .control-device-label {
