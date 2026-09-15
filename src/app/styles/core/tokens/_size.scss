@@ -67,6 +67,7 @@ $size: scale.linear(config.$size-base, (
 
   wifi-strength: 11.5,
   device-batt:   9,
+  scan-dot:      1.25,
 ));
 
 $panel-width: scale.linear(config.$size-base, (

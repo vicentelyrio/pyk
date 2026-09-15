@@ -1,0 +1,58 @@
+@use 'styles' as s;
+
+.panel-header {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.panel-back {
+  @include s.icon-button(back-hit);
+
+  image {
+    -gtk-icon-size: s.size(icon);
+    color: s.gtk(muted);
+  }
+
+  &:hover image { color: s.gtk(text); }
+}
+
+.panel-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.panel-status {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.panel-section-head {
+  padding: 0 s.space(xxs);
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.panel-section-label {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(label);
+  color: s.gtk(faint);
+}
+
+.panel-empty {
+  padding: s.space(xxl) s.space(lg);
+  border-radius: s.radius(md);
+  background-color: s.gtk(fillHoverSoft);
+
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.panel-empty-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(textSoft);
+}
+
+.panel-empty-hint {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}

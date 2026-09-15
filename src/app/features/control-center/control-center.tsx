@@ -3,6 +3,7 @@ import { Gdk, Gtk } from 'ags/gtk4'
 import { createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { closePopover, Popover } from '@/ui/components'
+import { Bluetooth } from '@/app/features/bluetooth'
 import { Wifi } from '@/app/features/wifi'
 import { audio } from '@/infrastructure/audio'
 import { battery } from '@/infrastructure/battery'
@@ -60,7 +61,7 @@ const icons = {
 const COLUMNS = 4
 const PAGE_FADE = 150
 
-type Page = 'root' | 'wifi'
+type Page = 'root' | 'wifi' | 'bluetooth'
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`
@@ -71,17 +72,25 @@ export function ControlCenter({ className }: { className?: string }) {
 
   const toRoot = () => setPage('root')
   const toWifi = () => setPage('wifi')
+  const toBluetooth = () => setPage('bluetooth')
 
-  const root = (
+  const rootPage = (
     <box orientation={Gtk.Orientation.VERTICAL}>
       <ControlUser />
-      <ControlTiles onWifi={toWifi} />
+      <ControlTiles onWifi={toWifi} onBluetooth={toBluetooth} />
       <ControlSliders />
-      <ControlDevices onWifi={toWifi} />
+      <ControlDevices onWifi={toWifi} onBluetooth={toBluetooth} />
     </box>
   ) as Gtk.Widget
 
-  const wifi = (<Wifi onBack={toRoot} />) as Gtk.Widget
+  const wifiPage = (<Wifi onBack={toRoot} />) as Gtk.Widget
+  const bluetoothPage = (<Bluetooth onBack={toRoot} />) as Gtk.Widget
+
+  const pages: Readonly<Record<Page, Gtk.Widget>> = {
+    root: rootPage,
+    wifi: wifiPage,
+    bluetooth: bluetoothPage,
+  }
 
   return (
     <Popover
@@ -103,11 +112,12 @@ export function ControlCenter({ className }: { className?: string }) {
           })
 
           onCleanup(page.subscribe(() => {
-            stack.set_visible_child(page() === 'wifi' ? wifi : root)
+            stack.set_visible_child(pages[page()])
           }))
         }}>
-        {root}
-        {wifi}
+        {rootPage}
+        {wifiPage}
+        {bluetoothPage}
       </stack>
     </Popover>
   )
@@ -155,10 +165,15 @@ type Tile = {
   readonly drill?: () => void
 }
 
-function ControlTiles({ onWifi }: { readonly onWifi: () => void }) {
+type DrillProps = {
+  readonly onWifi: () => void
+  readonly onBluetooth: () => void
+}
+
+function ControlTiles({ onWifi, onBluetooth }: DrillProps) {
   const tiles: readonly Tile[] = [
     { name: 'Wi-Fi', icon: icons.wifi, on: network.wifiEnabled, act: () => network.toggleWifi(), drill: onWifi },
-    { name: 'Bluetooth', icon: icons.bluetooth, on: bluetooth.isPowered, visible: bluetooth.hasAdapter, act: () => bluetooth.togglePower() },
+    { name: 'Bluetooth', icon: icons.bluetooth, on: bluetooth.isPowered, visible: bluetooth.hasAdapter, act: () => bluetooth.togglePower(), drill: onBluetooth },
     { name: 'Do not disturb', icon: icons.bell, on: notifications.dontDisturb, act: () => notifications.toggleDontDisturb() },
     { name: 'Keep awake', icon: icons.keepAwake, on: idle.inhibited, act: () => idle.toggle() },
     { name: 'Screenshot', icon: icons.screenshot, act: (self) => closePopover(self, niri.screenshot) },
@@ -293,7 +308,7 @@ function DeviceRow(props: DeviceRowProps) {
   )
 }
 
-function ControlDevices({ onWifi }: { readonly onWifi: () => void }) {
+function ControlDevices({ onWifi, onBluetooth }: DrillProps) {
   const networkLabel = createComputed(() => {
     if (network.kind() === 'wifi') return network.ssid() || 'Wi-Fi'
     if (network.kind() === 'wired') return 'Wired'
@@ -329,7 +344,13 @@ function ControlDevices({ onWifi }: { readonly onWifi: () => void }) {
         onDrill={onWifi}
         drillable={network.hasWifi}
       />
-      <DeviceRow label={bluetoothLabel} value={bluetoothValue} visible={bluetooth.hasAdapter} />
+      <DeviceRow
+        label={bluetoothLabel}
+        value={bluetoothValue}
+        visible={bluetooth.hasAdapter}
+        onDrill={onBluetooth}
+        drillable={bluetooth.hasAdapter}
+      />
       <DeviceRow label={createComputed(() => 'Battery')} value={battery.label} visible={battery.isPresent} />
     </box>
   )

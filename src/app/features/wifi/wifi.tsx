@@ -2,16 +2,12 @@ import Pango from 'gi://Pango'
 import { Gtk } from 'ags/gtk4'
 import { For, createComputed, createState, type Accessor } from 'ags'
 import { clsx } from 'clsx'
-import { Switch } from '@/ui/components'
+import { PanelEmpty, PanelHeader, PanelSectionHead, PanelStatus, Switch } from '@/ui/components'
 import { LL } from '@/infrastructure/i18n'
 import { network, type AccessPoint } from '@/infrastructure/network'
 
 const cs = {
   root: 'wifi',
-  header: 'wifi-header',
-  back: 'wifi-back',
-  title: 'wifi-title',
-  radio: 'wifi-radio',
   body: 'wifi-body',
   card: 'wifi-card',
   cardHead: 'wifi-card-head',
@@ -22,7 +18,6 @@ const cs = {
   badge: 'wifi-badge',
   actions: 'wifi-actions',
   action: 'wifi-action',
-  sectionHead: 'wifi-section-head',
   section: 'wifi-section',
   scan: 'wifi-scan',
   list: 'wifi-list',
@@ -41,9 +36,6 @@ const cs = {
   submit: 'wifi-submit',
   error: 'wifi-error',
   busy: 'wifi-busy',
-  empty: 'wifi-empty',
-  emptyTitle: 'wifi-empty-title',
-  emptyHint: 'wifi-empty-hint',
 
   open: '--open',
   failed: '--failed',
@@ -51,7 +43,6 @@ const cs = {
 }
 
 const icons = {
-  back: 'pyk-chevron-left-symbolic',
   lock: 'pyk-lock-symbolic',
   eye: 'pyk-eye-symbolic',
   eyeOff: 'pyk-eye-off-symbolic',
@@ -132,20 +123,15 @@ export function Wifi({ onBack }: { readonly onBack: () => void }) {
       $={(self) => {
         self.connect('map', reset)
       }}>
-      <box class={cs.header} valign={Gtk.Align.CENTER}>
-        <button class={cs.back} tooltipText={t.back()} focusable={false} onClicked={onBack}>
-          <image iconName={icons.back} />
-        </button>
-        <label class={cs.title} label={t.title()} xalign={0} hexpand />
-        <label class={cs.radio} label={network.wifiEnabled.as((on) => (on ? t.on() : t.off()))} />
+      <PanelHeader title={t.title()} backTooltip={t.back()} onBack={onBack}>
+        <PanelStatus label={network.wifiEnabled.as((on) => (on ? t.on() : t.off()))} />
         <Switch on={network.wifiEnabled} onToggle={network.toggleWifi} tooltip={t.radio()} />
-      </box>
+      </PanelHeader>
 
       <box class={cs.body} orientation={Gtk.Orientation.VERTICAL} visible={network.wifiEnabled}>
         <WifiCurrent />
         <box class={cs.section} orientation={Gtk.Orientation.VERTICAL}>
-          <box class={cs.sectionHead} valign={Gtk.Align.CENTER}>
-            <label class={cs.title} label={t.available()} xalign={0} hexpand />
+          <PanelSectionHead label={t.available()}>
             <button
               class={network.isScanning.as((on) => clsx(cs.scan, on && cs.active))}
               focusable={false}
@@ -153,7 +139,7 @@ export function Wifi({ onBack }: { readonly onBack: () => void }) {
               onClicked={network.scan}>
               <label label={network.isScanning.as((on) => (on ? t.scanning() : t.scan()))} />
             </button>
-          </box>
+          </PanelSectionHead>
           <WifiList
             expanded={expanded}
             password={password}
@@ -168,7 +154,7 @@ export function Wifi({ onBack }: { readonly onBack: () => void }) {
         </box>
       </box>
 
-      <WifiEmpty
+      <PanelEmpty
         visible={network.wifiEnabled.as((on) => !on)}
         title={t.offTitle()}
         hint={t.offHint()}
@@ -246,7 +232,7 @@ function WifiList(props: ListProps) {
           </For>
         </box>
       </scrolledwindow>
-      <WifiEmpty
+      <PanelEmpty
         visible={points.as((it) => it.length === 0)}
         title={t.emptyTitle()}
         hint={t.emptyHint()}
@@ -311,21 +297,6 @@ function WifiRow({ point, ...props }: ListProps & { readonly point: AccessPoint 
         </box>
         <label class={cs.error} label={t.wrongPassword()} xalign={0} wrap visible={wrong} />
       </box>
-    </box>
-  )
-}
-
-type EmptyProps = {
-  readonly visible: Accessor<boolean>
-  readonly title: string
-  readonly hint: string
-}
-
-function WifiEmpty({ visible, title, hint }: EmptyProps) {
-  return (
-    <box class={cs.empty} orientation={Gtk.Orientation.VERTICAL} visible={visible}>
-      <label class={cs.emptyTitle} label={title} />
-      <label class={cs.emptyHint} label={hint} wrap justify={Gtk.Justification.CENTER} />
     </box>
   )
 }

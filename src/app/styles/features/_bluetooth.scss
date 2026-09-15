@@ -1,0 +1,173 @@
+@use 'styles' as s;
+
+.bt {
+  > *:not(:first-child) { margin-top: s.space(lg); }
+}
+
+.bt-body {
+  > *:not(:first-child) { margin-top: s.space(lg); }
+}
+
+.bt-section {
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.bt-scan {
+  @include s.bare-button;
+  min-height: s.size(chip);
+  padding: 0 s.space(sm);
+  border-radius: s.radius(sm);
+  background-color: s.gtk(fillHover);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  label {
+    font-size: s.font-size(xs);
+    color: s.gtk(textSoft);
+  }
+
+  > box > *:not(:first-child) { margin-left: s.space(xs); }
+
+  &:hover { background-color: s.gtk(lineStrong); }
+
+  &.--active {
+    background-color: s.gtk(accentWash);
+
+    label { color: s.gtk(accent); }
+
+    .bt-scan-dot { background-color: s.gtk(accent); }
+  }
+}
+
+.bt-scan-dot {
+  min-width: s.size(scan-dot);
+  min-height: s.size(scan-dot);
+  border-radius: s.radius(full);
+  background-color: s.gtk(indicatorStrong);
+}
+
+.bt-list {
+  border-radius: s.radius(md);
+  background-color: s.gtk(fillHoverSoft);
+}
+
+.bt-row {
+  &:not(:first-child) { @include s.hairline(top); }
+}
+
+.bt-pick {
+  @include s.bare-button;
+  min-height: s.size(row-two-line);
+  padding: s.space(sm) s.space(md);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  &:hover { background-color: s.gtk(fillHoverSoft); }
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+  > box > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.bt-icon {
+  -gtk-icon-size: s.size(icon);
+  color: s.gtk(faint);
+
+  &.--on { color: s.gtk(accent); }
+}
+
+.bt-meta {
+  > *:not(:first-child) { margin-top: s.space(xxs); }
+}
+
+.bt-name {
+  font-size: s.font-size(sm);
+  color: s.gtk(textSoft);
+
+  &.--on { color: s.gtk(text); }
+}
+
+.bt-status {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+
+  &.--on { color: s.gtk(ok); }
+}
+
+.bt-address {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.bt-battery {
+  @include s.numeric;
+  min-width: s.size(device-batt);
+  font-size: s.font-size(xs);
+  color: s.gtk(muted);
+}
+
+.bt-remove {
+  @include s.icon-button(icon-lg);
+  margin-right: s.space(sm);
+
+  image {
+    -gtk-icon-size: s.size(icon-sm);
+    color: s.gtk(faint);
+  }
+
+  &:hover {
+    background-color: s.gtk(warnWash);
+
+    image { color: s.gtk(warn); }
+  }
+
+  &.--armed {
+    background-color: s.gtk(warnWash);
+
+    image { color: s.gtk(warn); }
+  }
+}
+
+.bt-pair {
+  @include s.bare-button;
+  min-height: s.size(chip);
+  padding: 0 s.space(md);
+  border-radius: s.radius(sm);
+  background-color: s.gtk(fillHover);
+  transition: background-color s.duration(toggle) s.easing(standard);
+
+  label {
+    font-size: s.font-size(xs);
+    color: s.gtk(textSoft);
+  }
+
+  &:hover {
+    background-color: s.gtk(accentWash);
+
+    label { color: s.gtk(text); }
+  }
+}
+
+.bt-failure {
+  padding: 0 s.space(md) s.space(sm) s.size(row-two-line);
+
+  > *:not(:first-child) { margin-left: s.space(sm); }
+
+  > label {
+    font-size: s.font-size(xs);
+    color: s.gtk(warn);
+  }
+}
+
+.bt-retry {
+  @include s.bare-button;
+  min-height: s.size(chip);
+  padding: 0 s.space(sm);
+  border-radius: s.radius(sm);
+  background-color: s.gtk(fillHover);
+
+  label {
+    font-size: s.font-size(xs);
+    color: s.gtk(textSoft);
+  }
+
+  &:hover { background-color: s.gtk(lineStrong); }
+}
