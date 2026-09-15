@@ -1,9 +1,8 @@
-import GLib from 'gi://GLib'
 import Pango from 'gi://Pango'
 import { Gtk } from 'ags/gtk4'
 import { createComputed, type Accessor } from 'ags'
 import { clsx } from 'clsx'
-import { Popover } from '@/ui/components'
+import { closePopover, Popover } from '@/ui/components'
 import { audio } from '@/infrastructure/audio'
 import { battery } from '@/infrastructure/battery'
 import { bluetooth } from '@/infrastructure/bluetooth'
@@ -57,15 +56,6 @@ const COLUMNS = 4
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`
-}
-
-function closeFrom(widget: Gtk.Widget, then?: () => void) {
-  const popover = widget.get_ancestor(Gtk.Popover.$gtype) as Gtk.Popover | null
-  popover?.popdown()
-  if (then) GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, () => {
-    then()
-    return GLib.SOURCE_REMOVE
-  })
 }
 
 export function ControlCenter({ className }: { className?: string }) {
@@ -136,8 +126,8 @@ function ControlTiles() {
     { name: 'Bluetooth', icon: icons.bluetooth, on: bluetooth.isPowered, visible: bluetooth.hasAdapter, act: () => bluetooth.togglePower() },
     { name: 'Do not disturb', icon: icons.bell, on: notifications.dontDisturb, act: () => notifications.toggleDontDisturb() },
     { name: 'Keep awake', icon: icons.keepAwake, on: idle.inhibited, act: () => idle.toggle() },
-    { name: 'Screenshot', icon: icons.screenshot, act: (self) => closeFrom(self, niri.screenshot) },
-    { name: 'Overview', icon: icons.overview, act: (self) => closeFrom(self, niri.toggleOverview) },
+    { name: 'Screenshot', icon: icons.screenshot, act: (self) => closePopover(self, niri.screenshot) },
+    { name: 'Overview', icon: icons.overview, act: (self) => closePopover(self, niri.toggleOverview) },
   ]
 
   const rows: Tile[][] = []
