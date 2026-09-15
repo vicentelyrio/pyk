@@ -4,7 +4,7 @@ import { loadedFormatters, loadedLocales } from './i18n-util'
 
 import en from './en'
 
-const localeTranslations: Record<Locales, Translations> = {
+const localeTranslations = {
   en,
 }
 
@@ -15,7 +15,7 @@ export const loadFormatters = (locale: Locales): void => {
 export const loadLocale = (locale: Locales): void => {
   if (loadedLocales[locale]) return
 
-  loadedLocales[locale] = localeTranslations[locale]
+  loadedLocales[locale] = localeTranslations[locale] as unknown as Translations
   loadFormatters(locale)
 }
 

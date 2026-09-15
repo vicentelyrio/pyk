@@ -3,6 +3,296 @@ import type { BaseTranslation } from '../i18n-types'
 const en = {
   WELCOME: 'Welcome to AGS!',
   WORKSPACE_COUNT: '{count:number} workspace{{s}}',
+
+  wifi: {
+    title: 'Wi-Fi',
+    back: 'Back to Control center',
+    radio: 'Wi-Fi radio',
+    on: 'on',
+    off: 'off',
+    offTitle: 'Wi-Fi is off',
+    offHint: 'Turn the radio on to see networks',
+    connected: 'CONNECTED',
+    disconnect: 'Disconnect',
+    available: 'AVAILABLE NETWORKS',
+    scanning: 'scanning…',
+    scan: 'scan',
+    emptyTitle: 'No networks found',
+    emptyHint: 'Move closer to an access point',
+    saved: 'saved',
+    password: 'Password',
+    showPassword: 'Show password',
+    connect: 'Connect',
+    connecting: 'Connecting…',
+    wrongPassword: 'Wrong password. The network rejected the key.',
+  },
+
+  bluetooth: {
+    title: 'Bluetooth',
+    back: 'Back to Control center',
+    radio: 'Bluetooth power',
+    on: 'on',
+    off: 'off',
+    noAdapter: 'no adapter',
+    noAdapterTitle: 'No Bluetooth adapter',
+    noAdapterHint: 'bluetoothd reports no controller',
+    offTitle: 'Bluetooth is off',
+    offHint: 'Paired devices will reconnect when on',
+    paired: 'PAIRED DEVICES',
+    available: 'AVAILABLE DEVICES',
+    scan: 'Scan',
+    stopScan: 'Stop scanning',
+    idleTitle: 'Not scanning',
+    idleHint: 'Start a scan to discover nearby devices',
+    statusConnected: 'Connected',
+    statusDisconnected: 'Not connected',
+    statusConnecting: 'Connecting…',
+    pair: 'Pair',
+    pairing: 'Pairing…',
+    remove: 'Remove device',
+    confirmRemove: 'Click again to remove',
+  },
+
+  settings: {
+    title: 'PYK SETTINGS',
+    search: 'Search settings',
+    resultsFor: 'Results for “{query:string}”',
+    settingCount: '{count:number} setting{{s}}',
+    matchCount: '{shown:number} of {total:number}',
+    noResultsTitle: 'No settings match',
+    noResultsHint: 'Search runs over labels, hints and key combos',
+    resetAll: 'Reset all to defaults',
+    resetAllArmed: 'Click again to reset everything',
+    resetRow: 'Reset to default',
+    afterRestart: 'AFTER RESTART',
+    restartOne: '1 change applies after restart',
+    restartMany: '{count:number} changes apply after restart',
+    restartShell: 'Restart shell',
+    advancedNote: 'Protocol timeouts and logging. Defaults are correct for almost every setup; every value here applies only after a restart.',
+    outOfRange: '{raw:string} is outside {min:string}–{max:string} — value not applied',
+    browse: 'Browse…',
+    addShortcut: 'Add',
+    capturing: 'press keys…',
+    captureHint: 'esc cancels',
+    removeShortcut: 'Remove',
+    recordKey: 'MONITOR',
+    recordValue: 'VALUE',
+    addRecord: 'Add a display mapping',
+    clearRecord: 'Clear mapping',
+    close: 'Close',
+
+    sections: {
+      appearance: 'Appearance',
+      notifications: 'Notifications',
+      bar: 'Bar & popovers',
+      launcher: 'Launcher',
+      clock: 'Clock & calendar',
+      wallpaper: 'Wallpaper',
+      shortcuts: 'Shortcuts',
+      media: 'Media',
+      advanced: 'Advanced',
+    },
+
+    appearance: {
+      accent: {
+        label: 'Accent color',
+        hint: 'Fixed hue — never sampled from the wallpaper',
+      },
+      surfaceOpacity: {
+        label: 'Surface opacity',
+        hint: 'Background alpha of every popout and window',
+      },
+      fontFamily: {
+        label: 'UI font',
+        hint: 'Family resolved through fontconfig',
+      },
+      fontFamilyMono: {
+        label: 'Monospace font',
+        hint: 'Every number, path and key combo',
+      },
+      fontSize: {
+        label: 'Base font size',
+        hint: 'All other sizes derive from this',
+      },
+      typeScale: {
+        label: 'Type scale',
+        hint: 'Ratio between consecutive type steps',
+      },
+      sizeBase: {
+        label: 'Size base',
+        hint: 'Spacing grid unit — gaps are multiples of it',
+      },
+      radiusBase: {
+        label: 'Corner radius base',
+        hint: 'Rows ×2, tiles ×3, panels ×4',
+      },
+    },
+
+    notifications: {
+      toastTimeout: {
+        label: 'Toast timeout',
+        hint: 'How long a toast stays on screen',
+      },
+      toastMaxAge: {
+        label: 'Show toasts for notifications newer than',
+        hint: 'Older notifications go straight to the center',
+      },
+      criticalSticky: {
+        label: 'Critical notifications stay until dismissed',
+        hint: 'Urgency 2 ignores the timeout',
+      },
+    },
+
+    osd: {
+      timeout: {
+        label: 'Overlay timeout',
+        hint: 'How long the volume and brightness overlay stays on screen',
+      },
+      settleDelay: {
+        label: 'Overlay settle delay',
+        hint: 'Suppresses the overlay while the shell starts up',
+      },
+    },
+
+    popover: {
+      hoverCloseDelay: {
+        label: 'Hover close delay',
+        hint: 'Grace period before a hover-opened popover closes',
+      },
+    },
+
+    launcher: {
+      resultLimit: {
+        label: 'Result limit',
+        hint: 'Caps the panel height',
+      },
+      closeOnLaunch: {
+        label: 'Close after launching',
+        hint: 'Also clears the query',
+      },
+    },
+
+    clock: {
+      hourFormat: {
+        label: 'Hour format',
+        hint: 'Bar clock and lock screen',
+      },
+      showSeconds: {
+        label: 'Show seconds',
+        hint: 'Repaints the clock every second',
+      },
+      showDate: {
+        label: 'Show date',
+        hint: 'Next to the time in the bar',
+      },
+      dateFormat: {
+        label: 'Date format',
+        hint: 'strftime tokens',
+      },
+    },
+
+    calendar: {
+      weekStart: {
+        label: 'Week starts on',
+        hint: 'Calendar grid and week numbers',
+      },
+      showWeekNumber: {
+        label: 'Show week number',
+        hint: 'ISO week, top right of the calendar',
+      },
+    },
+
+    schedule: {
+      directory: {
+        label: 'Calendar folder',
+        hint: 'Read-only. vdirsyncer syncs remote calendars into this folder',
+      },
+    },
+
+    wallpaper: {
+      directory: {
+        label: 'Folder',
+        hint: 'Scanned once at startup and on inotify',
+      },
+      image: {
+        label: 'Default image for all displays',
+        hint: 'Used by any display without its own mapping',
+      },
+      outputs: {
+        label: 'Per-display wallpaper',
+        hint: 'Overrides the default for one output',
+      },
+      fit: {
+        label: 'Fit',
+        hint: 'How an image fills a display',
+      },
+    },
+
+    shortcuts: {
+      niriBinds: {
+        label: 'Write niri keybinds',
+        hint: 'Emits pyk-binds.kdl — include it from your niri config',
+      },
+      global: {
+        launcher: {
+          label: 'Global — Toggle launcher',
+          hint: 'Opens and closes the launcher from anywhere',
+        },
+      },
+      launcher: {
+        close: {
+          label: 'Launcher — Close',
+          hint: 'Dismisses the launcher without running anything',
+        },
+        next: {
+          label: 'Launcher — Next',
+          hint: 'Moves down the result list',
+        },
+        previous: {
+          label: 'Launcher — Previous',
+          hint: 'Moves up the result list',
+        },
+        launch: {
+          label: 'Launcher — Launch',
+          hint: 'Runs the selected result',
+        },
+      },
+    },
+
+    media: {
+      progressInterval: {
+        label: 'Progress refresh interval',
+        hint: 'MPRIS position polling',
+      },
+    },
+
+    system: {
+      reconnectDelay: {
+        label: 'Reconnect delay',
+        hint: 'First retry after a D-Bus drop',
+      },
+      reconnectMaxDelay: {
+        label: 'Max reconnect delay',
+        hint: 'Backoff ceiling',
+      },
+      actionTimeout: {
+        label: 'Action timeout',
+        hint: 'Any single D-Bus call',
+      },
+      bluetoothConnectTimeout: {
+        label: 'Bluetooth connect timeout',
+        hint: 'Per connect attempt',
+      },
+      logFormat: {
+        label: 'Log format',
+        hint: 'journal is structured, pretty is human',
+      },
+      logLevel: {
+        label: 'Log level',
+        hint: 'Anything below Info is noisy',
+      },
+    },
+  },
 } satisfies BaseTranslation
 
 export default en

@@ -20,7 +20,22 @@ export function stateChanges(
     ),
   )
 
-  return Stream.mergeAll([fromNetwork, fromDevice], { concurrency: 'unbounded' }).pipe(
+  const fromRadio = fromSignal('network', network, 'notify', () => network.wifi ?? null).pipe(
+    Stream.changesWith((a, b) => a === b),
+    Stream.switchMap((wifi) =>
+      wifi
+        ? Stream.mergeAll(
+            [
+              fromSignal('network', wifi, 'notify::access-points', snap),
+              fromSignal('network', wifi, 'notify::scanning', snap),
+            ],
+            { concurrency: 'unbounded' },
+          )
+        : Stream.empty,
+    ),
+  )
+
+  return Stream.mergeAll([fromNetwork, fromDevice, fromRadio], { concurrency: 'unbounded' }).pipe(
     reconnecting,
   )
 }

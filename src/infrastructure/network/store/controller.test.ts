@@ -9,12 +9,14 @@ import { Network, NetworkLayer } from './controller'
 import { emptyState, type NetworkState } from './state'
 
 const wifi = (over: Partial<NetworkState> = {}): NetworkState => ({
+  ...emptyState,
   kind: 'wifi',
   icon: 'network-wireless-signal-ok-symbolic',
   ssid: 'Lyrio',
   strength: 45,
   isConnected: true,
   isConnecting: false,
+  hasWifi: true,
   wifiEnabled: true,
   ...over,
 })
@@ -25,6 +27,10 @@ function fakeBackend(changes: Stream.Stream<NetworkState, SourceError>) {
   const layer = Layer.succeed(NetworkBackend, {
     changes,
     toggleWifi: Effect.sync(() => { calls.push('toggleWifi') }),
+    scan: Effect.sync(() => { calls.push('scan') }),
+    disconnect: Effect.sync(() => { calls.push('disconnect') }),
+    connect: (bssid: string, password: string | null) =>
+      Effect.sync(() => { calls.push(`connect:${bssid}:${password ?? 'open'}`) }),
   })
 
   return { layer, calls }
@@ -106,6 +112,45 @@ describe('Network', () => {
     )
 
     assert.deepEqual(backend.calls, ['toggleWifi'])
+  })
+
+  test('routes scan, disconnect and connect to the backend', async () => {
+    const backend = fakeBackend(Stream.never)
+
+    await run(
+      Effect.gen(function* () {
+        const network = yield* Network
+        yield* network.scan
+        yield* network.disconnect
+        yield* network.connect('AA:BB:CC:DD:EE:FF', 'hunter2')
+        yield* network.connect('11:22:33:44:55:66', null)
+      }),
+      backend.layer,
+    )
+
+    assert.deepEqual(backend.calls, [
+      'scan',
+      'disconnect',
+      'connect:AA:BB:CC:DD:EE:FF:hunter2',
+      'connect:11:22:33:44:55:66:open',
+    ])
+  })
+
+  test('carries the access point list through', async () => {
+    const points = [
+      { ssid: 'Lyrio', bssid: 'AA:BB:CC:DD:EE:FF', strength: 82, secure: true, saved: true, isActive: true },
+      { ssid: 'guest', bssid: '11:22:33:44:55:66', strength: 40, secure: false, saved: false, isActive: false },
+    ]
+
+    const backend = fakeBackend(
+      Stream.fromIterable([wifi({ accessPoints: points, isScanning: true })]).pipe(Stream.concat(Stream.never)),
+    )
+
+    const state = await snapshotAfter(backend.layer)
+
+    assert.equal(state.isScanning, true)
+    assert.deepEqual(state.accessPoints.map((it) => it.ssid), ['Lyrio', 'guest'])
+    assert.equal(state.accessPoints[0].isActive, true)
   })
 
   test('keeps the last state when the source fails terminally', async () => {

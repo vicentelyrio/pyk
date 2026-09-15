@@ -96,3 +96,14 @@ export function dispatch<Shape, E extends PykError>(
 ): void {
   runtime.runFork(Effect.flatMap(service, action).pipe(Effect.catchCause(report)))
 }
+
+export function request<Shape, A, E extends PykError>(
+  service: Effect.Effect<Shape, never, Services>,
+  action: (svc: Shape) => Effect.Effect<A, E>,
+): Promise<A | null> {
+  return runtime.runPromise(
+    Effect.flatMap(service, action).pipe(
+      Effect.catchCause((cause) => Effect.as(report(cause), null)),
+    ),
+  )
+}
