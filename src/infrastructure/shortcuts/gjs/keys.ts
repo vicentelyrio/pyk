@@ -1,6 +1,6 @@
 import Gdk from 'gi://Gdk?version=4.0'
 
-import { parse, type Accelerator } from '../accelerator'
+import { format, parse, type Accelerator } from '../accelerator'
 
 const MODIFIERS = Gdk.ModifierType.CONTROL_MASK
   | Gdk.ModifierType.ALT_MASK
@@ -51,4 +51,29 @@ export function handleShortcut<Action extends string>(
 
   handlers[action]()
   return true
+}
+
+const NAMEABLE = /^[A-Za-z0-9_]+$/
+
+const MODIFIER_KEYS = new Set([
+  Gdk.KEY_Control_L, Gdk.KEY_Control_R,
+  Gdk.KEY_Alt_L, Gdk.KEY_Alt_R,
+  Gdk.KEY_Shift_L, Gdk.KEY_Shift_R,
+  Gdk.KEY_Super_L, Gdk.KEY_Super_R,
+  Gdk.KEY_Meta_L, Gdk.KEY_Meta_R,
+])
+
+export function toShortcut(keyval: number, state: Gdk.ModifierType): string | null {
+  if (MODIFIER_KEYS.has(keyval)) return null
+
+  const name = Gdk.keyval_name(keyval)
+  if (!name || !NAMEABLE.test(name)) return null
+
+  return format({
+    key: name.length === 1 ? name.toUpperCase() : name,
+    ctrl: (state & Gdk.ModifierType.CONTROL_MASK) !== 0,
+    alt: (state & Gdk.ModifierType.ALT_MASK) !== 0,
+    shift: (state & Gdk.ModifierType.SHIFT_MASK) !== 0,
+    super: (state & Gdk.ModifierType.SUPER_MASK) !== 0,
+  })
 }

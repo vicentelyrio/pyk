@@ -8,6 +8,9 @@ export type {
   ConfigPatch,
   LauncherConfig,
   Leaf,
+  PathLeaf,
+  NumberLeaf,
+  ChoiceLeaf,
   MediaConfig,
   NotificationsConfig,
   PopoverConfig,
@@ -16,5 +19,5 @@ export type {
   SystemConfig,
   WallpaperConfig,
 } from './schema'
-export { collapseHome, configSpec, defaultConfig, expandHome } from './schema'
+export { collapseHome, configSpec, defaultConfig, expandHome, isLeaf } from './schema'
 export { Configuration, StartupConfig } from './store'

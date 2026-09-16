@@ -83,7 +83,7 @@ const en = {
     removeShortcut: 'Remove',
     recordKey: 'MONITOR',
     recordValue: 'VALUE',
-    addRecord: 'Add a display mapping',
+    recordEmpty: 'No per-display overrides — set one from the wallpaper picker',
     clearRecord: 'Clear mapping',
     close: 'Close',
 

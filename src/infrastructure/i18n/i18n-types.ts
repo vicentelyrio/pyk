@@ -89,7 +89,7 @@ type RootTranslation = {
     removeShortcut: string
     recordKey: string
     recordValue: string
-    addRecord: string
+    recordEmpty: string
     clearRecord: string
     close: string
     sections: {
@@ -378,7 +378,7 @@ export type TranslationFunctions = {
     removeShortcut: () => LocalizedString
     recordKey: () => LocalizedString
     recordValue: () => LocalizedString
-    addRecord: () => LocalizedString
+    recordEmpty: () => LocalizedString
     clearRecord: () => LocalizedString
     close: () => LocalizedString
     sections: {

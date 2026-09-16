@@ -38,10 +38,10 @@ export const configSpec = {
     showWeekNumber: toggle(true),
   },
   schedule: {
-    directory: path('~/.local/share/calendars'),
+    directory: path('~/.local/share/calendars', { select: 'directory' }),
   },
   wallpaper: {
-    directory: path('~/Pictures/Wallpapers'),
+    directory: path('~/Pictures/Wallpapers', { select: 'directory' }),
     image: path(''),
     outputs: record(),
     fit: choice(['cover', 'contain', 'fill'], 'cover'),

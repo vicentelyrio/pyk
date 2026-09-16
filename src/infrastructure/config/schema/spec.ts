@@ -16,7 +16,9 @@ export type ColorLeaf = LeafBase<'color', string>
 export type TextLeaf = LeafBase<'text', string>
 export type ToggleLeaf = LeafBase<'toggle', boolean>
 export type ShortcutLeaf = LeafBase<'shortcut', readonly string[]>
-export type PathLeaf = LeafBase<'path', string>
+export interface PathLeaf extends LeafBase<'path', string> {
+  readonly select: 'file' | 'directory'
+}
 export type RecordLeaf = LeafBase<'record', Readonly<Record<string, string>>>
 
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
@@ -62,8 +64,16 @@ export function toggle(fallback: boolean, options: Options = {}): ToggleLeaf {
   return { kind: 'toggle', default: fallback, apply: options.apply ?? 'live' }
 }
 
-export function path(fallback: string, options: Options = {}): PathLeaf {
-  return { kind: 'path', default: fallback, apply: options.apply ?? 'live' }
+export function path(
+  fallback: string,
+  options: Options & { readonly select?: 'file' | 'directory' } = {},
+): PathLeaf {
+  return {
+    kind: 'path',
+    default: fallback,
+    apply: options.apply ?? 'live',
+    select: options.select ?? 'file',
+  }
 }
 
 export function record(options: Options = {}): RecordLeaf {
@@ -85,7 +95,7 @@ export function choice<const T extends string>(
 const HEX = /^#(?:[0-9a-f]{6}|[0-9a-f]{8})$/i
 const KEY = /^(?:(?:Mod|Super|Ctrl|Control|Alt|Shift)\+)*[A-Za-z0-9_]+$/
 
-function isLeaf(node: Leaf | Spec): node is Leaf {
+export function isLeaf(node: Leaf | Spec): node is Leaf {
   return typeof node.kind === 'string'
 }
 

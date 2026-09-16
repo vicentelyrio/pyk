@@ -30,3 +30,16 @@ export function parse(shortcut: string): Accelerator | null {
 
   return accelerator
 }
+
+export function format(accelerator: Accelerator): string {
+  const parts: string[] = []
+
+  if (accelerator.super) parts.push('Mod')
+  if (accelerator.ctrl) parts.push('Ctrl')
+  if (accelerator.alt) parts.push('Alt')
+  if (accelerator.shift) parts.push('Shift')
+
+  parts.push(accelerator.key)
+
+  return parts.join('+')
+}
