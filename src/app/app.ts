@@ -3,7 +3,7 @@ import app from 'ags/gtk4/app'
 import style from './style.scss'
 
 import { applyAppearance } from '@/app/appearance'
-import { Bar, launcher, LauncherWindow, NotificationToasts, OsdWindow, WallpaperWindow } from '@/app/modules'
+import { Bar, launcher, LauncherWindow, NotificationToasts, OsdWindow, settings, SettingsWindow, WallpaperWindow } from '@/app/modules'
 import { INSTANCE_NAME } from '@/infrastructure/instance'
 import { runtime } from '@/infrastructure/runtime'
 
@@ -25,6 +25,10 @@ app.start({
       launcher.toggle()
       return res('launcher toggled')
     }
+    if (cmd === 'settings') {
+      settings.toggle()
+      return res('settings toggled')
+    }
     res(`unknown request: ${argv.join(' ')}`)
   },
   main() {
@@ -34,5 +38,6 @@ app.start({
     NotificationToasts()
     OsdWindow()
     LauncherWindow()
+    SettingsWindow()
   },
 })

@@ -68,6 +68,21 @@ $size: scale.linear(config.$size-base, (
   wifi-strength: 11.5,
   device-batt:   9,
   scan-dot:      1.25,
+
+  settings-h:       140,
+  settings-sidebar: 69,
+  settings-slider:  33,
+  settings-value:   14.5,
+  settings-text:    40,
+  settings-menu:    35,
+  dropdown:         29,
+  record-key:       24,
+  set-label-col:    60,
+  set-control-col:  63,
+  swatch:           4,
+  swatch-radius:    2,
+  hex:              18,
+  scroll-slider:    1.5,
 ));
 
 $panel-width: scale.linear(config.$size-base, (
@@ -80,4 +95,5 @@ $panel-width: scale.linear(config.$size-base, (
   control:       93,
   session:       61,
   osd:           62,
+  settings:      207,
 ));

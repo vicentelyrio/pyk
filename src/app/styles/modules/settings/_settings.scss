@@ -1,0 +1,12 @@
+@use 'styles' as s;
+
+window.settings-window { background-color: transparent; }
+
+.settings {
+  @include s.popout(popout);
+  @include s.enter-pop;
+  min-width: s.panel-width(settings);
+  min-height: s.size(settings-h);
+
+  > *:not(:first-child) { @include s.hairline(left); }
+}
