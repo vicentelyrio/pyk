@@ -26,6 +26,7 @@ const cs = {
   identity: 'control-identity',
   name: 'control-name',
   uptime: 'control-uptime',
+  gear: 'control-gear',
   tiles: 'control-tiles',
   tile: 'control-tile',
   sliders: 'control-sliders',
@@ -56,6 +57,7 @@ const icons = {
   volume: 'pyk-volume-symbolic',
   volumeMuted: 'pyk-volume-muted-symbolic',
   drill: 'pyk-chevron-right-symbolic',
+  gear: 'pyk-gear-symbolic',
 }
 
 const COLUMNS = 4
@@ -67,7 +69,12 @@ function percent(value: number): string {
   return `${Math.round(value * 100)}%`
 }
 
-export function ControlCenter({ className }: { className?: string }) {
+export type ControlCenterProps = {
+  readonly className?: string
+  readonly onSettings: () => void
+}
+
+export function ControlCenter({ className, onSettings }: ControlCenterProps) {
   const [page, setPage] = createState<Page>('root')
 
   const toRoot = () => setPage('root')
@@ -76,7 +83,7 @@ export function ControlCenter({ className }: { className?: string }) {
 
   const rootPage = (
     <box orientation={Gtk.Orientation.VERTICAL}>
-      <ControlUser />
+      <ControlUser onSettings={onSettings} />
       <ControlTiles onWifi={toWifi} onBluetooth={toBluetooth} />
       <ControlSliders />
       <ControlDevices onWifi={toWifi} onBluetooth={toBluetooth} />
@@ -136,7 +143,7 @@ function ControlStatus() {
   )
 }
 
-function ControlUser() {
+function ControlUser({ onSettings }: { readonly onSettings: () => void }) {
   return (
     <box class={cs.user}>
       <box class={cs.avatar} valign={Gtk.Align.CENTER} halign={Gtk.Align.START} hexpand={false}>
@@ -152,6 +159,14 @@ function ControlUser() {
         <label class={cs.name} label={host.displayName} xalign={0} ellipsize={Pango.EllipsizeMode.END} />
         <label class={cs.uptime} label={host.uptime.as((it) => `${it} · ${host.distro}`)} xalign={0} />
       </box>
+      <button
+        class={cs.gear}
+        tooltipText="Settings"
+        focusable={false}
+        valign={Gtk.Align.CENTER}
+        onClicked={(self: Gtk.Button) => closePopover(self, onSettings)}>
+        <image iconName={icons.gear} />
+      </button>
     </box>
   )
 }
