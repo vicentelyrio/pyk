@@ -53,6 +53,8 @@ $size: scale.linear(config.$size-base, (
   switch-w:      9,
   switch-h:      5,
   switch-knob:   4,
+  switch-inset:  0.5,
+  switch-travel: 4.5,
   switch-radius: 2.5,
   switch-knob-radius: 2,
 
@@ -77,8 +79,6 @@ $size: scale.linear(config.$size-base, (
   settings-menu:    35,
   dropdown:         29,
   record-key:       24,
-  set-label-col:    60,
-  set-control-col:  63,
   swatch:           4,
   swatch-radius:    2,
   hex:              18,

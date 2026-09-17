@@ -1,7 +1,7 @@
 import GLib from 'gi://GLib'
 import Gio from 'gi://Gio'
 import Pango from 'gi://Pango'
-import { Gtk } from 'ags/gtk4'
+import { Gdk, Gtk } from 'ags/gtk4'
 import { For, createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { closePopover, Popover, Switch } from '@/ui/components'
@@ -129,11 +129,23 @@ function passScrollToList(self: Gtk.Widget): void {
 }
 
 function stepOf(leaf: NumberLeaf): number {
-  return leaf.max - leaf.min <= 2 ? 0.01 : 1
+  return leaf.step ?? (leaf.max - leaf.min <= 2 ? 0.01 : 1)
+}
+
+function decimalsOf(step: number): number {
+  return String(step).split('.')[1]?.length ?? 0
+}
+
+function snap(leaf: NumberLeaf, value: number): number {
+  const step = stepOf(leaf)
+  const snapped = Number((Math.round(value / step) * step).toFixed(decimalsOf(step)))
+
+  return Math.min(leaf.max, Math.max(leaf.min, snapped))
 }
 
 function display(leaf: NumberLeaf, value: number): string {
-  const text = stepOf(leaf) < 1 ? value.toFixed(2) : String(Math.round(value))
+  const decimals = decimalsOf(stepOf(leaf))
+  const text = decimals ? String(Number(value.toFixed(decimals))) : String(Math.round(value))
 
   return leaf.unit ? `${text} ${leaf.unit}` : text
 }
@@ -163,7 +175,7 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
   return (
     <box class={cs.row} orientation={Gtk.Orientation.VERTICAL}>
       <box class={cs.head}>
-        <box class={cs.labels} orientation={Gtk.Orientation.VERTICAL}>
+        <box class={cs.labels} orientation={Gtk.Orientation.VERTICAL} hexpand>
           <label
             class={cs.crumb}
             label={sectionTitle(row.section).toUpperCase()}
@@ -178,7 +190,6 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
               label={text.label}
               xalign={0}
               wrap
-              maxWidthChars={1}
             />
             <label class={cs.restart} label={t.afterRestart()} visible={leaf.apply === 'restart'} />
           </box>
@@ -202,7 +213,7 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
 
         {inline
           ? (
-            <box class={cs.control} hexpand halign={Gtk.Align.END} valign={Gtk.Align.START}>
+            <box class={cs.control} halign={Gtk.Align.END} valign={Gtk.Align.START}>
               <ResetButton visible={modified} onReset={reset} />
               <Control row={row} value={value} set={set} onError={setError} />
             </box>
@@ -283,6 +294,21 @@ function ToggleControl({ value, set }: ControlProps) {
   return <Switch on={on} onToggle={() => set(!on())} />
 }
 
+function whileDragging(self: Gtk.Widget, onStart: () => void, onEnd: () => void): void {
+  const events = new Gtk.EventControllerLegacy({ propagationPhase: Gtk.PropagationPhase.CAPTURE })
+
+  events.connect('event', (_controller, event: Gdk.Event) => {
+    const type = event.get_event_type()
+
+    if (type === Gdk.EventType.BUTTON_PRESS) onStart()
+    if (type === Gdk.EventType.BUTTON_RELEASE) onEnd()
+
+    return false
+  })
+
+  self.add_controller(events)
+}
+
 function SliderControl({ row, value, set }: ControlProps) {
   const leaf = row.leaf as NumberLeaf
   const [draft, setDraft] = createState(value() as number)
@@ -290,6 +316,7 @@ function SliderControl({ row, value, set }: ControlProps) {
   onCleanup(value.subscribe(() => setDraft(value() as number)))
 
   const commit = debounce<number>((next) => set(next))
+  let dragging = false
 
   return (
     <box class={cs.slider} valign={Gtk.Align.CENTER}>
@@ -298,11 +325,21 @@ function SliderControl({ row, value, set }: ControlProps) {
         max={leaf.max}
         step={stepOf(leaf)}
         value={draft}
-        $={(self) => passScrollToList(self as Gtk.Widget)}
+        $={(self) => {
+          passScrollToList(self as Gtk.Widget)
+          whileDragging(
+            self as Gtk.Widget,
+            () => { dragging = true },
+            () => {
+              dragging = false
+              set(draft())
+            },
+          )
+        }}
         onChangeValue={(self: Gtk.Range) => {
-          const next = self.get_value()
+          const next = snap(leaf, self.get_value())
           setDraft(next)
-          commit(next)
+          if (!dragging) commit(next)
         }}
       />
       <label class={cs.value} label={draft.as((it) => display(leaf, it))} xalign={1} />

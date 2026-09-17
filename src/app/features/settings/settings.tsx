@@ -1,3 +1,4 @@
+import GLib from 'gi://GLib'
 import Pango from 'gi://Pango'
 import { Gdk, Gtk } from 'ags/gtk4'
 import { For, createComputed, createState, type Accessor } from 'ags'
@@ -6,8 +7,11 @@ import { config } from '@/infrastructure/config'
 import { LL } from '@/infrastructure/i18n'
 import { toShortcut } from '@/infrastructure/shortcuts'
 
+import { collapseHome } from '@/infrastructure/config/schema'
+
 import { patchFor, ROWS, same, SECTION_ICONS, SECTIONS, valueAt, type SectionId, type SettingRow } from './catalog'
 import { copyFor, sectionTitle } from './copy'
+import { DensityRow } from './density'
 import { SettingRowView } from './rows'
 
 const cs = {
@@ -118,7 +122,7 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
   return (
     <overlay halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
       <box class={cs.root} overflow={Gtk.Overflow.HIDDEN} $={capture}>
-        <box class={cs.sidebar} orientation={Gtk.Orientation.VERTICAL}>
+        <box class={cs.sidebar} orientation={Gtk.Orientation.VERTICAL} hexpand={false}>
           <box class={cs.brand} orientation={Gtk.Orientation.VERTICAL}>
             <label label={t.title()} xalign={0} />
             <box class={cs.search} valign={Gtk.Align.CENTER}>
@@ -178,7 +182,13 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
           </scrolledwindow>
 
           <box class={cs.footer} orientation={Gtk.Orientation.VERTICAL}>
-            <label class={cs.path} label={config.path} xalign={0} ellipsize={Pango.EllipsizeMode.START} />
+            <label
+              class={cs.path}
+              label={collapseHome(config.path, GLib.get_home_dir())}
+              xalign={0}
+              maxWidthChars={1}
+              ellipsize={Pango.EllipsizeMode.START}
+            />
             <button
               class={armed.as((it) => clsx(cs.resetAll, it && cs.armed))}
               focusable={false}
@@ -239,6 +249,11 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
                 maxWidthChars={1}
                 visible={createComputed(() => !searching() && section() === 'advanced')}
               />
+              <box
+                orientation={Gtk.Orientation.VERTICAL}
+                visible={createComputed(() => !searching() && section() === 'scale')}>
+                <DensityRow />
+              </box>
               <For each={visible} id={(it: SettingRow) => it.key}>
                 {(it: SettingRow) => (
                   <SettingRowView

@@ -9,6 +9,7 @@ interface LeafBase<K extends string, T> {
 export interface NumberLeaf extends LeafBase<'number', number> {
   readonly min: number
   readonly max: number
+  readonly step?: number
   readonly unit?: 'px' | 'ms'
 }
 
@@ -47,7 +48,7 @@ type Options = { readonly apply?: Apply }
 
 export function number(
   fallback: number,
-  range: { readonly min: number, readonly max: number, readonly unit?: 'px' | 'ms' } & Options,
+  range: { readonly min: number, readonly max: number, readonly step?: number, readonly unit?: 'px' | 'ms' } & Options,
 ): NumberLeaf {
   return { kind: 'number', default: fallback, apply: range.apply ?? 'live', ...range }
 }

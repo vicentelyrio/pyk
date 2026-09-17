@@ -89,6 +89,7 @@ const en = {
 
     sections: {
       appearance: 'Appearance',
+      scale: 'Scale',
       notifications: 'Notifications',
       bar: 'Bar & popovers',
       launcher: 'Launcher',
@@ -97,6 +98,15 @@ const en = {
       shortcuts: 'Shortcuts',
       media: 'Media',
       advanced: 'Advanced',
+    },
+
+    density: {
+      label: 'Density',
+      hint: 'Sets base font size and spacing grid together',
+      small: 'Small',
+      medium: 'Medium',
+      large: 'Large',
+      custom: 'Custom',
     },
 
     appearance: {

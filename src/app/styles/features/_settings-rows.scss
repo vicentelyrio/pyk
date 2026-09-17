@@ -12,8 +12,6 @@
 }
 
 .set-labels {
-  min-width: s.size(set-label-col);
-
   > *:not(:first-child) { margin-top: s.space(xxs); }
 }
 
@@ -54,10 +52,6 @@
 .set-error {
   font-size: s.font-size(xs);
   color: s.gtk(warn);
-}
-
-.set-control {
-  min-width: s.size(set-control-col);
 }
 
 .set-control,
@@ -133,7 +127,7 @@
   border: s.stroke(hairline) solid s.gtk(lineStrong);
   background-color: s.gtk(fillHover);
 
-  > *:not(:first-child) { margin-left: s.space(xs); }
+  > *:not(:first-child) { margin-left: s.space(sm); }
 
   &.--failed { border-color: s.gtk(warn); }
 }

@@ -94,6 +94,7 @@ type RootTranslation = {
     close: string
     sections: {
       appearance: string
+      scale: string
       notifications: string
       bar: string
       launcher: string
@@ -102,6 +103,14 @@ type RootTranslation = {
       shortcuts: string
       media: string
       advanced: string
+    }
+    density: {
+      label: string
+      hint: string
+      small: string
+      medium: string
+      large: string
+      custom: string
     }
     appearance: {
       accent: {
@@ -383,6 +392,7 @@ export type TranslationFunctions = {
     close: () => LocalizedString
     sections: {
       appearance: () => LocalizedString
+      scale: () => LocalizedString
       notifications: () => LocalizedString
       bar: () => LocalizedString
       launcher: () => LocalizedString
@@ -391,6 +401,14 @@ export type TranslationFunctions = {
       shortcuts: () => LocalizedString
       media: () => LocalizedString
       advanced: () => LocalizedString
+    }
+    density: {
+      label: () => LocalizedString
+      hint: () => LocalizedString
+      small: () => LocalizedString
+      medium: () => LocalizedString
+      large: () => LocalizedString
+      custom: () => LocalizedString
     }
     appearance: {
       accent: {

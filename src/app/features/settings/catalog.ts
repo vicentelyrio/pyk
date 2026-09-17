@@ -2,6 +2,7 @@ import { configSpec, isLeaf, type Config, type ConfigPatch, type Leaf, type Spec
 
 export type SectionId =
   | 'appearance'
+  | 'scale'
   | 'notifications'
   | 'bar'
   | 'launcher'
@@ -20,6 +21,7 @@ export interface SettingRow {
 
 const LAYOUT: ReadonlyArray<readonly [SectionId, readonly string[]]> = [
   ['appearance', ['appearance']],
+  ['scale', []],
   ['notifications', ['notifications']],
   ['bar', ['osd', 'popover']],
   ['launcher', ['launcher']],
@@ -32,8 +34,16 @@ const LAYOUT: ReadonlyArray<readonly [SectionId, readonly string[]]> = [
 
 export const SECTIONS: readonly SectionId[] = LAYOUT.map(([id]) => id)
 
+const SECTION_OF: Readonly<Record<string, SectionId>> = {
+  'appearance.fontSize': 'scale',
+  'appearance.typeScale': 'scale',
+  'appearance.sizeBase': 'scale',
+  'appearance.radiusBase': 'scale',
+}
+
 export const SECTION_ICONS: Readonly<Record<SectionId, string>> = {
   appearance: 'pyk-appearance-symbolic',
+  scale: 'pyk-scale-symbolic',
   notifications: 'pyk-bell-symbolic',
   bar: 'pyk-bar-symbolic',
   launcher: 'pyk-search-symbolic',
@@ -48,7 +58,10 @@ function collect(node: Spec, prefix: readonly string[], section: SectionId, into
   for (const [name, child] of Object.entries(node)) {
     const path = [...prefix, name]
 
-    if (isLeaf(child)) into.push({ path, key: path.join('.'), leaf: child, section })
+    if (isLeaf(child)) {
+      const key = path.join('.')
+      into.push({ path, key, leaf: child, section: SECTION_OF[key] ?? section })
+    }
     else collect(child, path, section, into)
   }
 }

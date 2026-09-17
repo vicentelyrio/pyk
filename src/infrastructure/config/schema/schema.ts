@@ -8,7 +8,7 @@ export const configSpec = {
     fontFamilyMono: text('IBM Plex Mono'),
     fontSize: number(16, { min: 12, max: 32, unit: 'px' }),
     typeScale: number(1.2, { min: 1, max: 2 }),
-    sizeBase: number(4, { min: 2, max: 8, unit: 'px' }),
+    sizeBase: number(4, { min: 3, max: 6, step: 0.25, unit: 'px' }),
     radiusBase: number(4, { min: 0, max: 12, unit: 'px' }),
   },
   notifications: {

@@ -4,7 +4,6 @@
   @include s.bare-button;
   min-width: s.size(switch-w);
   min-height: s.size(switch-h);
-  padding: s.space(xxs);
   border-radius: s.size(switch-radius);
   background-color: s.gtk(lineStrong);
   transition: background-color s.duration(toggle) s.easing(standard);
@@ -17,7 +16,7 @@
 .switch-knob {
   min-width: s.size(switch-knob);
   min-height: s.size(switch-knob);
-  margin-left: 0;
+  margin: s.size(switch-inset);
   border-radius: s.size(switch-knob-radius);
   background-color: s.gtk(muted);
   transition:
@@ -25,7 +24,7 @@
     background-color s.duration(toggle) s.easing(standard);
 
   .switch.--on & {
-    margin-left: s.size(switch-knob);
+    margin-left: s.size(switch-travel);
     background-color: s.gtk(ink);
   }
 }
