@@ -1,6 +1,7 @@
 import app from 'ags/gtk4/app'
 import { Astal, Gdk, Gtk } from 'ags/gtk4'
 import { Calendar, ControlCenter, Media, Notifications, Session, Wallpaper, Workspaces } from '@/app/features'
+import { Divider } from '@/ui/components'
 import { settings } from '@/app/modules/settings'
 
 const cs = {
@@ -27,8 +28,11 @@ export function Bar(gdkmonitor: Gdk.Monitor) {
         <box $type="end" class={cs.tray}>
           <Wallpaper connector={gdkmonitor.connector ?? ''} />
           <Notifications />
+          <Divider />
           <ControlCenter onSettings={settings.show} />
+          <Divider />
           <Calendar />
+          <Divider />
           <Session />
         </box>
       </centerbox>

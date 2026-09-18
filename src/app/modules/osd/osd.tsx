@@ -12,7 +12,7 @@ const cs = {
 export const OSD_WINDOW = 'osd'
 
 export function OsdWindow() {
-  const { BOTTOM } = Astal.WindowAnchor
+  const { RIGHT } = Astal.WindowAnchor
 
   return (
     <window
@@ -20,7 +20,7 @@ export function OsdWindow() {
       class={cs.root}
       visible={osd.visible}
       resizable={false}
-      anchor={BOTTOM}
+      anchor={RIGHT}
       exclusivity={Astal.Exclusivity.IGNORE}
       layer={Astal.Layer.OVERLAY}
       keymode={Astal.Keymode.NONE}

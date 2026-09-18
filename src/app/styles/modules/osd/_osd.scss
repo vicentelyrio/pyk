@@ -2,6 +2,16 @@
 
 window.osd {
   background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+
+  decoration {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+  }
 }
 
 .osd-panel {
@@ -9,9 +19,10 @@ window.osd {
   @include s.enter-pop;
   margin: s.shadow-room(osd);
   min-width: s.panel-width(osd);
-  padding: s.space(md) s.space(lg);
+  min-height: s.size(osd-h);
+  padding: s.space(lg) s.space(md);
 
-  > *:not(:first-child) { margin-left: s.space(md); }
+  > *:not(:first-child) { margin-top: s.space(md); }
 }
 
 .osd-icon {
@@ -20,16 +31,16 @@ window.osd {
 }
 
 .osd-track {
-  min-height: s.size(slider-track);
+  min-width: s.size(slider-track);
 
   trough {
-    min-height: s.size(slider-track);
+    min-width: s.size(slider-track);
     border-radius: s.radius(xxs);
     background-color: s.gtk(lineStrong);
   }
 
   block {
-    min-height: s.size(slider-track);
+    min-width: s.size(slider-track);
     border-radius: s.radius(xxs);
     background-color: transparent;
 
@@ -39,7 +50,6 @@ window.osd {
 
 .osd-value {
   @include s.numeric;
-  min-width: s.size(slider-value);
   font-size: s.font-size(xs);
   color: s.gtk(muted);
 }

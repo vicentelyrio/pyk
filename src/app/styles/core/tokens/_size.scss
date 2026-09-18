@@ -5,6 +5,7 @@ $size: scale.linear(config.$size-base, (
   bar:        11,
   bar-hit:    7.5,
   bar-hit-sm: 7,
+  divider:    4,
 
   icon-xs: 2.75,
   icon:    3.75,
@@ -71,6 +72,8 @@ $size: scale.linear(config.$size-base, (
   device-batt:   9,
   scan-dot:      1.25,
 
+  osd-h:            62,
+
   settings-h:       140,
   settings-sidebar: 69,
   settings-slider:  33,
@@ -94,6 +97,6 @@ $panel-width: scale.linear(config.$size-base, (
   calendar:      80,
   control:       93,
   session:       61,
-  osd:           62,
+  osd:           11,
   settings:      207,
 ));

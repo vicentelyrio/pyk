@@ -38,16 +38,20 @@ export function Osd({ feedback }: { readonly feedback: Accessor<OsdFeedback> }) 
   return (
     <box
       class={feedback.as((it) => clsx(cs.root, it.muted && cs.muted))}
+      orientation={Gtk.Orientation.VERTICAL}
+      halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}>
-      <image class={cs.icon} iconName={feedback.as(icon)} valign={Gtk.Align.CENTER} />
+      <label class={cs.value} label={feedback.as((it) => percent(it.value))} />
       <levelbar
         class={cs.track}
+        orientation={Gtk.Orientation.VERTICAL}
         mode={Gtk.LevelBarMode.CONTINUOUS}
+        inverted
         value={feedback.as((it) => it.value)}
-        valign={Gtk.Align.CENTER}
-        hexpand
+        halign={Gtk.Align.CENTER}
+        vexpand
       />
-      <label class={cs.value} label={feedback.as((it) => percent(it.value))} xalign={1} />
+      <image class={cs.icon} iconName={feedback.as(icon)} halign={Gtk.Align.CENTER} />
     </box>
   )
 }

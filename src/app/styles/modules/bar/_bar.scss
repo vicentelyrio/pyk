@@ -5,3 +5,9 @@ window.bar {
   min-height: s.size(bar);
   padding: 0 s.space(md);
 }
+
+.bar-tray {
+  > *:not(:first-child) { margin-left: s.space(xxs); }
+
+  > .divider { margin: 0 s.space(sm); }
+}

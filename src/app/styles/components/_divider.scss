@@ -1,0 +1,7 @@
+@use 'styles' as s;
+
+.divider {
+  min-width: s.stroke(hairline);
+  min-height: s.size(divider);
+  background-color: s.gtk(lineStrong);
+}
