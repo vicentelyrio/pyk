@@ -11,6 +11,9 @@ export class Mpris extends Context.Service<Mpris, {
   readonly playPause: Effect.Effect<void, ActionError>
   readonly next: Effect.Effect<void, ActionError>
   readonly previous: Effect.Effect<void, ActionError>
+  readonly seek: (position: number) => Effect.Effect<void, ActionError>
+  readonly toggleShuffle: Effect.Effect<void, ActionError>
+  readonly cycleLoop: Effect.Effect<void, ActionError>
 }>()('pyk/Mpris') {}
 
 export const MprisLayer = Layer.effect(
@@ -24,6 +27,9 @@ export const MprisLayer = Layer.effect(
       playPause: backend.playPause,
       next: backend.next,
       previous: backend.previous,
+      seek: backend.seek,
+      toggleShuffle: backend.toggleShuffle,
+      cycleLoop: backend.cycleLoop,
     }
   }),
 )

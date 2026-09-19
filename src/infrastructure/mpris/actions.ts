@@ -13,3 +13,15 @@ export function nextTrack(): void {
 export function previousTrack(): void {
   dispatch(Mpris, (mpris) => mpris.previous)
 }
+
+export function seek(position: number): void {
+  dispatch(Mpris, (mpris) => mpris.seek(position))
+}
+
+export function toggleShuffle(): void {
+  dispatch(Mpris, (mpris) => mpris.toggleShuffle)
+}
+
+export function cycleLoop(): void {
+  dispatch(Mpris, (mpris) => mpris.cycleLoop)
+}

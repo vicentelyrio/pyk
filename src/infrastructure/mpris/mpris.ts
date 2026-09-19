@@ -1,4 +1,4 @@
-import { nextTrack, playPause, previousTrack } from './actions'
+import { cycleLoop, nextTrack, playPause, previousTrack, seek, toggleShuffle } from './actions'
 import { mprisState } from './bridge'
 import { player } from './derived'
 
@@ -7,4 +7,7 @@ export const mpris = {
   playPause,
   nextTrack,
   previousTrack,
+  seek,
+  toggleShuffle,
+  cycleLoop,
 } as const

@@ -9,4 +9,7 @@ export class MprisBackend extends Context.Service<MprisBackend, {
   readonly playPause: Effect.Effect<void, ActionError>
   readonly next: Effect.Effect<void, ActionError>
   readonly previous: Effect.Effect<void, ActionError>
+  readonly seek: (position: number) => Effect.Effect<void, ActionError>
+  readonly toggleShuffle: Effect.Effect<void, ActionError>
+  readonly cycleLoop: Effect.Effect<void, ActionError>
 }>()('pyk/MprisBackend') {}

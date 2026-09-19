@@ -21,5 +21,8 @@ export const MprisBackendLive = Layer.sync(MprisBackend, () => {
     playPause: onPlayer('playPause', (p) => p.play_pause()),
     next: onPlayer('next', (p) => p.next()),
     previous: onPlayer('previous', (p) => p.previous()),
+    seek: (position: number) => onPlayer('seek', (p) => p.set_position(position)),
+    toggleShuffle: onPlayer('toggleShuffle', (p) => p.shuffle()),
+    cycleLoop: onPlayer('cycleLoop', (p) => p.loop()),
   }
 })
