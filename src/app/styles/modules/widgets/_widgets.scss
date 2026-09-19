@@ -1,0 +1,12 @@
+@use 'styles' as s;
+
+window.widgets {
+  background-color: transparent;
+}
+
+.widgets-column {
+  min-width: s.size(widget-w);
+  margin: s.size(widget-y) 0 0 s.size(widget-x);
+
+  > *:not(:first-child) { margin-top: s.space(xl); }
+}

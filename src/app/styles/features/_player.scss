@@ -1,0 +1,205 @@
+@use 'styles' as s;
+
+.player {
+  text-shadow: s.text-shadow(widget);
+
+  > *:not(:first-child) { margin-top: s.space(md); }
+}
+
+.player-art {
+  min-height: s.size(player-art);
+  border-radius: s.radius(xs);
+  box-shadow: s.shadow(art);
+}
+
+.player-cover {
+  min-height: s.size(player-art);
+  border-radius: s.radius(xs);
+  background-color: s.gtk(raised);
+  background-size: cover;
+  background-position: center;
+}
+
+.player-placeholder {
+  -gtk-icon-size: s.size(icon-lg);
+  color: s.gtk(muted);
+}
+
+.player-scrim {
+  min-height: s.size(player-scrim);
+  border-radius: 0 0 s.radius(xs) s.radius(xs);
+  background-image: linear-gradient(to top, s.gtk(scrim), transparent);
+}
+
+.player-badge {
+  @include s.numeric;
+  margin: 0 s.space(lg) s.space(md) 0;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(text);
+}
+
+.player-meta {
+  > *:not(:first-child) { margin-top: s.space(xs); }
+}
+
+.player-source {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(accent);
+}
+
+.player-title {
+  font-size: s.font-size(xl);
+  letter-spacing: s.tracking(display);
+  color: s.gtk(text);
+}
+
+.player-artist {
+  font-size: s.font-size(base);
+  color: s.gtk(textSoft);
+}
+
+.player-album {
+  font-size: s.font-size(sm);
+  color: s.gtk(muted);
+}
+
+.player-seek {
+  > *:not(:first-child) { margin-top: s.space(xs); }
+
+  scale {
+    min-height: s.size(player-knob);
+    padding: 0;
+
+    trough,
+    highlight,
+    fill,
+    slider {
+      background-image: none;
+      outline: none;
+      box-shadow: none;
+      border: none;
+    }
+
+    fill { background-color: transparent; }
+
+    trough {
+      min-height: s.stroke(hairline);
+      border-radius: s.radius(xxs);
+      background-color: s.gtk(indicatorStrong);
+    }
+
+    highlight {
+      min-height: s.size(player-track);
+      border-radius: s.radius(xxs);
+      background-color: s.gtk(accent);
+    }
+
+    slider {
+      min-width: s.size(player-knob);
+      min-height: s.size(player-knob);
+      margin: s.size(player-knob-offset);
+      border-radius: s.radius(full);
+      background-color: s.gtk(text);
+    }
+  }
+}
+
+.player-time {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(numeric);
+  color: s.gtk(textSoft);
+}
+
+.player-control {
+  @include s.bare-button;
+  color: s.gtk(muted);
+
+  image { -gtk-icon-size: s.size(player-icon); }
+
+  &:hover { color: s.gtk(text); }
+  &.--on { color: s.gtk(accent); }
+  &:disabled { opacity: 1; color: s.gtk(indicator); }
+}
+
+.player-step {
+  color: s.gtk(textSoft);
+
+  image { -gtk-icon-size: s.size(player-icon-lg); }
+}
+
+.player-play {
+  @include s.bare-button;
+  min-width: s.size(player-play);
+  min-height: s.size(player-play);
+  border: s.stroke(ring) solid s.gtk(indicatorHover);
+  border-radius: s.radius(full);
+  color: s.gtk(text);
+  transition: border-color s.duration(toggle) s.easing(standard);
+
+  image { -gtk-icon-size: s.size(icon-lg); }
+
+  &:hover {
+    border-color: s.gtk(accent);
+    color: s.gtk(accent);
+  }
+}
+
+.player-volume {
+  > *:not(:first-child) { margin-left: s.space(md); }
+
+  scale {
+    min-height: s.size(player-knob);
+    padding: 0;
+
+    trough,
+    highlight,
+    fill,
+    slider {
+      background-image: none;
+      outline: none;
+      box-shadow: none;
+      border: none;
+    }
+
+    fill,
+    slider { background-color: transparent; }
+
+    slider {
+      min-width: 0;
+      min-height: 0;
+      margin: 0;
+    }
+
+    trough {
+      min-height: s.stroke(hairline);
+      border-radius: s.radius(xxs);
+      background-color: s.gtk(indicatorStrong);
+    }
+
+    highlight {
+      min-height: s.size(player-track);
+      border-radius: s.radius(xxs);
+      background-color: s.gtk(textSoft);
+    }
+  }
+}
+
+.player-volume-icon {
+  @include s.bare-button;
+  color: s.gtk(textSoft);
+
+  image { -gtk-icon-size: s.size(icon); }
+
+  &:hover { color: s.gtk(text); }
+}
+
+.player-volume-value {
+  @include s.numeric;
+  min-width: s.size(player-volume-value);
+  font-size: s.font-size(xs);
+  color: s.gtk(textSoft);
+}

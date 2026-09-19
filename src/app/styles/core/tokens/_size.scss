@@ -24,6 +24,20 @@ $size: scale.linear(config.$size-base, (
   media-cover: 15.5,
   media-track: 0.75,
 
+  widget-w: 90,
+  widget-x: 13,
+  widget-y: 21,
+
+  player-art:          58,
+  player-scrim:        27,
+  player-icon:         4.25,
+  player-icon-lg:      5.25,
+  player-play:         12,
+  player-track:        0.5,
+  player-knob:         2.25,
+  player-knob-offset:  -0.875,
+  player-volume-value: 8.5,
+
   badge:       1.25,
   badge-inset: 1.5,
 

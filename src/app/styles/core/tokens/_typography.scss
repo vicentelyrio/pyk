@@ -7,6 +7,8 @@ $font-size: scale.geometric(config.$font-size-base, config.$type-scale, (
   sm:   -1,
   base: 0,
   md:   1,
+  lg:   2,
+  xl:   3,
 ));
 
 $font-stack: (
@@ -22,6 +24,8 @@ $font-weight: (
 $tracking: (
   numeric: 0.02em,
   label:   0.06em,
+  wide:    0.16em,
+  display: -0.02em,
 );
 
 $leading: (

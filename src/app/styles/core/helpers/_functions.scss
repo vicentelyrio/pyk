@@ -32,6 +32,7 @@
 @function tracking($k)    { @return _get(tokens.$tracking,    $k, 'tracking'); }
 
 @function shadow($k)      { @return _get(tokens.$shadow,      $k, 'shadow') gtk(shadow); }
+@function text-shadow($k) { @return _get(tokens.$text-shadow, $k, 'text-shadow') gtk(scrim); }
 @function shadow-room($k) { @return _get(tokens.$shadow-room, $k, 'shadow-room'); }
 @function duration($k)    { @return _get(tokens.$duration,    $k, 'duration'); }
 @function easing($k)      { @return _get(tokens.$easing,      $k, 'easing'); }
