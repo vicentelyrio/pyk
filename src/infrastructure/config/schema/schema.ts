@@ -58,6 +58,17 @@ export const configSpec = {
       launch: shortcut(['Return', 'KP_Enter']),
     },
   },
+  weather: {
+    location: text('São Paulo'),
+    units: choice(['metric', 'imperial'], 'metric'),
+    refreshInterval: number(900_000, { min: 300_000, max: 3_600_000, step: 60_000, unit: 'ms' }),
+  },
+  todos: {
+    file: path('~/.config/pyk/todo.txt'),
+  },
+  monitor: {
+    interval: number(2000, { min: 500, max: 10_000, step: 500, unit: 'ms' }),
+  },
   media: {
     progressInterval: number(1000, { min: 100, max: 10_000, unit: 'ms', apply: 'restart' }),
   },
@@ -84,6 +95,9 @@ export type WallpaperConfig = Config['wallpaper']
 export type ClockConfig = Config['clock']
 export type CalendarConfig = Config['calendar']
 export type ScheduleConfig = Config['schedule']
+export type WeatherConfig = Config['weather']
+export type TodosConfig = Config['todos']
+export type MonitorConfig = Config['monitor']
 export type MediaConfig = Config['media']
 export type SystemConfig = Config['system']
 

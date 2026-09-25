@@ -23,14 +23,20 @@ import { NiriIpcLive } from '@/infrastructure/niri/gjs/ipc'
 import { NotificationsBackendLive } from '@/infrastructure/notifications/gjs/backend'
 import { NotificationsLayer } from '@/infrastructure/notifications/store/controller'
 import { NiriLayer } from '@/infrastructure/niri/store/controller'
+import { MonitorBackendLive } from '@/infrastructure/monitor/gjs/backend'
+import { MonitorLayer } from '@/infrastructure/monitor/store/controller'
 import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
 import { MprisLayer } from '@/infrastructure/mpris/store/controller'
 import { ScheduleBackendLive } from '@/infrastructure/schedule/gjs/backend'
 import { ScheduleLayer } from '@/infrastructure/schedule/store/controller'
 import { SessionLive } from '@/infrastructure/session/gjs/backend'
 import { NiriBindsLayer } from '@/infrastructure/shortcuts/gjs/layer'
+import { TodosBackendLive } from '@/infrastructure/todos/gjs/backend'
+import { TodosLayer } from '@/infrastructure/todos/store/controller'
 import { WallpaperBackendLive } from '@/infrastructure/wallpaper/gjs/backend'
 import { WallpaperLayer } from '@/infrastructure/wallpaper/store/controller'
+import { WeatherBackendLive } from '@/infrastructure/weather/gjs/backend'
+import { WeatherLayer } from '@/infrastructure/weather/store/controller'
 
 const MainLayer = Layer.mergeAll(
   AppsLayer.pipe(Layer.provide([AppsBackendLive])),
@@ -41,11 +47,14 @@ const MainLayer = Layer.mergeAll(
   ScheduleLayer.pipe(Layer.provide([ScheduleBackendLive])),
   NetworkLayer.pipe(Layer.provide([NetworkBackendLive])),
   NiriLayer.pipe(Layer.provide([NiriIpcLive])),
+  MonitorLayer.pipe(Layer.provide([MonitorBackendLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
   NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
   NiriBindsLayer,
   SessionLive,
+  TodosLayer.pipe(Layer.provide([TodosBackendLive])),
   WallpaperLayer.pipe(Layer.provide([WallpaperBackendLive])),
+  WeatherLayer.pipe(Layer.provide([WeatherBackendLive])),
 ).pipe(
   Layer.provideMerge([ClockLayer.pipe(Layer.provide([ClockBackendLive]))]),
   Layer.provideMerge([ConfigurationLayer]),

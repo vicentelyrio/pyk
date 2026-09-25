@@ -1,0 +1,62 @@
+@use 'styles' as s;
+
+.weather {
+  > .weather-summary { margin-top: s.space(xxs); }
+  > .weather-range { margin-top: s.space(xxs); }
+  > .forecast { margin-top: s.space(xl); }
+}
+
+.weather-now {
+  > *:not(:first-child) { margin-left: s.space(lg); }
+}
+
+.weather-icon {
+  -gtk-icon-size: s.size(weather-icon);
+  margin-top: s.size(weather-nudge);
+  color: s.gtk(info);
+  -gtk-icon-shadow: s.text-shadow(widget);
+}
+
+.weather-temperature {
+  font-size: s.font-size(xxxl);
+  letter-spacing: s.tracking(hero);
+  color: s.gtk(text);
+}
+
+.weather-summary {
+  font-size: s.font-size(base);
+  color: s.gtk(text);
+}
+
+.weather-range {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(numeric);
+  color: s.gtk(textSoft);
+}
+
+.forecast-chart .plot {
+  min-height: s.size(forecast-chart);
+}
+
+.forecast-line { color: s.gtk(infoSoft); }
+.forecast-day { color: s.gtk(info); }
+.forecast-night { color: s.gtk(attention); }
+
+.forecast-slot {
+  margin-top: s.space(xs);
+
+  > *:not(:first-child) { margin-top: s.space(xs); }
+}
+
+.forecast-degrees {
+  @include s.numeric;
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.forecast-time {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  color: s.gtk(textSoft);
+}

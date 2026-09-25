@@ -1,0 +1,39 @@
+@use 'styles' as s;
+
+.todos {
+  > *:not(:first-child) { margin-top: s.space(md); }
+}
+
+.todo {
+  @include s.bare-button;
+
+  box > *:not(:first-child) { margin-left: s.space(md); }
+
+  &:hover .todo-dot { border-color: s.gtk(accent); }
+
+  &.--done {
+    .todo-text {
+      color: s.gtk(muted);
+      text-decoration: line-through;
+      text-decoration-color: s.gtk(indicatorHover);
+    }
+
+    .todo-dot {
+      border-color: s.gtk(accent);
+      background-color: s.gtk(accent);
+    }
+  }
+}
+
+.todo-text {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.todo-dot {
+  min-width: s.size(todo-dot);
+  min-height: s.size(todo-dot);
+  border: s.stroke(hairline) solid s.gtk(indicatorHover);
+  border-radius: s.radius(full);
+  transition: border-color s.duration(toggle) s.easing(standard);
+}

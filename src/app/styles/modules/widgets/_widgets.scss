@@ -6,7 +6,17 @@ window.widgets {
 
 .widgets-column {
   min-width: s.size(widget-w);
-  margin: s.size(widget-y) 0 0 s.size(widget-x);
+  margin-top: s.size(widget-y);
+  text-shadow: s.text-shadow(widget);
+
+  &.--start { margin-left: s.size(widget-x); }
+  &.--end { margin-right: s.size(widget-x); }
 
   > *:not(:first-child) { margin-top: s.space(xl); }
+}
+
+.widgets-rule {
+  min-width: s.size(widget-rule);
+  min-height: s.stroke(hairline);
+  background-color: s.gtk(indicator);
 }

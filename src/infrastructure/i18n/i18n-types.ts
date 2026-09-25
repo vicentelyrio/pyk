@@ -65,6 +65,31 @@ type RootTranslation = {
     connectFailed: string
     retry: string
   }
+  widgets: {
+    allDay: string
+    summary: RequiredParams<'condition' | 'place'>
+    range: RequiredParams<'apparent' | 'high' | 'low'>
+    meters: {
+      cpu: string
+      mem: string
+      net: string
+      temp: string
+    }
+    conditions: {
+      clear: string
+      partly: string
+      cloudy: string
+      fog: string
+      drizzle: string
+      rain: string
+      lightRain: string
+      heavyRain: string
+      snow: string
+      lightSnow: string
+      heavySnow: string
+      storm: string
+    }
+  }
   settings: {
     title: string
     search: string
@@ -100,6 +125,7 @@ type RootTranslation = {
       launcher: string
       clock: string
       wallpaper: string
+      widgets: string
       shortcuts: string
       media: string
       advanced: string
@@ -268,6 +294,32 @@ type RootTranslation = {
         }
       }
     }
+    weather: {
+      location: {
+        label: string
+        hint: string
+      }
+      units: {
+        label: string
+        hint: string
+      }
+      refreshInterval: {
+        label: string
+        hint: string
+      }
+    }
+    todos: {
+      file: {
+        label: string
+        hint: string
+      }
+    }
+    monitor: {
+      interval: {
+        label: string
+        hint: string
+      }
+    }
     media: {
       progressInterval: {
         label: string
@@ -363,6 +415,31 @@ export type TranslationFunctions = {
     connectFailed: () => LocalizedString
     retry: () => LocalizedString
   }
+  widgets: {
+    allDay: () => LocalizedString
+    summary: (arg: { condition: string, place: string }) => LocalizedString
+    range: (arg: { apparent: string, high: string, low: string }) => LocalizedString
+    meters: {
+      cpu: () => LocalizedString
+      mem: () => LocalizedString
+      net: () => LocalizedString
+      temp: () => LocalizedString
+    }
+    conditions: {
+      clear: () => LocalizedString
+      partly: () => LocalizedString
+      cloudy: () => LocalizedString
+      fog: () => LocalizedString
+      drizzle: () => LocalizedString
+      rain: () => LocalizedString
+      lightRain: () => LocalizedString
+      heavyRain: () => LocalizedString
+      snow: () => LocalizedString
+      lightSnow: () => LocalizedString
+      heavySnow: () => LocalizedString
+      storm: () => LocalizedString
+    }
+  }
   settings: {
     title: () => LocalizedString
     search: () => LocalizedString
@@ -398,6 +475,7 @@ export type TranslationFunctions = {
       launcher: () => LocalizedString
       clock: () => LocalizedString
       wallpaper: () => LocalizedString
+      widgets: () => LocalizedString
       shortcuts: () => LocalizedString
       media: () => LocalizedString
       advanced: () => LocalizedString
@@ -564,6 +642,32 @@ export type TranslationFunctions = {
           label: () => LocalizedString
           hint: () => LocalizedString
         }
+      }
+    }
+    weather: {
+      location: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+      units: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+      refreshInterval: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+    }
+    todos: {
+      file: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+    }
+    monitor: {
+      interval: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
       }
     }
     media: {

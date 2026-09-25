@@ -1,0 +1,42 @@
+@use 'styles' as s;
+
+.today {
+  > *:not(:first-child) { margin-top: s.space(md); }
+}
+
+.today-date {
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.today-month {
+  @include s.numeric;
+  font-size: s.font-size(sm);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(accent);
+}
+
+.today-day {
+  font-size: s.font-size(xxl);
+  letter-spacing: s.tracking(hero);
+  color: s.gtk(text);
+}
+
+.today-events {
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.today-row {
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.today-title {
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}
+
+.today-time {
+  @include s.numeric;
+  min-width: s.size(today-time);
+  font-size: s.font-size(xs);
+  color: s.gtk(textSoft);
+}

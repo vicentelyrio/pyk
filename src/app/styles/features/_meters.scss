@@ -1,0 +1,35 @@
+@use 'styles' as s;
+
+.meters {
+  min-width: s.size(widget-w);
+
+  > *:not(:first-child) { margin-top: s.space(lg); }
+}
+
+.meter {
+  > *:not(:first-child) { margin-left: s.space(lg); }
+}
+
+.meter-label {
+  @include s.numeric;
+  min-width: s.size(meter-label);
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(textSoft);
+}
+
+.meter-plot {
+  min-height: s.size(meter-plot);
+
+  &.--accent { color: s.gtk(accent); }
+  &.--warn { color: s.gtk(warn); }
+  &.--info { color: s.gtk(info); }
+  &.--ok { color: s.gtk(ok); }
+}
+
+.meter-value {
+  @include s.numeric;
+  min-width: s.size(meter-value);
+  font-size: s.font-size(sm);
+  color: s.gtk(text);
+}

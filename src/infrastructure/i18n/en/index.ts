@@ -59,6 +59,32 @@ const en = {
     retry: 'Retry',
   },
 
+  widgets: {
+    allDay: 'all day',
+    summary: '{condition:string} · {place:string}',
+    range: '{low:string} / {high:string} · feels {apparent:string}',
+    meters: {
+      cpu: 'CPU',
+      mem: 'MEM',
+      net: 'NET',
+      temp: 'TEMP',
+    },
+    conditions: {
+      clear: 'Clear',
+      partly: 'Partly cloudy',
+      cloudy: 'Cloudy',
+      fog: 'Fog',
+      drizzle: 'Drizzle',
+      rain: 'Rain',
+      lightRain: 'Light rain',
+      heavyRain: 'Heavy rain',
+      snow: 'Snow',
+      lightSnow: 'Light snow',
+      heavySnow: 'Heavy snow',
+      storm: 'Thunderstorm',
+    },
+  },
+
   settings: {
     title: 'PYK SETTINGS',
     search: 'Search settings',
@@ -95,6 +121,7 @@ const en = {
       launcher: 'Launcher',
       clock: 'Clock & calendar',
       wallpaper: 'Wallpaper',
+      widgets: 'Widgets',
       shortcuts: 'Shortcuts',
       media: 'Media',
       advanced: 'Advanced',
@@ -272,6 +299,35 @@ const en = {
           label: 'Launcher — Launch',
           hint: 'Runs the selected result',
         },
+      },
+    },
+
+    weather: {
+      location: {
+        label: 'Weather location',
+        hint: 'City name, geocoded by Open-Meteo',
+      },
+      units: {
+        label: 'Units',
+        hint: 'metric is °C, imperial is °F',
+      },
+      refreshInterval: {
+        label: 'Weather refresh interval',
+        hint: 'How often the forecast is fetched',
+      },
+    },
+
+    todos: {
+      file: {
+        label: 'Todo file',
+        hint: 'todo.txt format — lines starting with “x ” are done',
+      },
+    },
+
+    monitor: {
+      interval: {
+        label: 'Meter sample interval',
+        hint: 'CPU, memory, network and temperature',
       },
     },
 

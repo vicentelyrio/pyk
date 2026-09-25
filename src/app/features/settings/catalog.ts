@@ -8,6 +8,7 @@ export type SectionId =
   | 'launcher'
   | 'clock'
   | 'wallpaper'
+  | 'widgets'
   | 'shortcuts'
   | 'media'
   | 'advanced'
@@ -27,6 +28,7 @@ const LAYOUT: ReadonlyArray<readonly [SectionId, readonly string[]]> = [
   ['launcher', ['launcher']],
   ['clock', ['clock', 'calendar', 'schedule']],
   ['wallpaper', ['wallpaper']],
+  ['widgets', ['weather', 'todos', 'monitor']],
   ['shortcuts', ['shortcuts']],
   ['media', ['media']],
   ['advanced', ['system']],
@@ -49,6 +51,7 @@ export const SECTION_ICONS: Readonly<Record<SectionId, string>> = {
   launcher: 'pyk-search-symbolic',
   clock: 'pyk-calendar-symbolic',
   wallpaper: 'pyk-image-symbolic',
+  widgets: 'pyk-widgets-symbolic',
   shortcuts: 'pyk-keyboard-symbolic',
   media: 'pyk-music-symbolic',
   advanced: 'pyk-advanced-symbolic',

@@ -128,6 +128,23 @@ function passScrollToList(self: Gtk.Widget): void {
   self.add_controller(scroll)
 }
 
+function bindText(self: Gtk.Entry, value: Accessor<unknown>): void {
+  const editing = () => self.has_focus || self.get_focus_child() !== null
+  const sync = () => {
+    const next = String(value())
+    if (self.text !== next) self.text = next
+  }
+
+  const focus = new Gtk.EventControllerFocus()
+  focus.connect('leave', sync)
+  self.add_controller(focus)
+
+  sync()
+  onCleanup(value.subscribe(() => {
+    if (!editing()) sync()
+  }))
+}
+
 function stepOf(leaf: NumberLeaf): number {
   return leaf.step ?? (leaf.max - leaf.min <= 2 ? 0.01 : 1)
 }
@@ -358,7 +375,7 @@ function EntryControl({ row, value, set, onError }: ControlProps) {
     <box class={bad.as((it) => clsx(cs.entry, it && cs.failed))} valign={Gtk.Align.CENTER}>
       <entry
         class={cs.input}
-        text={value.as(String)}
+        $={(self: Gtk.Entry) => bindText(self, value)}
         xalign={1}
         widthChars={NUMBER_CHARS}
         maxWidthChars={NUMBER_CHARS}
@@ -450,7 +467,7 @@ function ColorControl({ value, set, onError }: ControlProps) {
         <box class={cs.colorChip} valign={Gtk.Align.CENTER} css={value.as((it) => `background-color: ${String(it)};`)} />
         <entry
           class={cs.input}
-          text={value.as(String)}
+          $={(self: Gtk.Entry) => bindText(self, value)}
           widthChars={HEX_CHARS}
           maxWidthChars={HEX_CHARS}
           onNotifyText={(self: Gtk.Entry) => {
@@ -476,7 +493,7 @@ function TextControl({ value, set, onError }: ControlProps) {
     <box class={bad.as((it) => clsx(cs.text, it && cs.failed))} valign={Gtk.Align.CENTER}>
       <entry
         class={cs.input}
-        text={value.as(String)}
+        $={(self: Gtk.Entry) => bindText(self, value)}
         widthChars={TEXT_CHARS}
         maxWidthChars={TEXT_CHARS}
         onNotifyText={(self: Gtk.Entry) => {
@@ -522,7 +539,7 @@ function PathControl({ row, value, set }: ControlProps) {
     <box class={cs.path} hexpand valign={Gtk.Align.CENTER}>
       <entry
         class={cs.input}
-        text={value.as(String)}
+        $={(self: Gtk.Entry) => bindText(self, value)}
         hexpand
         onNotifyText={(self: Gtk.Entry) => commit(self.text)}
       />
