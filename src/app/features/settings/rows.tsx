@@ -6,8 +6,9 @@ import { For, createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { closePopover, Popover, Switch } from '@/ui/components'
 import { config } from '@/infrastructure/config'
-import { collapseHome, expandHome, type ChoiceLeaf, type NumberLeaf, type PathLeaf } from '@/infrastructure/config/schema'
+import { acceptsItem, collapseHome, expandHome, type ChoiceLeaf, type ListLeaf, type NumberLeaf, type PathLeaf } from '@/infrastructure/config/schema'
 import { LL } from '@/infrastructure/i18n'
+import { isRemote } from '@/infrastructure/wallpaper'
 
 import { patchFor, same, valueAt, type SettingRow } from './catalog'
 import { copyFor, sectionTitle } from './copy'
@@ -187,7 +188,7 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
 
   const [error, setError] = createState('')
 
-  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record'
+  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record' && leaf.kind !== 'list'
 
   return (
     <box class={cs.row} orientation={Gtk.Orientation.VERTICAL}>
@@ -302,6 +303,8 @@ function Control(props: ControlProps) {
       return <ShortcutControl {...props} />
     case 'record':
       return <RecordControl {...props} />
+    case 'list':
+      return <ListControl {...props} />
   }
 }
 
@@ -521,7 +524,7 @@ function PathControl({ row, value, set }: ControlProps) {
     const window = self.get_root() as Gtk.Window | null
     const current = expandHome(String(value()), home)
 
-    if (current) dialog.set_initial_file(Gio.File.new_for_path(current))
+    if (current && !isRemote(current)) dialog.set_initial_file(Gio.File.new_for_path(current))
 
     const picked = leaf.select === 'directory'
       ? dialog.select_folder(window, null)
@@ -589,6 +592,73 @@ function ShortcutControl({ row, value, set, capturing, onCapture }: ControlProps
           <label label={t.addShortcut()} />
         </box>
       </button>
+    </box>
+  )
+}
+
+function ListControl({ row, value, set, onError }: ControlProps) {
+  const t = LL().settings
+  const leaf = row.leaf as ListLeaf
+
+  const items = value as Accessor<readonly string[]>
+
+  const add = (self: Gtk.Entry) => {
+    const item = self.text.trim()
+    if (!item) return
+
+    if (!acceptsItem(leaf, item)) {
+      onError(t.listInvalid({ raw: item }))
+      return
+    }
+
+    onError('')
+    if (!items().includes(item)) set([...items(), item])
+    self.text = ''
+  }
+
+  let input: Gtk.Entry | null = null
+
+  return (
+    <box class={cs.table} orientation={Gtk.Orientation.VERTICAL} hexpand>
+      <For each={items} id={(it: string) => it}>
+        {(item: string) => (
+          <box class={cs.tableRow}>
+            <label
+              class={cs.tableValue}
+              label={item}
+              xalign={0}
+              hexpand
+              maxWidthChars={1}
+              ellipsize={Pango.EllipsizeMode.MIDDLE}
+            />
+            <button
+              class={cs.tableClear}
+              tooltipText={t.removeShortcut()}
+              focusable={false}
+              onClicked={() => set(items().filter((it) => it !== item))}>
+              <image iconName={icons.drop} />
+            </button>
+          </box>
+        )}
+      </For>
+      <label
+        class={cs.empty}
+        label={t.listEmpty()}
+        xalign={0}
+        visible={items.as((it) => it.length === 0)}
+      />
+      <box class={cs.path} hexpand>
+        <entry
+          class={cs.input}
+          placeholderText={t.listPlaceholder()}
+          hexpand
+          $={(self: Gtk.Entry) => (input = self)}
+          onActivate={add}
+        />
+        <button class={cs.browse} focusable={false} onClicked={() => input && add(input)}>
+          <label label={t.listAdd()} />
+        </button>
+      </box>
     </box>
   )
 }

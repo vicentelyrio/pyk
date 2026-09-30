@@ -111,6 +111,10 @@ const en = {
     recordValue: 'VALUE',
     recordEmpty: 'No per-display overrides — set one from the wallpaper picker',
     clearRecord: 'Clear mapping',
+    listEmpty: 'Nothing added yet',
+    listAdd: 'Add',
+    listPlaceholder: 'https://…',
+    listInvalid: '{raw:string} is not a valid entry',
     close: 'Close',
 
     sections: {
@@ -260,6 +264,10 @@ const en = {
       image: {
         label: 'Default image for all displays',
         hint: 'Used by any display without its own mapping',
+      },
+      urls: {
+        label: 'Image URLs',
+        hint: 'Downloaded once and shown in the wallpaper picker. Unsplash photo pages work too',
       },
       outputs: {
         label: 'Per-display wallpaper',

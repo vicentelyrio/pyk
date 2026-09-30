@@ -21,12 +21,15 @@ export interface PathLeaf extends LeafBase<'path', string> {
   readonly select: 'file' | 'directory'
 }
 export type RecordLeaf = LeafBase<'record', Readonly<Record<string, string>>>
+export interface ListLeaf extends LeafBase<'list', readonly string[]> {
+  readonly item: 'text' | 'url'
+}
 
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
   readonly options: readonly T[]
 }
 
-export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | RecordLeaf | ChoiceLeaf<string>
+export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | ListLeaf | RecordLeaf | ChoiceLeaf<string>
 
 export interface Spec {
   readonly [key: string]: Leaf | Spec
@@ -36,7 +39,7 @@ export type Value<S> =
   S extends ChoiceLeaf<infer T> ? T
     : S extends NumberLeaf ? number
       : S extends ToggleLeaf ? boolean
-        : S extends ShortcutLeaf ? readonly string[]
+        : S extends ShortcutLeaf | ListLeaf ? readonly string[]
           : S extends RecordLeaf ? Readonly<Record<string, string>>
         : S extends ColorLeaf | TextLeaf | PathLeaf ? string
           : S extends Spec ? { readonly [K in keyof S]: Value<S[K]> }
@@ -81,6 +84,10 @@ export function record(options: Options = {}): RecordLeaf {
   return { kind: 'record', default: {}, apply: options.apply ?? 'live' }
 }
 
+export function list(item: ListLeaf['item'] = 'text', options: Options = {}): ListLeaf {
+  return { kind: 'list', default: [], item, apply: options.apply ?? 'live' }
+}
+
 export function shortcut(fallback: readonly string[], options: Options = {}): ShortcutLeaf {
   return { kind: 'shortcut', default: fallback, apply: options.apply ?? 'live' }
 }
@@ -94,7 +101,12 @@ export function choice<const T extends string>(
 }
 
 const HEX = /^#(?:[0-9a-f]{6}|[0-9a-f]{8})$/i
+const URL = /^https?:\/\/\S+$/i
 const KEY = /^(?:(?:Mod|Super|Ctrl|Control|Alt|Shift)\+)*[A-Za-z0-9_]+$/
+
+export function acceptsItem(leaf: ListLeaf, item: string): boolean {
+  return item.length > 0 && (leaf.item === 'text' || URL.test(item))
+}
 
 export function isLeaf(node: Leaf | Spec): node is Leaf {
   return typeof node.kind === 'string'
@@ -116,6 +128,8 @@ function accepts(leaf: Leaf, input: unknown): boolean {
       return typeof input === 'string'
     case 'record':
       return isRecord(input) && Object.values(input).every((it) => typeof it === 'string')
+    case 'list':
+      return Array.isArray(input) && input.every((it) => typeof it === 'string' && acceptsItem(leaf, it))
     case 'toggle':
       return typeof input === 'boolean'
     case 'shortcut':

@@ -10,12 +10,32 @@ export const thumbnailDir = GLib.build_filenamev([GLib.get_user_cache_dir(), 'py
 
 export interface Scanned {
   readonly image: WallpaperImage
+  readonly source: string
   readonly target: string
 }
 
 function thumbnailPath(path: string, modified: number): string {
   const key = GLib.compute_checksum_for_string(GLib.ChecksumType.MD5, `${path}:${modified}`, -1)
   return GLib.build_filenamev([thumbnailDir, `${key}.png`])
+}
+
+export function inspect(source: string, path: string, name: string, modified: number): Scanned | null {
+  const [format, width, height] = GdkPixbuf.Pixbuf.get_file_info(source)
+  if (!format) return null
+
+  const target = thumbnailPath(source, modified)
+
+  return {
+    source,
+    target,
+    image: {
+      path,
+      name,
+      width,
+      height,
+      thumbnail: GLib.file_test(target, GLib.FileTest.EXISTS) ? target : null,
+    },
+  }
 }
 
 export function scan(directory: string): readonly Scanned[] {
@@ -31,21 +51,8 @@ export function scan(directory: string): readonly Scanned[] {
       if (!info.get_content_type()?.startsWith('image/')) continue
 
       const path = GLib.build_filenamev([directory, info.get_name()])
-      const [format, width, height] = GdkPixbuf.Pixbuf.get_file_info(path)
-      if (!format) continue
-
-      const target = thumbnailPath(path, info.get_modification_date_time()?.to_unix() ?? 0)
-
-      found.push({
-        target,
-        image: {
-          path,
-          name: info.get_name(),
-          width,
-          height,
-          thumbnail: GLib.file_test(target, GLib.FileTest.EXISTS) ? target : null,
-        },
-      })
+      const scanned = inspect(path, path, info.get_name(), info.get_modification_date_time()?.to_unix() ?? 0)
+      if (scanned) found.push(scanned)
     }
   }
   finally {

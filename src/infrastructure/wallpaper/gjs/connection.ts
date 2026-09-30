@@ -3,7 +3,7 @@ import { Duration, Effect, Stream } from 'effect'
 
 import { attemptPromise, fromSignal, reconnecting, report, type SourceError } from '@/infrastructure/effect'
 
-import type { WallpaperImage, WallpaperState } from '../store/state'
+import type { WallpaperGallery, WallpaperImage } from '../store/state'
 import { scan, type Scanned } from './scan'
 import { createThumbnail } from './thumbnail'
 
@@ -18,14 +18,14 @@ function watch(directory: string): Stream.Stream<readonly Scanned[], SourceError
   )
 }
 
-function withThumbnails(directory: string, scanned: readonly Scanned[]): Stream.Stream<WallpaperState> {
+function withThumbnails(directory: string, scanned: readonly Scanned[]): Stream.Stream<WallpaperGallery> {
   const initial: readonly WallpaperImage[] = scanned.map((it) => it.image)
   const missing = scanned.filter((it) => !it.image.thumbnail)
 
   const updates = Stream.fromIterable(missing).pipe(
     Stream.mapEffect(
-      ({ image, target }) =>
-        attemptPromise('wallpaper', 'thumbnail', () => createThumbnail(image.path, target), Duration.seconds(30)).pipe(
+      ({ image, source, target }) =>
+        attemptPromise('wallpaper', 'thumbnail', () => createThumbnail(source, target), Duration.seconds(30)).pipe(
           Effect.map((thumbnail) => ({ path: image.path, thumbnail })),
           Effect.catchCause((cause) => report(cause).pipe(Effect.as(null))),
         ),
@@ -43,7 +43,7 @@ function withThumbnails(directory: string, scanned: readonly Scanned[]): Stream.
   )
 }
 
-export function stateChanges(directories: Stream.Stream<string>): Stream.Stream<WallpaperState, SourceError> {
+export function stateChanges(directories: Stream.Stream<string>): Stream.Stream<WallpaperGallery, SourceError> {
   return directories.pipe(
     Stream.changes,
     Stream.switchMap((directory) =>

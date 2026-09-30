@@ -7,5 +7,7 @@ export function gallery(state: Accessor<WallpaperState>) {
   return {
     directory: createMemo(() => state().directory),
     images: createMemo(() => state().images, { equals: Equal.equals }),
+    remote: createMemo(() => state().remote, { equals: Equal.equals }),
+    files: createMemo(() => state().files, { equals: Equal.equals }),
   }
 }

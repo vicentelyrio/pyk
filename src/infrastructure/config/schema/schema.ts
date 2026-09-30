@@ -1,4 +1,4 @@
-import { choice, color, defaults, number, path, record, shortcut, text, toggle, type Patch, type Value } from './spec'
+import { choice, color, defaults, list, number, path, record, shortcut, text, toggle, type Patch, type Value } from './spec'
 
 export const configSpec = {
   appearance: {
@@ -43,6 +43,7 @@ export const configSpec = {
   wallpaper: {
     directory: path('~/Pictures/Wallpapers', { select: 'directory' }),
     image: path(''),
+    urls: list('url'),
     outputs: record(),
     fit: choice(['cover', 'contain', 'fill'], 'cover'),
   },

@@ -1,4 +1,3 @@
-import GLib from 'gi://GLib'
 import Pango from 'gi://Pango'
 import { Gtk } from 'ags/gtk4'
 import { For, createComputed, type Accessor } from 'ags'
@@ -36,7 +35,7 @@ export type WallpaperProps = {
 }
 
 export function Wallpaper({ connector, className }: WallpaperProps) {
-  const current = wallpaper.forOutput(connector)
+  const current = wallpaper.source(connector)
 
   return (
     <Popover
@@ -68,7 +67,7 @@ type WallpaperGridProps = {
 }
 
 function WallpaperGrid({ connector, current }: WallpaperGridProps) {
-  const rows = createComputed(() => wallpaper.rows(wallpaper.images().map((it) => it.path), COLUMNS))
+  const rows = createComputed(() => wallpaper.rows(wallpaper.paths(), COLUMNS))
 
   return (
     <box class={cs.grid} orientation={Gtk.Orientation.VERTICAL}>
@@ -95,13 +94,13 @@ type WallpaperThumbProps = {
 }
 
 function WallpaperThumb({ path, connector, current }: WallpaperThumbProps) {
-  const thumbnail = createComputed(() => wallpaper.images().find((it) => it.path === path)?.thumbnail ?? null)
+  const thumbnail = createComputed(() => wallpaper.find(path)?.thumbnail ?? null)
 
   return (
     <button
       class={current.as((it) => clsx(cs.thumb, it === path && cs.selected))}
       css={thumbnail.as((it) => (it ? `background-image: url("file://${it}");` : ''))}
-      tooltipText={GLib.path_get_basename(path)}
+      tooltipText={wallpaper.displayName(path)}
       focusable={false}
       onClicked={() => wallpaper.assign(connector, path)}
     />
@@ -109,7 +108,7 @@ function WallpaperThumb({ path, connector, current }: WallpaperThumbProps) {
 }
 
 function WallpaperFooter({ current }: { readonly current: Accessor<string> }) {
-  const selected = createComputed(() => wallpaper.images().find((it) => it.path === current()) ?? null)
+  const selected = createComputed(() => wallpaper.find(current()))
 
   return (
     <box class={cs.footer}>
@@ -117,9 +116,10 @@ function WallpaperFooter({ current }: { readonly current: Accessor<string> }) {
         class={cs.name}
         label={createComputed(() => {
           const path = current()
-          return path ? GLib.path_get_basename(path) : 'No wallpaper'
+          return path ? wallpaper.displayName(path) : 'No wallpaper'
         })}
         xalign={0}
+        maxWidthChars={1}
         ellipsize={Pango.EllipsizeMode.MIDDLE}
         hexpand
       />

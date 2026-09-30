@@ -1,5 +1,5 @@
 import GLib from 'gi://GLib'
-import { Gtk } from 'ags/gtk4'
+import { Astal, Gtk } from 'ags/gtk4'
 import { clsx } from 'clsx'
 import { onCleanup, type Accessor } from 'ags'
 import { config } from '@/infrastructure/config'
@@ -79,9 +79,25 @@ export function Popover({
 }
 
 function track(anchor: Gtk.Widget, content: Gtk.Popover) {
+  let restore: Astal.Keymode | null = null
+
   const opened = content.connect('notify::visible', () => {
-    if (content.visible) anchor.add_css_class(cs.open)
-    else anchor.remove_css_class(cs.open)
+    const window = anchor.get_root()
+
+    if (content.visible) {
+      anchor.add_css_class(cs.open)
+      if (window instanceof Astal.Window && window.keymode === Astal.Keymode.NONE) {
+        restore = window.keymode
+        window.keymode = Astal.Keymode.ON_DEMAND
+      }
+    }
+    else {
+      anchor.remove_css_class(cs.open)
+      if (window instanceof Astal.Window && restore !== null) {
+        window.keymode = restore
+        restore = null
+      }
+    }
   })
 
   onCleanup(() => content.disconnect(opened))

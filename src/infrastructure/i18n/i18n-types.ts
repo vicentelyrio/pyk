@@ -116,6 +116,10 @@ type RootTranslation = {
     recordValue: string
     recordEmpty: string
     clearRecord: string
+    listEmpty: string
+    listAdd: string
+    listPlaceholder: string
+    listInvalid: RequiredParams<'raw'>
     close: string
     sections: {
       appearance: string
@@ -252,6 +256,10 @@ type RootTranslation = {
         hint: string
       }
       image: {
+        label: string
+        hint: string
+      }
+      urls: {
         label: string
         hint: string
       }
@@ -466,6 +474,10 @@ export type TranslationFunctions = {
     recordValue: () => LocalizedString
     recordEmpty: () => LocalizedString
     clearRecord: () => LocalizedString
+    listEmpty: () => LocalizedString
+    listAdd: () => LocalizedString
+    listPlaceholder: () => LocalizedString
+    listInvalid: (arg: { raw: string }) => LocalizedString
     close: () => LocalizedString
     sections: {
       appearance: () => LocalizedString
@@ -602,6 +614,10 @@ export type TranslationFunctions = {
         hint: () => LocalizedString
       }
       image: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+      urls: {
         label: () => LocalizedString
         hint: () => LocalizedString
       }
