@@ -114,6 +114,24 @@
   color: s.gtk(textSoft);
 }
 
+.player-live {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.player-live-dot {
+  min-width: s.size(live-dot);
+  min-height: s.size(live-dot);
+  border-radius: s.radius(full);
+  background-color: s.gtk(warn);
+}
+
+.player-live-label {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(warn);
+}
+
 .player-control {
   @include s.bare-button;
   color: s.gtk(muted);

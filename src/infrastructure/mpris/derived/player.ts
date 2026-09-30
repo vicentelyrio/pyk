@@ -7,9 +7,10 @@ export function player(state: Accessor<MprisState>) {
   const length = createMemo(() => state().length)
   const loop = createMemo(() => state().loop)
   const shuffle = createMemo(() => state().shuffle)
+  const hasPlayer = createMemo(() => state().hasPlayer)
 
   return {
-    hasPlayer: createMemo(() => state().hasPlayer),
+    hasPlayer,
     isPlaying: createMemo(() => state().isPlaying),
     identity: createMemo(() => state().identity),
     title: createMemo(() => state().title),
@@ -19,6 +20,7 @@ export function player(state: Accessor<MprisState>) {
     position,
     length,
     remaining: createMemo(() => Math.max(length() - position(), 0)),
+    isLive: createMemo(() => hasPlayer() && length() === 0),
     progress: createMemo(() => (length() > 0 ? Math.min(position() / length(), 1) : 0)),
     canPlay: createMemo(() => state().canPlay),
     canSeek: createMemo(() => state().canSeek),

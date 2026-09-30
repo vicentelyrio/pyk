@@ -2,7 +2,6 @@
 
 .media {
   min-height: s.size(bar-hit);
-  &.media-disabled .media-control { color: s.gtk(faint); }
 }
 
 .media-controls {
@@ -93,4 +92,22 @@
   @include s.numeric;
   font-size: s.font-size(xxs);
   color: s.gtk(faint);
+}
+
+.media-live {
+  > *:not(:first-child) { margin-left: s.space(sm); }
+}
+
+.media-live-dot {
+  min-width: s.size(live-dot);
+  min-height: s.size(live-dot);
+  border-radius: s.radius(full);
+  background-color: s.gtk(warn);
+}
+
+.media-live-label {
+  @include s.numeric;
+  font-size: s.font-size(xs);
+  letter-spacing: s.tracking(wide);
+  color: s.gtk(warn);
 }

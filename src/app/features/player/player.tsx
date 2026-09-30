@@ -20,6 +20,9 @@ const cs = {
   seek: 'player-seek',
   times: 'player-times',
   time: 'player-time',
+  live: 'player-live',
+  liveDot: 'player-live-dot',
+  liveLabel: 'player-live-label',
   controls: 'player-controls',
   control: 'player-control',
   step: 'player-step',
@@ -53,6 +56,7 @@ export function Player({ className }: { className?: string }) {
       <PlayerArt />
       <PlayerMeta />
       <PlayerSeek />
+      <PlayerLive />
       <PlayerControls />
       <PlayerVolume />
     </box>
@@ -60,6 +64,11 @@ export function Player({ className }: { className?: string }) {
 }
 
 function PlayerArt() {
+  const badge = createComputed(() => {
+    if (!mpris.isPlaying()) return 'PAUSED'
+    return mpris.isLive() ? 'LIVE' : 'PLAYING'
+  })
+
   return (
     <overlay class={cs.art}>
       <box class={cs.cover} css={mpris.coverArt.as(cover)}>
@@ -77,7 +86,7 @@ function PlayerArt() {
       <label
         $type="overlay"
         class={cs.badge}
-        label={mpris.isPlaying.as((playing) => (playing ? 'PLAYING' : 'PAUSED'))}
+        label={badge}
         halign={Gtk.Align.END}
         valign={Gtk.Align.END}
       />
@@ -123,7 +132,10 @@ function PlayerLine({ className, text }: PlayerLineProps) {
 
 function PlayerSeek() {
   return (
-    <box class={cs.seek} orientation={Gtk.Orientation.VERTICAL}>
+    <box
+      class={cs.seek}
+      orientation={Gtk.Orientation.VERTICAL}
+      visible={mpris.isLive.as((live) => !live)}>
       <slider
         min={0}
         max={1}
@@ -136,6 +148,15 @@ function PlayerSeek() {
         <label class={cs.time} label={mpris.position.as(elapsed)} xalign={0} hexpand />
         <label class={cs.time} label={mpris.remaining.as(countdown)} xalign={1} hexpand />
       </box>
+    </box>
+  )
+}
+
+function PlayerLive() {
+  return (
+    <box class={cs.live} visible={mpris.isLive}>
+      <box class={cs.liveDot} valign={Gtk.Align.CENTER} />
+      <label class={cs.liveLabel} label="LIVE STREAM" />
     </box>
   )
 }

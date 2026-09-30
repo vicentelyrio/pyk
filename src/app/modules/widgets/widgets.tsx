@@ -3,6 +3,7 @@ import { Astal, Gdk, Gtk } from 'ags/gtk4'
 import type { Accessor } from 'ags'
 import { Meters, Player, Today, Todos, Weather } from '@/app/features'
 import { monitor } from '@/infrastructure/monitor'
+import { mpris } from '@/infrastructure/mpris'
 import { todos } from '@/infrastructure/todos'
 import { weather } from '@/infrastructure/weather'
 
@@ -19,7 +20,7 @@ export function WidgetsWindow(gdkmonitor: Gdk.Monitor) {
 
   return [
     <window
-      visible
+      visible={mpris.hasPlayer}
       name={`widgets-${gdkmonitor.connector}`}
       namespace="pyk-widgets"
       class={cs.root}

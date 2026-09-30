@@ -7,7 +7,6 @@ import { mpris } from '@/infrastructure/mpris'
 
 const cs = {
   root: 'media',
-  disabled: 'media-disabled',
   controls: 'media-controls',
   control: 'media-control',
   play: 'media-play',
@@ -24,6 +23,9 @@ const cs = {
   track: 'media-track',
   times: 'media-times',
   time: 'media-time',
+  live: 'media-live',
+  liveDot: 'media-live-dot',
+  liveLabel: 'media-live-label',
 }
 
 const icons = {
@@ -38,8 +40,9 @@ export function Media({ className }: { className?: string }) {
   return (
     <Popover
       on="hover"
-      className={clsx(cs.root, !mpris.hasPlayer && cs.disabled, className)}
+      className={clsx(cs.root, className)}
       contentClassName={cs.card}
+      visible={mpris.hasPlayer}
       trigger={<MediaControls />}>
       <MediaCard />
     </Popover>
@@ -86,7 +89,7 @@ type MediaControlProps = {
 function MediaControl({ icon, tooltip, enabled, className, onClicked }: MediaControlProps) {
   return (
     <button
-      class={clsx(cs.control, !mpris.hasPlayer && cs.disabled, className)}
+      class={clsx(cs.control, className)}
       tooltipText={tooltip}
       sensitive={enabled}
       halign={Gtk.Align.CENTER}
@@ -105,6 +108,7 @@ function MediaCard() {
         <MediaMeta />
       </box>
       <MediaProgress />
+      <MediaLive />
     </box>
   )
 }
@@ -166,7 +170,10 @@ function MediaMetaLine({ className, text }: MediaMetaLineProps) {
 
 function MediaProgress() {
   return (
-    <box class={cs.progress} orientation={Gtk.Orientation.VERTICAL}>
+    <box
+      class={cs.progress}
+      orientation={Gtk.Orientation.VERTICAL}
+      visible={mpris.isLive.as((live) => !live)}>
       <levelbar
         class={cs.track}
         mode={Gtk.LevelBarMode.CONTINUOUS}
@@ -176,6 +183,15 @@ function MediaProgress() {
         <MediaTime text={mpris.position.as(elapsed)} halign={Gtk.Align.START} />
         <MediaTime text={mpris.remaining.as(countdown)} halign={Gtk.Align.END} />
       </box>
+    </box>
+  )
+}
+
+function MediaLive() {
+  return (
+    <box class={cs.live} visible={mpris.isLive}>
+      <box class={cs.liveDot} valign={Gtk.Align.CENTER} />
+      <label class={cs.liveLabel} label="LIVE" />
     </box>
   )
 }
