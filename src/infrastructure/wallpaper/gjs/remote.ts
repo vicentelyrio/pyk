@@ -65,17 +65,21 @@ function download(url: string): Effect.Effect<string, SourceError> {
   })
 }
 
+type Thumbnailed = Scanned & { readonly image: { readonly thumbnail: string } }
+
+function isSettled(scanned: Scanned | null): scanned is Thumbnailed | null {
+  return !scanned || scanned.image.thumbnail !== null
+}
+
 function resolve(url: string): Effect.Effect<Scanned | null> {
   const fetched = cached(url) ? Effect.succeed(cachePath(url)) : download(url)
 
   return fetched.pipe(
     Effect.map((file) => inspect(file, url, displayName(url), 0)),
-    Effect.flatMap((scanned) =>
-      scanned && !scanned.image.thumbnail
-        ? attemptPromise('wallpaper', 'thumbnail', () => createThumbnail(scanned.source, scanned.target), Duration.seconds(30)).pipe(
-            Effect.map((thumbnail) => ({ ...scanned, image: { ...scanned.image, thumbnail } })),
-          )
-        : Effect.succeed(scanned)),
+    Effect.filterOrElse(isSettled, (scanned) =>
+      attemptPromise('wallpaper', 'thumbnail', () => createThumbnail(scanned.source, scanned.target), Duration.seconds(30)).pipe(
+        Effect.map((thumbnail) => ({ ...scanned, image: { ...scanned.image, thumbnail } })),
+      )),
     Effect.catchCause((cause) => report(cause).pipe(Effect.as(null))),
   )
 }
