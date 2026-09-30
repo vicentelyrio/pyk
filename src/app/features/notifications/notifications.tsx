@@ -1,7 +1,7 @@
 import GLib from 'gi://GLib'
 import Pango from 'gi://Pango'
 import { Gtk } from 'ags/gtk4'
-import { For, createComputed } from 'ags'
+import { For, createComputed, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { Avatar, Popover } from '@/ui/components'
 import { notifications, type Notification } from '@/infrastructure/notifications'
@@ -37,11 +37,17 @@ const icons = {
 
 const LIST_MAX_HEIGHT = 400
 
-export function Notifications({ className }: { className?: string }) {
+export type NotificationsProps = {
+  readonly className?: string
+  readonly reveal?: Accessor<object | null>
+}
+
+export function Notifications({ className, reveal }: NotificationsProps) {
   return (
     <Popover
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
+      reveal={reveal}
       tooltip="Notifications"
       trigger={<NotificationsBell />}>
       <box orientation={Gtk.Orientation.VERTICAL}>

@@ -49,13 +49,19 @@ const ACTIONS: readonly SessionAction[] = [
   { id: 'poweroff', label: 'Shut down', icon: icons.power, danger: true, run: session.powerOff },
 ]
 
-export function Session({ className }: { className?: string }) {
+export type SessionProps = {
+  readonly className?: string
+  readonly reveal?: Accessor<object | null>
+}
+
+export function Session({ className, reveal }: SessionProps) {
   const [armed, setArmed] = createState<string | null>(null)
 
   return (
     <Popover
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
+      reveal={reveal}
       tooltip="Session"
       trigger={<image class={cs.trigger} iconName={icons.power} />}>
       <box

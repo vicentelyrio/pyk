@@ -32,15 +32,17 @@ const COLUMNS = 3
 export type WallpaperProps = {
   readonly connector: string
   readonly className?: string
+  readonly reveal?: Accessor<object | null>
 }
 
-export function Wallpaper({ connector, className }: WallpaperProps) {
+export function Wallpaper({ connector, className, reveal }: WallpaperProps) {
   const current = wallpaper.source(connector)
 
   return (
     <Popover
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
+      reveal={reveal}
       tooltip="Wallpaper"
       trigger={<image class={cs.trigger} iconName={icons.image} />}>
       <box orientation={Gtk.Orientation.VERTICAL}>

@@ -4,6 +4,8 @@ import { Calendar, ControlCenter, Media, Notifications, Session, Wallpaper, Work
 import { Divider } from '@/ui/components'
 import { settings } from '@/app/modules/settings'
 
+import { bar, type BarSurface } from './state'
+
 const cs = {
   root: 'bar',
   tray: 'bar-tray',
@@ -11,6 +13,17 @@ const cs = {
 
 export function Bar(gdkmonitor: Gdk.Monitor) {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+  const connector = gdkmonitor.connector ?? ''
+
+  const reveal = (surface: BarSurface) =>
+    bar.request.as((it) => (it?.output === connector && it.surface === surface ? it : null))
+
+  const control = bar.request.as((it) => {
+    if (it?.output !== connector) return null
+    if (it.surface === 'control') return { page: 'root' as const }
+    if (it.surface === 'wifi' || it.surface === 'bluetooth') return { page: it.surface }
+    return null
+  })
 
   return (
     <window
@@ -26,14 +39,14 @@ export function Bar(gdkmonitor: Gdk.Monitor) {
         <Workspaces $type="start" />
         <Media $type="center" />
         <box $type="end" class={cs.tray}>
-          <Wallpaper connector={gdkmonitor.connector ?? ''} />
-          <Notifications />
+          <Wallpaper connector={connector} reveal={reveal('wallpaper')} />
+          <Notifications reveal={reveal('notifications')} />
           <Divider />
-          <ControlCenter onSettings={settings.show} />
+          <ControlCenter onSettings={() => settings.show()} reveal={control} />
           <Divider />
-          <Calendar />
+          <Calendar reveal={reveal('calendar')} />
           <Divider />
-          <Session />
+          <Session reveal={reveal('session')} />
         </box>
       </centerbox>
     </window>

@@ -24,7 +24,7 @@ export function SettingsWindow() {
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       $={(self) => dismissOutside(self as Gtk.Window)}>
-      <Settings onClose={settings.hide} />
+      <Settings section={settings.section} onSection={settings.select} onClose={settings.hide} />
     </window>
   )
 }

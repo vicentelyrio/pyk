@@ -2,6 +2,7 @@ import app from 'ags/gtk4/app'
 import { Astal, Gtk } from 'ags/gtk4'
 import { Launcher } from '@/app/features'
 
+import { launcherActions } from './actions'
 import { launcher } from './state'
 
 const cs = {
@@ -24,7 +25,7 @@ export function LauncherWindow() {
       keymode={Astal.Keymode.EXCLUSIVE}
       application={app}
       $={(self) => dismissOutside(self as Gtk.Window)}>
-      <Launcher open={launcher.open} onClose={launcher.hide} />
+      <Launcher open={launcher.open} actions={launcherActions()} onClose={launcher.hide} />
     </window>
   )
 }

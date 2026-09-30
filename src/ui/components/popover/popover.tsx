@@ -24,6 +24,7 @@ export type PopoverProps = {
   readonly position?: Gtk.PositionType
   readonly hasArrow?: boolean
   readonly halign?: Gtk.Align
+  readonly reveal?: Accessor<object | null>
 }
 
 export function Popover({
@@ -37,6 +38,7 @@ export function Popover({
   position = Gtk.PositionType.BOTTOM,
   hasArrow = false,
   halign = Gtk.Align.CENTER,
+  reveal,
 }: PopoverProps) {
   const hover = on === 'hover'
 
@@ -49,6 +51,12 @@ export function Popover({
       {children}
     </popover>
   ) as Gtk.Popover
+
+  if (reveal) {
+    onCleanup(reveal.subscribe(() => {
+      if (reveal()) content.popup()
+    }))
+  }
 
   if (hover) {
     return (

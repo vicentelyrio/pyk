@@ -5,6 +5,9 @@ const KEYWORD = 0.6
 const EXECUTABLE = 0.5
 const DESCRIPTION = 0.3
 
+export type Searchable = Pick<AppEntry, 'name' | 'keywords' | 'description'>
+  & Partial<Pick<AppEntry, 'executable' | 'frequency'>>
+
 const KINDS: ReadonlyArray<readonly [string, string]> = [
   ['TerminalEmulator', 'terminal'],
   ['WebBrowser', 'web'],
@@ -54,21 +57,21 @@ export function score(text: string, query: string, fuzzy = true): number {
   return 1 / (1 + gaps / query.length)
 }
 
-function relevance(app: AppEntry, query: string): number {
+function relevance(app: Searchable, query: string): number {
   return Math.max(
     score(app.name, query) * NAME,
     ...app.keywords.map((keyword) => score(keyword, query, false) * KEYWORD),
-    score(app.executable, query, false) * EXECUTABLE,
+    score(app.executable ?? '', query, false) * EXECUTABLE,
     score(app.description, query, false) * DESCRIPTION,
   )
 }
 
-export function search(apps: readonly AppEntry[], query: string, limit: number): readonly AppEntry[] {
+export function search<T extends Searchable>(apps: readonly T[], query: string, limit: number): readonly T[] {
   const needle = query.trim().toLowerCase()
 
   if (!needle) {
     return [...apps]
-      .sort((a, b) => b.frequency - a.frequency || a.name.localeCompare(b.name))
+      .sort((a, b) => (b.frequency ?? 0) - (a.frequency ?? 0) || a.name.localeCompare(b.name))
       .slice(0, limit)
   }
 
@@ -77,7 +80,7 @@ export function search(apps: readonly AppEntry[], query: string, limit: number):
     .filter((it) => it.relevance > 0)
     .sort((a, b) =>
       b.relevance - a.relevance
-      || b.app.frequency - a.app.frequency
+      || (b.app.frequency ?? 0) - (a.app.frequency ?? 0)
       || a.app.name.localeCompare(b.app.name))
     .slice(0, limit)
     .map((it) => it.app)

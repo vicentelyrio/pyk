@@ -32,7 +32,12 @@ const cs = {
 const ROWS = 6
 const COLUMNS = 7
 
-export function Calendar({ className }: { className?: string }) {
+export type CalendarProps = {
+  readonly className?: string
+  readonly reveal?: Accessor<object | null>
+}
+
+export function Calendar({ className, reveal }: CalendarProps) {
   const [view, setView] = createState<YearMonth>(clock.today())
   const [selected, setSelected] = createState<CalendarDate>(clock.today())
   const month = createComputed(() => clock.monthView(view()))
@@ -66,6 +71,7 @@ export function Calendar({ className }: { className?: string }) {
     <Popover
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
+      reveal={reveal}
       tooltip="Calendar"
       trigger={<Clock />}>
       <box orientation={Gtk.Orientation.VERTICAL} $={attach}>

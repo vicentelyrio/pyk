@@ -63,7 +63,7 @@ const icons = {
 const COLUMNS = 4
 const PAGE_FADE = 150
 
-type Page = 'root' | 'wifi' | 'bluetooth'
+export type ControlPage = 'root' | 'wifi' | 'bluetooth'
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`
@@ -72,10 +72,11 @@ function percent(value: number): string {
 export type ControlCenterProps = {
   readonly className?: string
   readonly onSettings: () => void
+  readonly reveal?: Accessor<{ readonly page: ControlPage } | null>
 }
 
-export function ControlCenter({ className, onSettings }: ControlCenterProps) {
-  const [page, setPage] = createState<Page>('root')
+export function ControlCenter({ className, onSettings, reveal }: ControlCenterProps) {
+  const [page, setPage] = createState<ControlPage>('root')
 
   const toRoot = () => setPage('root')
   const toWifi = () => setPage('wifi')
@@ -93,7 +94,7 @@ export function ControlCenter({ className, onSettings }: ControlCenterProps) {
   const wifiPage = (<Wifi onBack={toRoot} />) as Gtk.Widget
   const bluetoothPage = (<Bluetooth onBack={toRoot} />) as Gtk.Widget
 
-  const pages: Readonly<Record<Page, Gtk.Widget>> = {
+  const pages: Readonly<Record<ControlPage, Gtk.Widget>> = {
     root: rootPage,
     wifi: wifiPage,
     bluetooth: bluetoothPage,
@@ -104,6 +105,7 @@ export function ControlCenter({ className, onSettings }: ControlCenterProps) {
       className={clsx(cs.root, className)}
       contentClassName={cs.panel}
       tooltip="Control center"
+      reveal={reveal}
       trigger={<ControlStatus />}>
       <stack
         class={cs.pages}
@@ -112,11 +114,22 @@ export function ControlCenter({ className, onSettings }: ControlCenterProps) {
         vhomogeneous={false}
         $={(self) => {
           const stack = self as Gtk.Stack
+          let landing: ControlPage = 'root'
 
           stack.connect('map', () => {
-            setPage('root')
+            setPage(landing)
+            landing = 'root'
             brightness.refresh()
           })
+
+          if (reveal) {
+            onCleanup(reveal.subscribe(() => {
+              const target = reveal()?.page
+              if (!target) return
+              if (stack.get_mapped()) setPage(target)
+              else landing = target
+            }))
+          }
 
           onCleanup(page.subscribe(() => {
             stack.set_visible_child(pages[page()])

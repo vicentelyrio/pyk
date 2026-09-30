@@ -1,7 +1,7 @@
 import GLib from 'gi://GLib'
 import Pango from 'gi://Pango'
 import { Gdk, Gtk } from 'ags/gtk4'
-import { For, createComputed, createState, type Accessor } from 'ags'
+import { For, createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { config } from '@/infrastructure/config'
 import { LL } from '@/infrastructure/i18n'
@@ -62,10 +62,15 @@ function matches(row: SettingRow, needle: string): boolean {
   return haystack.toLowerCase().includes(needle)
 }
 
-export function Settings({ onClose }: { readonly onClose: () => void }) {
+export type SettingsProps = {
+  readonly section: Accessor<SectionId>
+  readonly onSection: (id: SectionId) => void
+  readonly onClose: () => void
+}
+
+export function Settings({ section, onSection, onClose }: SettingsProps) {
   const t = LL().settings
 
-  const [section, setSection] = createState<SectionId>('appearance')
   const [query, setQuery] = createState('')
   const [armed, setArmed] = createState(false)
   const [capturing, setCapturing] = createState<string | null>(null)
@@ -119,9 +124,19 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
 
   let input: Gtk.Entry | null = null
 
+  const clearSearch = () => {
+    input?.set_text('')
+    setQuery('')
+  }
+
+  const attach = (self: Gtk.Widget) => {
+    capture(self)
+    onCleanup(section.subscribe(clearSearch))
+  }
+
   return (
     <overlay halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
-      <box class={cs.root} overflow={Gtk.Overflow.HIDDEN} $={capture}>
+      <box class={cs.root} overflow={Gtk.Overflow.HIDDEN} $={attach}>
         <box class={cs.sidebar} orientation={Gtk.Orientation.VERTICAL} hexpand={false}>
           <box class={cs.brand} orientation={Gtk.Orientation.VERTICAL}>
             <label label={t.title()} xalign={0} />
@@ -140,10 +155,7 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
                 class={cs.clear}
                 focusable={false}
                 visible={searching}
-                onClicked={() => {
-                  input?.set_text('')
-                  setQuery('')
-                }}>
+                onClicked={clearSearch}>
                 <image iconName={icons.clear} />
               </button>
             </box>
@@ -156,9 +168,8 @@ export function Settings({ onClose }: { readonly onClose: () => void }) {
                   class={createComputed(() => clsx(cs.navItem, !searching() && section() === id && cs.active))}
                   focusable={false}
                   onClicked={() => {
-                    input?.set_text('')
-                    setQuery('')
-                    setSection(id)
+                    clearSearch()
+                    onSection(id)
                   }}>
                   <box valign={Gtk.Align.CENTER}>
                     <image class={cs.navIcon} iconName={SECTION_ICONS[id]} />

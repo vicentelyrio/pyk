@@ -23,6 +23,7 @@ import { NiriIpcLive } from '@/infrastructure/niri/gjs/ipc'
 import { NotificationsBackendLive } from '@/infrastructure/notifications/gjs/backend'
 import { NotificationsLayer } from '@/infrastructure/notifications/store/controller'
 import { NiriLayer } from '@/infrastructure/niri/store/controller'
+import { FilesLive } from '@/infrastructure/files/gjs/backend'
 import { MonitorBackendLive } from '@/infrastructure/monitor/gjs/backend'
 import { MonitorLayer } from '@/infrastructure/monitor/store/controller'
 import { MprisBackendLive } from '@/infrastructure/mpris/gjs/backend'
@@ -50,6 +51,7 @@ const MainLayer = Layer.mergeAll(
   MonitorLayer.pipe(Layer.provide([MonitorBackendLive])),
   MprisLayer.pipe(Layer.provide([MprisBackendLive])),
   NotificationsLayer.pipe(Layer.provide([NotificationsBackendLive])),
+  FilesLive,
   NiriBindsLayer,
   SessionLive,
   TodosLayer.pipe(Layer.provide([TodosBackendLive])),
