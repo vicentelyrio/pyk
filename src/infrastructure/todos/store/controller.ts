@@ -8,6 +8,7 @@ import { emptyState, type TodosState } from './state'
 export class Todos extends Context.Service<Todos, {
   readonly changes: Stream.Stream<TodosState>
   readonly snapshot: Effect.Effect<TodosState>
+  readonly add: (text: string) => Effect.Effect<void, ActionError>
   readonly toggle: (line: number) => Effect.Effect<void, ActionError>
 }>()('pyk/Todos') {}
 
@@ -19,6 +20,7 @@ export const TodosLayer = Layer.effect(
 
     return {
       ...store,
+      add: backend.add,
       toggle: backend.toggle,
     }
   }),

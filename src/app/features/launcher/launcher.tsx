@@ -50,7 +50,8 @@ type LauncherItem = AppEntry | LauncherAction
 
 export type LauncherProps = {
   readonly open: Accessor<boolean>
-  readonly actions: readonly LauncherAction[]
+  readonly actions: Accessor<readonly LauncherAction[]>
+  readonly prompts?: (query: string) => readonly LauncherAction[]
   readonly onClose: () => void
 }
 
@@ -90,7 +91,7 @@ function fileNeedle(query: string): string | null {
   return query.startsWith(' ') ? query.trim() : null
 }
 
-export function Launcher({ open, actions, onClose }: LauncherProps) {
+export function Launcher({ open, actions, prompts, onClose }: LauncherProps) {
   const [query, setQuery] = createState('')
   const [cursor, setCursor] = createState(0)
   const [fileHits, setFileHits] = createState<readonly LauncherItem[]>([])
@@ -104,11 +105,15 @@ export function Launcher({ open, actions, onClose }: LauncherProps) {
     const limit = config.launcher().resultLimit
     const needle = query()
     const matches = needle.trim()
-      ? apps.search<LauncherItem>([...apps.apps(), ...actions], needle, limit)
+      ? apps.search<LauncherItem>([...apps.apps(), ...actions()], needle, limit)
       : apps.search(apps.apps(), needle, limit)
     const value = evaluate(needle)
+    const pinned = [
+      ...(value === null ? [] : [calcAction(formatResult(value))]),
+      ...(prompts?.(needle) ?? []),
+    ]
 
-    return value === null ? matches : [calcAction(formatResult(value)), ...matches].slice(0, limit)
+    return [...pinned, ...matches].slice(0, limit)
   })
   const selected = createComputed(() => Math.min(cursor(), results().length - 1))
 
@@ -209,7 +214,7 @@ export function Launcher({ open, actions, onClose }: LauncherProps) {
         <image class={cs.searchIcon} iconName={icons.search} />
         <entry
           class={cs.input}
-          placeholderText="Search apps, settings or calculate — space for files…"
+          placeholderText="Search apps, settings, todos or calculate — space for files…"
           hexpand
           $={(self) => {
             input = self as Gtk.Entry
@@ -222,7 +227,7 @@ export function Launcher({ open, actions, onClose }: LauncherProps) {
         <label
           class={cs.count}
           label={createComputed(() =>
-            (fileMode() ? `${results().length} files` : `${results().length}/${apps.count() + actions.length}`))}
+            (fileMode() ? `${results().length} files` : `${results().length}/${apps.count() + actions().length}`))}
         />
       </box>
       <box class={cs.results} orientation={Gtk.Orientation.VERTICAL}>

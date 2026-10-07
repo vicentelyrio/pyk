@@ -6,7 +6,7 @@ import { expandHome } from '@/infrastructure/config/schema'
 import { Configuration } from '@/infrastructure/config/store/controller'
 import { attempt, fromSignal, reconnecting, type SourceError } from '@/infrastructure/effect'
 
-import { parseTodos, toggleLine } from '../derived'
+import { appendLine, parseTodos, toggleLine } from '../derived'
 import { TodosBackend } from '../store/backend'
 import type { TodosState } from '../store/state'
 
@@ -14,6 +14,12 @@ function readText(path: string): string {
   if (!GLib.file_test(path, GLib.FileTest.EXISTS)) return ''
   const [, bytes] = GLib.file_get_contents(path)
   return new TextDecoder().decode(bytes)
+}
+
+function writeText(path: string, text: string): void {
+  const parent = GLib.path_get_dirname(path)
+  if (!GLib.file_test(parent, GLib.FileTest.IS_DIR)) GLib.mkdir_with_parents(parent, 0o755)
+  GLib.file_set_contents(path, text)
 }
 
 function watch(file: string): Stream.Stream<TodosState, SourceError> {
@@ -36,6 +42,12 @@ export const TodosBackendLive = Layer.effect(
     const configuration = yield* Configuration
     const home = GLib.get_home_dir()
     const resolve = (path: string) => expandHome(path, home)
+    const edit = (action: string, change: (text: string) => string) =>
+      Effect.flatMap(configuration.snapshot, (config) =>
+        attempt('todos', action, () => {
+          const file = resolve(config.todos.file)
+          writeText(file, change(readText(file)))
+        }))
 
     return {
       changes: configuration.changes.pipe(
@@ -44,12 +56,8 @@ export const TodosBackendLive = Layer.effect(
         Stream.switchMap(watch),
         reconnecting,
       ),
-      toggle: (line: number) =>
-        Effect.flatMap(configuration.snapshot, (config) =>
-          attempt('todos', 'toggle', () => {
-            const file = resolve(config.todos.file)
-            GLib.file_set_contents(file, toggleLine(readText(file), line))
-          })),
+      add: (text: string) => edit('add', (current) => appendLine(current, text)),
+      toggle: (line: number) => edit('toggle', (current) => toggleLine(current, line)),
     }
   }),
 )

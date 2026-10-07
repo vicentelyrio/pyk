@@ -1,3 +1,5 @@
+import { createComputed, type Accessor } from 'ags'
+import { todos, type TodoItem } from '@/infrastructure/todos'
 import { SECTION_ICONS, SECTIONS, sectionTitle, type LauncherAction } from '@/app/features'
 import { bar, type BarSurface } from '@/app/modules/bar'
 import { settings } from '@/app/modules/settings'
@@ -19,7 +21,41 @@ const SURFACES: readonly Surface[] = [
   { surface: 'session', name: 'Power', icon: 'pyk-power-symbolic', keywords: ['session', 'shut down', 'reboot', 'log out', 'lock', 'suspend'] },
 ]
 
-export function launcherActions(): readonly LauncherAction[] {
+const TODO_PREFIX = /^todo\s+(.+)$/i
+
+function todoAction(item: TodoItem): LauncherAction {
+  return {
+    id: `todo:${item.line}:${item.done}`,
+    name: item.text,
+    description: item.done ? 'Reopen todo' : 'Complete todo',
+    keywords: ['todo', 'task'],
+    iconName: item.done ? 'pyk-reset-symbolic' : 'pyk-check-symbolic',
+    kind: item.done ? 'todo · done' : 'todo',
+    run: () => todos.toggle(item.line),
+  }
+}
+
+export function launcherPrompts(query: string): readonly LauncherAction[] {
+  const text = TODO_PREFIX.exec(query.trim())?.[1]?.trim()
+  if (!text) return []
+
+  return [{
+    id: `todo:add:${text}`,
+    name: `Add todo: ${text}`,
+    description: 'Append to the todo list',
+    keywords: [],
+    iconName: 'pyk-plus-symbolic',
+    kind: 'todo',
+    run: () => todos.add(text),
+  }]
+}
+
+export function launcherActions(): Accessor<readonly LauncherAction[]> {
+  const commands = shellActions()
+  return createComputed(() => [...commands, ...todos.items().map(todoAction)])
+}
+
+function shellActions(): readonly LauncherAction[] {
   const surfaces = SURFACES.map((it): LauncherAction => ({
     id: `shell:${it.surface}`,
     name: it.name,

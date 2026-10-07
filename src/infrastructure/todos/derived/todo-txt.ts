@@ -15,6 +15,14 @@ export function parseTodos(text: string): readonly TodoItem[] {
   })
 }
 
+export function appendLine(text: string, todo: string): string {
+  const line = todo.trim()
+  if (!line) return text
+  if (!text.trim()) return `${line}\n`
+
+  return `${text.replace(/\n*$/, '')}\n${line}\n`
+}
+
 export function toggleLine(text: string, line: number): string {
   const lines = text.split('\n')
   const current = lines[line]
