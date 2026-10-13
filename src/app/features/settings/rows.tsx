@@ -12,6 +12,7 @@ import { isRemote } from '@/infrastructure/wallpaper'
 
 import { patchFor, same, valueAt, type SettingRow } from './catalog'
 import { copyFor, sectionTitle } from './copy'
+import { LayoutControl } from './layout'
 
 const cs = {
   row: 'set-row',
@@ -188,7 +189,7 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
 
   const [error, setError] = createState('')
 
-  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record' && leaf.kind !== 'list' && leaf.kind !== 'table'
+  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record' && leaf.kind !== 'list' && leaf.kind !== 'table' && leaf.kind !== 'layout'
 
   return (
     <box class={cs.row} orientation={Gtk.Orientation.VERTICAL}>
@@ -307,6 +308,8 @@ function Control(props: ControlProps) {
       return <ListControl {...props} />
     case 'table':
       return <TableControl {...props} />
+    case 'layout':
+      return <LayoutControl leaf={leaf} value={props.value} set={props.set} />
   }
 }
 

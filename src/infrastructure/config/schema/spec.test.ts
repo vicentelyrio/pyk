@@ -39,7 +39,7 @@ describe('config spec', () => {
   })
 
   test('overrides keep only values that differ from defaults', () => {
-    const next = merge(defaultConfig, {
+    const next = merge(configSpec, defaultConfig, {
       appearance: { accent: '#9ecfb0' },
       popover: { hoverCloseDelay: defaultConfig.popover.hoverCloseDelay },
     })
@@ -49,7 +49,7 @@ describe('config spec', () => {
   })
 
   test('overrides round-trip through decode', () => {
-    const next = merge(defaultConfig, { system: { logFormat: 'pretty' }, media: { progressInterval: 500 } })
+    const next = merge(configSpec, defaultConfig, { system: { logFormat: 'pretty' }, media: { progressInterval: 500 } })
     assert.deepEqual(decode(configSpec, overrides(configSpec, next)).value, next)
   })
 
@@ -66,11 +66,27 @@ describe('config spec', () => {
     assert.equal(bad.issues.length, 1)
   })
 
-  test('record overrides merge per key and compare by content', () => {
-    const one = merge(defaultConfig, { wallpaper: { outputs: { 'DP-3': '/a.png' } } })
-    const two = merge(one, { wallpaper: { outputs: { 'HDMI-A-1': '/b.png' } } })
-    assert.deepEqual(two.wallpaper.outputs, { 'DP-3': '/a.png', 'HDMI-A-1': '/b.png' })
-    assert.deepEqual(overrides(configSpec, merge(defaultConfig, { wallpaper: { outputs: {} } })), {})
+  test('leaf values are replaced whole, so keys can be removed', () => {
+    const one = merge(configSpec, defaultConfig, { wallpaper: { outputs: { 'DP-3': '/a.png', 'HDMI-A-1': '/b.png' } } })
+    const two = merge(configSpec, one, { wallpaper: { outputs: { 'HDMI-A-1': '/b.png' } } })
+    assert.deepEqual(two.wallpaper.outputs, { 'HDMI-A-1': '/b.png' })
+    assert.deepEqual(overrides(configSpec, merge(configSpec, defaultConfig, { wallpaper: { outputs: {} } })), {})
+  })
+
+  test('layouts need a default and place each known widget at most once', () => {
+    const valid = { default: { start: ['today'], end: ['meters'] }, 'DP-3': { start: [], end: ['player'] } }
+    assert.deepEqual(decode(configSpec, { widgets: { layout: valid } }).value.widgets.layout, valid)
+
+    for (const layout of [
+      { 'DP-3': { start: [], end: [] } },
+      { default: { start: ['today'], end: ['today'] } },
+      { default: { start: ['clock'], end: [] } },
+      { default: { start: [] } },
+    ]) {
+      const { value, issues } = decode(configSpec, { widgets: { layout } })
+      assert.deepEqual(value.widgets.layout, defaultConfig.widgets.layout)
+      assert.equal(issues.length, 1)
+    }
   })
 
   test('home expansion round-trips', () => {

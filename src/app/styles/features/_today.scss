@@ -8,6 +8,7 @@
   > *:not(:first-child) { margin-left: s.space(md); }
 }
 
+.today-weekday,
 .today-month {
   @include s.numeric;
   font-size: s.font-size(sm);

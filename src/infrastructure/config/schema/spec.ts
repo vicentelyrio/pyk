@@ -29,11 +29,22 @@ export interface TableLeaf<C extends string = string> extends LeafBase<'table', 
   readonly columns: readonly C[]
 }
 
+export interface Layout<I extends string = string> {
+  readonly start: readonly I[]
+  readonly end: readonly I[]
+}
+
+export const DEFAULT_LAYOUT = 'default'
+
+export interface LayoutLeaf<I extends string = string> extends LeafBase<'layout', Readonly<Record<string, Layout<I>>>> {
+  readonly items: readonly I[]
+}
+
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
   readonly options: readonly T[]
 }
 
-export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | ListLeaf | RecordLeaf | TableLeaf | ChoiceLeaf<string>
+export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | ListLeaf | RecordLeaf | TableLeaf | LayoutLeaf | ChoiceLeaf<string>
 
 export interface Spec {
   readonly [key: string]: Leaf | Spec
@@ -42,6 +53,7 @@ export interface Spec {
 export type Value<S> =
   S extends ChoiceLeaf<infer T> ? T
     : S extends TableLeaf<infer C> ? readonly Readonly<Record<C, string>>[]
+      : S extends LayoutLeaf<infer I> ? Readonly<Record<string, Layout<I>>>
     : S extends NumberLeaf ? number
       : S extends ToggleLeaf ? boolean
         : S extends ShortcutLeaf | ListLeaf ? readonly string[]
@@ -108,6 +120,18 @@ export function shortcut(fallback: readonly string[], options: Options = {}): Sh
   return { kind: 'shortcut', default: fallback, apply: options.apply ?? 'live' }
 }
 
+export function layout<const I extends string>(
+  items: readonly I[],
+  fallback: Layout<NoInfer<I>>,
+  options: Options = {},
+): LayoutLeaf<I> {
+  return { kind: 'layout', default: { [DEFAULT_LAYOUT]: fallback }, items, apply: options.apply ?? 'live' }
+}
+
+export function layoutFor<I extends string>(layouts: Readonly<Record<string, Layout<I>>>, output: string): Layout<I> {
+  return layouts[output] ?? layouts[DEFAULT_LAYOUT] ?? { start: [], end: [] }
+}
+
 export function choice<const T extends string>(
   options: readonly T[],
   fallback: NoInfer<T>,
@@ -132,6 +156,16 @@ function isRecord(input: unknown): input is Record<string, unknown> {
   return typeof input === 'object' && input !== null && !Array.isArray(input)
 }
 
+function acceptsLayout(leaf: LayoutLeaf, input: unknown): boolean {
+  if (!isRecord(input) || !Object.keys(input).every((key) => key === 'start' || key === 'end')) return false
+
+  const placed = [input.start, input.end]
+  if (!placed.every(Array.isArray)) return false
+
+  const ids = placed.flat() as unknown[]
+  return ids.every((id) => typeof id === 'string' && leaf.items.includes(id)) && new Set(ids).size === ids.length
+}
+
 function accepts(leaf: Leaf, input: unknown): boolean {
   switch (leaf.kind) {
     case 'number':
@@ -151,6 +185,8 @@ function accepts(leaf: Leaf, input: unknown): boolean {
         isRecord(row)
         && Object.keys(row).every((key) => leaf.columns.includes(key))
         && leaf.columns.every((column) => typeof row[column] === 'string'))
+    case 'layout':
+      return isRecord(input) && DEFAULT_LAYOUT in input && Object.values(input).every((it) => acceptsLayout(leaf, it))
     case 'toggle':
       return typeof input === 'boolean'
     case 'shortcut':
@@ -216,16 +252,22 @@ export function collapseHome(value: string, home: string): string {
   return value === home || value.startsWith(`${home}/`) ? `~${value.slice(home.length)}` : value
 }
 
-export function merge<T>(base: T, patch: NoInfer<Patch<T>>): T {
-  if (!isRecord(base) || !isRecord(patch)) return (patch === undefined ? base : patch) as T
+export function merge<S extends Spec>(spec: S, base: Value<S>, patch: Patch<Value<S>>): Value<S> {
+  const walk = (node: Spec, current: Record<string, unknown>, change: unknown): Record<string, unknown> => {
+    if (!isRecord(change)) return current
 
-  const out: Record<string, unknown> = { ...base }
+    const out: Record<string, unknown> = { ...current }
 
-  for (const [key, value] of Object.entries(patch)) {
-    if (value !== undefined) out[key] = merge(out[key], value as never)
+    for (const [key, value] of Object.entries(change)) {
+      const child = node[key]
+      if (value === undefined || !child) continue
+      out[key] = isLeaf(child) ? value : walk(child, current[key] as Record<string, unknown>, value)
+    }
+
+    return out
   }
 
-  return out as T
+  return walk(spec, base as Record<string, unknown>, patch) as Value<S>
 }
 
 function same(a: unknown, b: unknown): boolean {

@@ -1,4 +1,8 @@
-import { choice, color, defaults, list, number, path, record, shortcut, table, text, toggle, type Patch, type Value } from './spec'
+import { choice, color, defaults, layout, list, number, path, record, shortcut, table, text, toggle, type Patch, type Value } from './spec'
+
+export const WIDGETS = ['today', 'todos', 'player', 'weather', 'meters'] as const
+
+export type WidgetId = (typeof WIDGETS)[number]
 
 export const configSpec = {
   appearance: {
@@ -59,6 +63,9 @@ export const configSpec = {
       launch: shortcut(['Return', 'KP_Enter']),
     },
   },
+  widgets: {
+    layout: layout(WIDGETS, { start: ['today', 'todos', 'player'], end: ['weather', 'meters'] }),
+  },
   weather: {
     location: text('São Paulo'),
     units: choice(['metric', 'imperial'], 'metric'),
@@ -104,6 +111,7 @@ export type WallpaperConfig = Config['wallpaper']
 export type ClockConfig = Config['clock']
 export type CalendarConfig = Config['calendar']
 export type ScheduleConfig = Config['schedule']
+export type WidgetsConfig = Config['widgets']
 export type WeatherConfig = Config['weather']
 export type TodosConfig = Config['todos']
 export type MonitorConfig = Config['monitor']

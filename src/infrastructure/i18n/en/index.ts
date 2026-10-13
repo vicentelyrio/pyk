@@ -310,6 +310,32 @@ const en = {
       },
     },
 
+    widgets: {
+      layout: {
+        label: 'Layout',
+        hint: 'Which desktop widgets show on each side, top to bottom',
+        allDisplays: 'All displays',
+        inherited: 'Uses the layout for all displays — any change makes it specific to this display',
+        custom: 'This display has its own layout',
+        useDefault: 'Use all-displays layout',
+        start: 'LEFT',
+        end: 'RIGHT',
+        up: 'Move up',
+        down: 'Move down',
+        toStart: 'Move to the left side',
+        toEnd: 'Move to the right side',
+        remove: 'Remove',
+        empty: 'No widgets on this side',
+        items: {
+          today: 'Date & events',
+          todos: 'Todos',
+          player: 'Player',
+          weather: 'Weather',
+          meters: 'System meters',
+        },
+      },
+    },
+
     weather: {
       location: {
         label: 'Weather location',

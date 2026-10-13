@@ -11,11 +11,11 @@ window.widgets {
 
   &.--start { margin-left: s.size(widget-x); }
   &.--end { margin-right: s.size(widget-x); }
-
-  > *:not(:first-child) { margin-top: s.space(xl); }
 }
 
 .widgets-rule {
+  margin-top: s.space(xl);
+  margin-bottom: s.space(xl);
   min-width: s.size(widget-rule);
   min-height: s.stroke(hairline);
   background-color: s.gtk(indicator);

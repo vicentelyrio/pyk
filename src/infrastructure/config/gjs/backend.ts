@@ -41,7 +41,7 @@ export const ConfigBackendLive = Layer.effect(
       ),
       write: (patch: ConfigPatch) =>
         attempt('config', 'write', () => {
-          save(overrides(configSpec, merge(current(), patch)))
+          save(overrides(configSpec, merge(configSpec, current(), patch)))
         }),
       reset: attempt('config', 'reset', () => {
         save({})

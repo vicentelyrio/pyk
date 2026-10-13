@@ -22,7 +22,10 @@ export const WallpaperLayer = Layer.effect(
     return {
       ...store,
       assign: (connector: string, path: string) =>
-        configuration.write({ wallpaper: connector ? { outputs: { [connector]: path } } : { image: path } }),
+        connector
+          ? Effect.flatMap(configuration.snapshot, ({ wallpaper }) =>
+            configuration.write({ wallpaper: { outputs: { ...wallpaper.outputs, [connector]: path } } }))
+          : configuration.write({ wallpaper: { image: path } }),
     }
   }),
 )

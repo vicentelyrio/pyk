@@ -3,6 +3,7 @@ import { For, createComputed } from 'ags'
 import { LL } from '@/infrastructure/i18n'
 import { weather, type ForecastSlot, type WeatherCondition } from '@/infrastructure/weather'
 import { Plot } from '@/ui/components'
+import { alignFor, edgeFirst, type Side } from '@/ui/side'
 
 const cs = {
   root: 'weather',
@@ -34,7 +35,7 @@ const icons: Readonly<Record<WeatherCondition, readonly [string, string]>> = {
   storm: ['pyk-weather-storm-symbolic', 'pyk-weather-storm-symbolic'],
 }
 
-export function Weather() {
+export function Weather({ side }: { readonly side: Side }) {
   const icon = createComputed(() => icons[weather.condition()][weather.isDay() ? 0 : 1])
   const summary = createComputed(() =>
     LL().widgets.summary({ condition: LL().widgets.conditions[weather.label()](), place: weather.place() }))
@@ -43,12 +44,15 @@ export function Weather() {
 
   return (
     <box class={cs.root} orientation={Gtk.Orientation.VERTICAL} visible={weather.isAvailable}>
-      <box class={cs.now} halign={Gtk.Align.END}>
-        <image class={cs.icon} iconName={icon} valign={Gtk.Align.START} />
-        <label class={cs.temperature} label={weather.temperature} />
+      <box class={cs.now} halign={alignFor(side)}>
+        {edgeFirst(
+          side,
+          <label class={cs.temperature} label={weather.temperature} />,
+          <image class={cs.icon} iconName={icon} valign={Gtk.Align.START} />,
+        )}
       </box>
-      <label class={cs.summary} label={summary} xalign={1} />
-      <label class={cs.range} label={range} xalign={1} />
+      <label class={cs.summary} label={summary} xalign={side === 'start' ? 0 : 1} />
+      <label class={cs.range} label={range} xalign={side === 'start' ? 0 : 1} />
       <Forecast />
     </box>
   )

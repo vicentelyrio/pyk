@@ -302,6 +302,31 @@ type RootTranslation = {
         }
       }
     }
+    widgets: {
+      layout: {
+        label: string
+        hint: string
+        allDisplays: string
+        inherited: string
+        custom: string
+        useDefault: string
+        start: string
+        end: string
+        up: string
+        down: string
+        toStart: string
+        toEnd: string
+        remove: string
+        empty: string
+        items: {
+          today: string
+          todos: string
+          player: string
+          weather: string
+          meters: string
+        }
+      }
+    }
     weather: {
       location: {
         label: string
@@ -665,6 +690,31 @@ export type TranslationFunctions = {
         launch: {
           label: () => LocalizedString
           hint: () => LocalizedString
+        }
+      }
+    }
+    widgets: {
+      layout: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+        allDisplays: () => LocalizedString
+        inherited: () => LocalizedString
+        custom: () => LocalizedString
+        useDefault: () => LocalizedString
+        start: () => LocalizedString
+        end: () => LocalizedString
+        up: () => LocalizedString
+        down: () => LocalizedString
+        toStart: () => LocalizedString
+        toEnd: () => LocalizedString
+        remove: () => LocalizedString
+        empty: () => LocalizedString
+        items: {
+          today: () => LocalizedString
+          todos: () => LocalizedString
+          player: () => LocalizedString
+          weather: () => LocalizedString
+          meters: () => LocalizedString
         }
       }
     }

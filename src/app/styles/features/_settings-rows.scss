@@ -423,3 +423,28 @@ popover.set-menu > contents {
   font-size: s.font-size(xs);
   color: s.gtk(faint);
 }
+
+.set-layout {
+  > *:not(:first-child) { margin-top: s.space(md); }
+}
+
+.set-layout-status {
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.set-layout-note {
+  font-size: s.font-size(xs);
+  color: s.gtk(faint);
+}
+
+.set-layout-columns {
+  > *:not(:first-child) { margin-left: s.space(md); }
+}
+
+.set-layout-column {
+  > *:not(:first-child) { margin-top: s.space(sm); }
+}
+
+.set-layout-adds {
+  > *:not(:first-child) { margin-top: s.space(xs); }
+}
