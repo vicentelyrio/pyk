@@ -62,16 +62,20 @@ export const BrightnessBackendLive = Layer.effect(
       )
     }).pipe(Effect.forever, Effect.forkScoped)
 
+    const setLevel = (level: number) =>
+      Effect.gen(function* () {
+        const target = yield* Ref.get(device)
+        if (!target) return
+        const clamped = clampLevel(level)
+        yield* SubscriptionRef.update(state, (it) => ({ ...it, level: clamped }))
+        yield* Queue.offer(targets, clamped)
+      })
+
     return {
       changes: SubscriptionRef.changes(state),
-      setLevel: (level: number) =>
-        Effect.gen(function* () {
-          const target = yield* Ref.get(device)
-          if (!target) return
-          const clamped = clampLevel(level)
-          yield* SubscriptionRef.update(state, (it) => ({ ...it, level: clamped }))
-          yield* Queue.offer(targets, clamped)
-        }),
+      setLevel,
+      adjust: (delta: number) =>
+        SubscriptionRef.get(state).pipe(Effect.flatMap(({ level }) => setLevel(level + delta))),
       refresh: Ref.get(device).pipe(
         Effect.flatMap((target) => (target ? sync(target) : Effect.void)),
       ),

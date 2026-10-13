@@ -24,7 +24,7 @@ const LAYOUT: ReadonlyArray<readonly [SectionId, readonly string[]]> = [
   ['appearance', ['appearance']],
   ['scale', []],
   ['notifications', ['notifications']],
-  ['bar', ['osd', 'popover']],
+  ['bar', ['osd', 'brightness', 'popover']],
   ['launcher', ['launcher']],
   ['clock', ['clock', 'calendar', 'schedule']],
   ['wallpaper', ['wallpaper']],

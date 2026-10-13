@@ -5,6 +5,7 @@ import style from './style.scss'
 import { applyAppearance } from '@/app/appearance'
 import {
   Bar,
+  brightnessKeys,
   launcher,
   LauncherWindow,
   NotificationToasts,
@@ -35,6 +36,10 @@ app.start({
     if (cmd === 'launcher') {
       launcher.toggle()
       return res('launcher toggled')
+    }
+    if (cmd === 'brightness' && (arg === 'up' || arg === 'down')) {
+      brightnessKeys.step(arg)
+      return res(`brightness ${arg}`)
     }
     if (cmd === 'settings') {
       settings.toggle()

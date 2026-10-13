@@ -9,6 +9,7 @@ export class Brightness extends Context.Service<Brightness, {
   readonly changes: Stream.Stream<BrightnessState>
   readonly snapshot: Effect.Effect<BrightnessState>
   readonly setLevel: (level: number) => Effect.Effect<void, ActionError>
+  readonly adjust: (delta: number) => Effect.Effect<void, ActionError>
   readonly refresh: Effect.Effect<void, ActionError>
 }>()('pyk/Brightness') {}
 
@@ -21,6 +22,7 @@ export const BrightnessLayer = Layer.effect(
     return {
       ...store,
       setLevel: backend.setLevel,
+      adjust: backend.adjust,
       refresh: backend.refresh,
     }
   }),

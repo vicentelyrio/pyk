@@ -201,6 +201,13 @@ const en = {
       },
     },
 
+    brightness: {
+      step: {
+        label: 'Brightness step',
+        hint: 'Percent changed per brightness key press',
+      },
+    },
+
     popover: {
       hoverCloseDelay: {
         label: 'Hover close delay',
@@ -288,6 +295,14 @@ const en = {
         launcher: {
           label: 'Global — Toggle launcher',
           hint: 'Opens and closes the launcher from anywhere',
+        },
+        brightnessUp: {
+          label: 'Global — Brightness up',
+          hint: 'Raises display brightness, also on the lock screen',
+        },
+        brightnessDown: {
+          label: 'Global — Brightness down',
+          hint: 'Lowers display brightness, also on the lock screen',
         },
       },
       launcher: {

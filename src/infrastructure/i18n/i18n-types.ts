@@ -200,6 +200,12 @@ type RootTranslation = {
         hint: string
       }
     }
+    brightness: {
+      step: {
+        label: string
+        hint: string
+      }
+    }
     popover: {
       hoverCloseDelay: {
         label: string
@@ -279,6 +285,14 @@ type RootTranslation = {
       }
       global: {
         launcher: {
+          label: string
+          hint: string
+        }
+        brightnessUp: {
+          label: string
+          hint: string
+        }
+        brightnessDown: {
           label: string
           hint: string
         }
@@ -591,6 +605,12 @@ export type TranslationFunctions = {
         hint: () => LocalizedString
       }
     }
+    brightness: {
+      step: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+    }
     popover: {
       hoverCloseDelay: {
         label: () => LocalizedString
@@ -670,6 +690,14 @@ export type TranslationFunctions = {
       }
       global: {
         launcher: {
+          label: () => LocalizedString
+          hint: () => LocalizedString
+        }
+        brightnessUp: {
+          label: () => LocalizedString
+          hint: () => LocalizedString
+        }
+        brightnessDown: {
           label: () => LocalizedString
           hint: () => LocalizedString
         }

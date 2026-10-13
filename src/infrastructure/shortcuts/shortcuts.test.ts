@@ -25,6 +25,15 @@ describe('shortcuts', () => {
     )
   })
 
+  test('lets brightness keys work on the lock screen', () => {
+    assert.equal(
+      renderBinds({ brightnessUp: ['XF86MonBrightnessUp'] }, 'pyk'),
+      'binds {\n'
+      + '    XF86MonBrightnessUp allow-when-locked=true hotkey-overlay-title="Brightness up" { spawn "ags" "request" "-i" "pyk" "brightness" "up"; }\n'
+      + '}\n',
+    )
+  })
+
   test('drops duplicate keys and renders nothing when unbound', () => {
     assert.equal(renderBinds({ launcher: ['Mod+Space', 'mod+space'] }, 'pyk').split('\n').length, 4)
     assert.equal(renderBinds({ launcher: [] }, 'pyk'), '')

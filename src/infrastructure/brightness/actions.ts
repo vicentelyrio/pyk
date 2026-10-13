@@ -6,6 +6,10 @@ export function setLevel(level: number): void {
   dispatch(Brightness, (brightness) => brightness.setLevel(level))
 }
 
+export function adjust(delta: number): void {
+  dispatch(Brightness, (brightness) => brightness.adjust(delta))
+}
+
 export function refresh(): void {
   dispatch(Brightness, (brightness) => brightness.refresh)
 }

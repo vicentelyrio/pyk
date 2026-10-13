@@ -2,27 +2,36 @@ import type { ShortcutsConfig } from '@/infrastructure/config/schema'
 
 type GlobalAction = keyof ShortcutsConfig['global']
 
-export const globalActions: Record<GlobalAction, { readonly title: string, readonly request: readonly string[] }> = {
+type GlobalBind = {
+  readonly title: string
+  readonly request: readonly string[]
+  readonly whenLocked?: boolean
+}
+
+export const globalActions: Record<GlobalAction, GlobalBind> = {
   launcher: { title: 'Toggle launcher', request: ['launcher'] },
+  brightnessUp: { title: 'Brightness up', request: ['brightness', 'up'], whenLocked: true },
+  brightnessDown: { title: 'Brightness down', request: ['brightness', 'down'], whenLocked: true },
 }
 
 function quote(value: string): string {
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
 }
 
-export function renderBinds(global: ShortcutsConfig['global'], instance: string): string {
+export function renderBinds(global: Partial<ShortcutsConfig['global']>, instance: string): string {
   const seen = new Set<string>()
   const lines: string[] = []
 
   for (const [action, keys] of Object.entries(global) as [GlobalAction, readonly string[]][]) {
-    const { title, request } = globalActions[action]
+    const { title, request, whenLocked } = globalActions[action]
+    const locked = whenLocked ? ' allow-when-locked=true' : ''
     const spawn = ['ags', 'request', '-i', instance, ...request].map(quote).join(' ')
 
     for (const key of keys) {
       const id = key.toLowerCase()
       if (seen.has(id)) continue
       seen.add(id)
-      lines.push(`    ${key} hotkey-overlay-title=${quote(title)} { spawn ${spawn}; }`)
+      lines.push(`    ${key}${locked} hotkey-overlay-title=${quote(title)} { spawn ${spawn}; }`)
     }
   }
 

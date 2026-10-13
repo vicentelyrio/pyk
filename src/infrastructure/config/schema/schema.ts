@@ -20,6 +20,9 @@ export const configSpec = {
     toastMaxAge: number(10_000, { min: 0, max: 600_000, unit: 'ms' }),
     criticalSticky: toggle(true),
   },
+  brightness: {
+    step: number(5, { min: 1, max: 25 }),
+  },
   osd: {
     timeout: number(1600, { min: 300, max: 10_000, unit: 'ms' }),
     settleDelay: number(2000, { min: 0, max: 30_000, unit: 'ms' }),
@@ -55,6 +58,8 @@ export const configSpec = {
     niriBinds: toggle(true),
     global: {
       launcher: shortcut(['Mod+Space']),
+      brightnessUp: shortcut(['XF86MonBrightnessUp']),
+      brightnessDown: shortcut(['XF86MonBrightnessDown']),
     },
     launcher: {
       close: shortcut(['Escape']),
@@ -103,6 +108,7 @@ export type ConfigPatch = Patch<Config>
 
 export type AppearanceConfig = Config['appearance']
 export type NotificationsConfig = Config['notifications']
+export type BrightnessConfig = Config['brightness']
 export type OsdConfig = Config['osd']
 export type PopoverConfig = Config['popover']
 export type LauncherConfig = Config['launcher']

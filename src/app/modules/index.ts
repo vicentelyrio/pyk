@@ -1,4 +1,5 @@
 export * from './bar'
+export * from './brightness'
 export * from './launcher'
 export * from './notifications'
 export * from './osd'
