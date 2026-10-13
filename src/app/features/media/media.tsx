@@ -144,7 +144,7 @@ function MediaMeta() {
       hexpand>
       <MediaMetaLine className={cs.title} text={mpris.title} />
       <MediaMetaLine className={cs.artist} text={mpris.artist} />
-      <MediaMetaLine className={cs.source} text={mpris.identity} />
+      <MediaMetaLine className={cs.source} text={mpris.source} />
     </box>
   )
 }

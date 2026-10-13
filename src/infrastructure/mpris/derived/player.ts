@@ -13,6 +13,10 @@ export function player(state: Accessor<MprisState>) {
     hasPlayer,
     isPlaying: createMemo(() => state().isPlaying),
     identity: createMemo(() => state().identity),
+    source: createMemo(() => {
+      const { identity, channel } = state()
+      return channel.name ? `${channel.name} · ${identity}` : identity
+    }),
     title: createMemo(() => state().title),
     artist: createMemo(() => state().artist),
     album: createMemo(() => state().album),

@@ -2,6 +2,12 @@ export type MprisLoop = 'unsupported' | 'none' | 'track' | 'playlist'
 
 export type MprisShuffle = 'unsupported' | 'on' | 'off'
 
+export interface MprisChannel {
+  readonly app: string
+  readonly origin: string
+  readonly name: string
+}
+
 export interface MprisState {
   readonly hasPlayer: boolean
   readonly isPlaying: boolean
@@ -10,6 +16,8 @@ export interface MprisState {
   readonly artist: string
   readonly album: string
   readonly coverArt: string
+  readonly url: string
+  readonly channel: MprisChannel
   readonly position: number
   readonly length: number
   readonly canPlay: boolean
@@ -28,6 +36,8 @@ export const emptyState: MprisState = {
   artist: '',
   album: '',
   coverArt: '',
+  url: '',
+  channel: { app: '', origin: '', name: '' },
   position: 0,
   length: 0,
   canPlay: false,

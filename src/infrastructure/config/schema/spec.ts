@@ -25,11 +25,15 @@ export interface ListLeaf extends LeafBase<'list', readonly string[]> {
   readonly item: 'text' | 'url'
 }
 
+export interface TableLeaf<C extends string = string> extends LeafBase<'table', readonly Readonly<Record<C, string>>[]> {
+  readonly columns: readonly C[]
+}
+
 export interface ChoiceLeaf<T extends string> extends LeafBase<'choice', T> {
   readonly options: readonly T[]
 }
 
-export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | ListLeaf | RecordLeaf | ChoiceLeaf<string>
+export type Leaf = NumberLeaf | ColorLeaf | TextLeaf | PathLeaf | ToggleLeaf | ShortcutLeaf | ListLeaf | RecordLeaf | TableLeaf | ChoiceLeaf<string>
 
 export interface Spec {
   readonly [key: string]: Leaf | Spec
@@ -37,6 +41,7 @@ export interface Spec {
 
 export type Value<S> =
   S extends ChoiceLeaf<infer T> ? T
+    : S extends TableLeaf<infer C> ? readonly Readonly<Record<C, string>>[]
     : S extends NumberLeaf ? number
       : S extends ToggleLeaf ? boolean
         : S extends ShortcutLeaf | ListLeaf ? readonly string[]
@@ -84,8 +89,19 @@ export function record(options: Options = {}): RecordLeaf {
   return { kind: 'record', default: {}, apply: options.apply ?? 'live' }
 }
 
-export function list(item: ListLeaf['item'] = 'text', options: Options = {}): ListLeaf {
-  return { kind: 'list', default: [], item, apply: options.apply ?? 'live' }
+export function list(
+  item: ListLeaf['item'] = 'text',
+  options: Options & { readonly fallback?: readonly string[] } = {},
+): ListLeaf {
+  return { kind: 'list', default: options.fallback ?? [], item, apply: options.apply ?? 'live' }
+}
+
+export function table<const C extends string>(
+  columns: readonly C[],
+  fallback: readonly Readonly<Record<NoInfer<C>, string>>[] = [],
+  options: Options = {},
+): TableLeaf<C> {
+  return { kind: 'table', default: fallback, columns, apply: options.apply ?? 'live' }
 }
 
 export function shortcut(fallback: readonly string[], options: Options = {}): ShortcutLeaf {
@@ -130,6 +146,11 @@ function accepts(leaf: Leaf, input: unknown): boolean {
       return isRecord(input) && Object.values(input).every((it) => typeof it === 'string')
     case 'list':
       return Array.isArray(input) && input.every((it) => typeof it === 'string' && acceptsItem(leaf, it))
+    case 'table':
+      return Array.isArray(input) && input.every((row) =>
+        isRecord(row)
+        && Object.keys(row).every((key) => leaf.columns.includes(key))
+        && leaf.columns.every((column) => typeof row[column] === 'string'))
     case 'toggle':
       return typeof input === 'boolean'
     case 'shortcut':
@@ -209,11 +230,11 @@ export function merge<T>(base: T, patch: NoInfer<Patch<T>>): T {
 
 function same(a: unknown, b: unknown): boolean {
   if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((it, i) => it === b[i])
+    return a.length === b.length && a.every((it, i) => same(it, b[i]))
   }
   if (isRecord(a) && isRecord(b)) {
     const keys = Object.keys(a)
-    return keys.length === Object.keys(b).length && keys.every((key) => a[key] === b[key])
+    return keys.length === Object.keys(b).length && keys.every((key) => same(a[key], b[key]))
   }
   return a === b
 }

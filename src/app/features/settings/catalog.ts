@@ -97,7 +97,7 @@ export function patchFor(path: readonly string[], value: unknown): ConfigPatch {
 
 export function same(a: unknown, b: unknown): boolean {
   if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((it, at) => it === b[at])
+    return a.length === b.length && a.every((it, at) => same(it, b[at]))
   }
 
   if (a && b && typeof a === 'object' && typeof b === 'object') {
@@ -105,7 +105,7 @@ export function same(a: unknown, b: unknown): boolean {
     const right = b as Record<string, unknown>
     const keys = Object.keys(left)
 
-    return keys.length === Object.keys(right).length && keys.every((key) => left[key] === right[key])
+    return keys.length === Object.keys(right).length && keys.every((key) => same(left[key], right[key]))
   }
 
   return a === b

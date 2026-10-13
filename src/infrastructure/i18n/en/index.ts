@@ -344,6 +344,14 @@ const en = {
         label: 'Progress refresh interval',
         hint: 'MPRIS position polling',
       },
+      channels: {
+        label: 'Channels',
+        hint: 'Names a player by site or app, and fills in cover art from a URL template when the player sends none',
+      },
+      localCovers: {
+        label: 'Local cover files',
+        hint: 'Looked up next to local media that has no embedded art',
+      },
     },
 
     system: {

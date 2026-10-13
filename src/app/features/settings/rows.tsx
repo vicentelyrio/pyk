@@ -6,7 +6,7 @@ import { For, createComputed, createState, onCleanup, type Accessor } from 'ags'
 import { clsx } from 'clsx'
 import { closePopover, Popover, Switch } from '@/ui/components'
 import { config } from '@/infrastructure/config'
-import { acceptsItem, collapseHome, expandHome, type ChoiceLeaf, type ListLeaf, type NumberLeaf, type PathLeaf } from '@/infrastructure/config/schema'
+import { acceptsItem, collapseHome, expandHome, type ChoiceLeaf, type ListLeaf, type NumberLeaf, type PathLeaf, type TableLeaf } from '@/infrastructure/config/schema'
 import { LL } from '@/infrastructure/i18n'
 import { isRemote } from '@/infrastructure/wallpaper'
 
@@ -188,7 +188,7 @@ export function SettingRowView({ row, crumb, capturing, onCapture }: RowProps) {
 
   const [error, setError] = createState('')
 
-  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record' && leaf.kind !== 'list'
+  const inline = leaf.kind !== 'path' && leaf.kind !== 'shortcut' && leaf.kind !== 'record' && leaf.kind !== 'list' && leaf.kind !== 'table'
 
   return (
     <box class={cs.row} orientation={Gtk.Orientation.VERTICAL}>
@@ -305,6 +305,8 @@ function Control(props: ControlProps) {
       return <RecordControl {...props} />
     case 'list':
       return <ListControl {...props} />
+    case 'table':
+      return <TableControl {...props} />
   }
 }
 
@@ -659,6 +661,53 @@ function ListControl({ row, value, set, onError }: ControlProps) {
           <label label={t.listAdd()} />
         </button>
       </box>
+    </box>
+  )
+}
+
+function TableControl({ row, value, set }: ControlProps) {
+  const t = LL().settings
+  const leaf = row.leaf as TableLeaf
+
+  const rows = value as Accessor<readonly Readonly<Record<string, string>>[]>
+
+  return (
+    <box class={cs.table} orientation={Gtk.Orientation.VERTICAL} hexpand>
+      <box class={cs.tableHead}>
+        {leaf.columns.map((column) => (
+          <label class={cs.tableCol} label={column.toUpperCase()} xalign={0} hexpand />
+        ))}
+      </box>
+      <For each={rows} id={(it: Readonly<Record<string, string>>) => JSON.stringify(it)}>
+        {(entry: Readonly<Record<string, string>>) => (
+          <box class={cs.tableRow}>
+            {leaf.columns.map((column) => (
+              <label
+                class={cs.tableValue}
+                label={entry[column] ?? ''}
+                tooltipText={entry[column] ?? ''}
+                xalign={0}
+                hexpand
+                maxWidthChars={1}
+                ellipsize={Pango.EllipsizeMode.MIDDLE}
+              />
+            ))}
+            <button
+              class={cs.tableClear}
+              tooltipText={t.removeShortcut()}
+              focusable={false}
+              onClicked={() => set(rows().filter((it) => it !== entry))}>
+              <image iconName={icons.drop} />
+            </button>
+          </box>
+        )}
+      </For>
+      <label
+        class={cs.empty}
+        label={t.listEmpty()}
+        xalign={0}
+        visible={rows.as((it) => it.length === 0)}
+      />
     </box>
   )
 }

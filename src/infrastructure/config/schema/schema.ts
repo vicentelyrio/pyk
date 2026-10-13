@@ -1,4 +1,4 @@
-import { choice, color, defaults, list, number, path, record, shortcut, text, toggle, type Patch, type Value } from './spec'
+import { choice, color, defaults, list, number, path, record, shortcut, table, text, toggle, type Patch, type Value } from './spec'
 
 export const configSpec = {
   appearance: {
@@ -72,6 +72,14 @@ export const configSpec = {
   },
   media: {
     progressInterval: number(1000, { min: 100, max: 10_000, unit: 'ms', apply: 'restart' }),
+    channels: table(['match', 'name', 'cover'], [
+      { match: 'music.youtube.com', name: 'YouTube Music', cover: 'https://i.ytimg.com/vi/{query.v}/mqdefault.jpg' },
+      { match: 'youtube.com', name: 'YouTube', cover: 'https://i.ytimg.com/vi/{query.v}/mqdefault.jpg' },
+    ], { apply: 'restart' }),
+    localCovers: list('text', {
+      fallback: ['cover.jpg', 'cover.png', 'folder.jpg', 'folder.png', 'front.jpg', 'front.png'],
+      apply: 'restart',
+    }),
   },
   system: {
     reconnectDelay: number(500, { min: 100, max: 60_000, unit: 'ms', apply: 'restart' }),

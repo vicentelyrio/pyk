@@ -1,5 +1,7 @@
 import AstalMpris from 'gi://AstalMpris'
+import GLib from 'gi://GLib'
 
+import { appOf, originOf } from '../derived/channel'
 import { emptyState, type MprisLoop, type MprisShuffle, type MprisState } from '../store/state'
 
 const positive = (value: number) => (Number.isFinite(value) && value > 0 ? value : 0)
@@ -17,6 +19,11 @@ function shuffleOf(status: AstalMpris.Shuffle): MprisShuffle {
   return 'unsupported'
 }
 
+function metaString(player: AstalMpris.Player, key: string): string {
+  const value = player.get_meta(key)
+  return value?.is_of_type(new GLib.VariantType('s')) ? value.get_string()[0] : ''
+}
+
 export function activePlayer(mpris: AstalMpris.Mpris): AstalMpris.Player | null {
   const players = mpris.get_players()
 
@@ -28,6 +35,8 @@ export function activePlayer(mpris: AstalMpris.Mpris): AstalMpris.Player | null 
 export function snapshot(player: AstalMpris.Player | null): MprisState {
   if (!player) return emptyState
 
+  const url = metaString(player, 'xesam:url')
+
   return {
     hasPlayer: true,
     isPlaying: player.playbackStatus === AstalMpris.PlaybackStatus.PLAYING,
@@ -36,6 +45,8 @@ export function snapshot(player: AstalMpris.Player | null): MprisState {
     artist: player.artist ?? '',
     album: player.album ?? '',
     coverArt: player.coverArt ?? '',
+    url,
+    channel: { app: appOf(player.entry ?? '', player.busName ?? ''), origin: originOf(url), name: '' },
     position: positive(player.position),
     length: positive(player.length),
     canPlay: player.canPlay,

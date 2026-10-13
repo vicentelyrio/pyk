@@ -96,7 +96,7 @@ function PlayerArt() {
 
 function PlayerMeta() {
   const source = createComputed(() => {
-    const player = mpris.identity().toUpperCase()
+    const player = mpris.source().toUpperCase()
     const sink = audio.description()
     return sink ? `${player} → ${sink}` : player
   })

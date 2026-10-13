@@ -79,4 +79,19 @@ describe('config spec', () => {
     assert.equal(collapseHome('/home/me/Pictures', '/home/me'), '~/Pictures')
     assert.equal(collapseHome('/home/meow', '/home/me'), '/home/meow')
   })
+  test('table rows must carry every column as text and nothing else', () => {
+    const row = { match: 'example.com', name: 'Example', cover: '' }
+    assert.deepEqual(decode(configSpec, { media: { channels: [row] } }).value.media.channels, [row])
+
+    for (const channels of [[{ match: 'a', name: 'b' }], [{ ...row, extra: 'x' }], [{ ...row, cover: 1 }], row]) {
+      const { value, issues } = decode(configSpec, { media: { channels } })
+      assert.deepEqual(value.media.channels, defaultConfig.media.channels)
+      assert.equal(issues.length, 1)
+    }
+  })
+
+  test('default table rows are not written back as overrides', () => {
+    const copy = defaultConfig.media.channels.map((it) => ({ ...it }))
+    assert.deepEqual(overrides(configSpec, { ...defaultConfig, media: { ...defaultConfig.media, channels: copy } }), {})
+  })
 })

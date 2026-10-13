@@ -333,6 +333,14 @@ type RootTranslation = {
         label: string
         hint: string
       }
+      channels: {
+        label: string
+        hint: string
+      }
+      localCovers: {
+        label: string
+        hint: string
+      }
     }
     system: {
       reconnectDelay: {
@@ -688,6 +696,14 @@ export type TranslationFunctions = {
     }
     media: {
       progressInterval: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+      channels: {
+        label: () => LocalizedString
+        hint: () => LocalizedString
+      }
+      localCovers: {
         label: () => LocalizedString
         hint: () => LocalizedString
       }
