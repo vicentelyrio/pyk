@@ -5,13 +5,16 @@ import style from './style.scss'
 import { applyAppearance } from '@/app/appearance'
 import {
   Bar,
+  bar,
   brightnessKeys,
+  isBarSurface,
   launcher,
   LauncherWindow,
   NotificationToasts,
   OsdWindow,
   settings,
   SettingsWindow,
+  wallpaperKeys,
   WallpaperWindow,
   WidgetsWindow
 } from '@/app/modules'
@@ -44,6 +47,14 @@ app.start({
     if (cmd === 'settings') {
       settings.toggle()
       return res('settings toggled')
+    }
+    if (cmd === 'reveal' && isBarSurface(arg)) {
+      bar.reveal(arg)
+      return res(`${arg} revealed`)
+    }
+    if (cmd === 'wallpaper' && (arg === 'next' || arg === 'previous')) {
+      wallpaperKeys.step(arg)
+      return res(`wallpaper ${arg}`)
     }
     res(`unknown request: ${argv.join(' ')}`)
   },

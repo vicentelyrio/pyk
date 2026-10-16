@@ -3,7 +3,12 @@ import app from 'ags/gtk4/app'
 import { createState } from 'ags'
 import { niri } from '@/infrastructure/niri'
 
-export type BarSurface = 'control' | 'wifi' | 'bluetooth' | 'wallpaper' | 'notifications' | 'calendar' | 'session'
+const SURFACES = ['control', 'wifi', 'bluetooth', 'wallpaper', 'notifications', 'calendar', 'session'] as const
+
+export type BarSurface = (typeof SURFACES)[number]
+
+export const isBarSurface = (value: string | undefined): value is BarSurface =>
+  SURFACES.includes(value as BarSurface)
 
 export interface BarRequest {
   readonly surface: BarSurface
