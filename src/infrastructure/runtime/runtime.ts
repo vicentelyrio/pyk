@@ -34,6 +34,8 @@ import { SessionLive } from '@/infrastructure/session/gjs/backend'
 import { NiriBindsLayer } from '@/infrastructure/shortcuts/gjs/layer'
 import { TodosBackendLive } from '@/infrastructure/todos/gjs/backend'
 import { TodosLayer } from '@/infrastructure/todos/store/controller'
+import { TrayBackendLive } from '@/infrastructure/tray/gjs/backend'
+import { TrayLayer } from '@/infrastructure/tray/store/controller'
 import { WallpaperBackendLive } from '@/infrastructure/wallpaper/gjs/backend'
 import { WallpaperLayer } from '@/infrastructure/wallpaper/store/controller'
 import { WeatherBackendLive } from '@/infrastructure/weather/gjs/backend'
@@ -55,6 +57,7 @@ const MainLayer = Layer.mergeAll(
   NiriBindsLayer,
   SessionLive,
   TodosLayer.pipe(Layer.provide([TodosBackendLive])),
+  TrayLayer.pipe(Layer.provide([TrayBackendLive])),
   WallpaperLayer.pipe(Layer.provide([WallpaperBackendLive])),
   WeatherLayer.pipe(Layer.provide([WeatherBackendLive])),
 ).pipe(

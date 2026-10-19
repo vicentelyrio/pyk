@@ -1,8 +1,9 @@
 import app from 'ags/gtk4/app'
 import { Astal, Gdk, Gtk } from 'ags/gtk4'
-import { Calendar, ControlCenter, Media, Notifications, Session, Wallpaper, Workspaces } from '@/app/features'
+import { Calendar, ControlCenter, Media, Notifications, Session, Tray, Wallpaper, Workspaces } from '@/app/features'
 import { Divider } from '@/ui/components'
 import { settings } from '@/app/modules/settings'
+import { tray } from '@/infrastructure/tray'
 
 import { bar, type BarSurface } from './state'
 
@@ -39,6 +40,8 @@ export function Bar(gdkmonitor: Gdk.Monitor) {
         <Workspaces $type="start" />
         <Media $type="center" />
         <box $type="end" class={cs.tray}>
+          <Tray />
+          <Divider visible={tray.hasItems} />
           <Wallpaper connector={connector} reveal={reveal('wallpaper')} />
           <Notifications reveal={reveal('notifications')} />
           <Divider />

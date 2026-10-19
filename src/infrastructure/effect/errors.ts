@@ -1,6 +1,6 @@
 import { Data } from 'effect'
 
-export type Domain = 'apps' | 'audio' | 'battery' | 'bluetooth' | 'brightness' | 'clock' | 'config' | 'files' | 'monitor' | 'mpris' | 'network' | 'niri' | 'notifications' | 'schedule' | 'session' | 'shortcuts' | 'todos' | 'wallpaper' | 'weather'
+export type Domain = 'apps' | 'audio' | 'battery' | 'bluetooth' | 'brightness' | 'clock' | 'config' | 'files' | 'monitor' | 'mpris' | 'network' | 'niri' | 'notifications' | 'schedule' | 'session' | 'shortcuts' | 'todos' | 'tray' | 'wallpaper' | 'weather'
 
 export class ActionError extends Data.TaggedError('ActionError')<{
   readonly domain: Domain

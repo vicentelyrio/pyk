@@ -1,0 +1,16 @@
+@use 'styles' as s;
+
+.tray {
+  > *:not(:first-child) { margin-left: s.space(xxs); }
+}
+
+.tray-item {
+  @include s.icon-button(bar-hit);
+  color: s.gtk(muted);
+
+  &:hover { color: s.gtk(text); }
+}
+
+.tray-icon {
+  -gtk-icon-size: s.size(icon);
+}
