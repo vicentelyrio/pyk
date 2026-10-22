@@ -1,5 +1,5 @@
 import { Gtk } from 'ags/gtk4'
-import { For, createComputed } from 'ags'
+import { For, createComputed, type Accessor } from 'ags'
 import { LL } from '@/infrastructure/i18n'
 import { weather, type ForecastSlot, type WeatherCondition } from '@/infrastructure/weather'
 import { Plot } from '@/ui/components'
@@ -71,24 +71,36 @@ function Forecast() {
   const values = createComputed(() => normalize(slots().map((it) => it.value)))
   const day = createComputed(() => slots().map((it) => it.isDay))
   const night = createComputed(() => slots().map((it) => !it.isDay))
+  let row: Gtk.Box | undefined
+
+  const anchors = (area: Gtk.Widget) => {
+    const centers: number[] = []
+    for (let slot = row?.get_first_child(); slot; slot = slot.get_next_sibling()) {
+      const [, bounds] = slot.get_first_child()!.compute_bounds(area)
+      centers.push(bounds.get_x() + bounds.get_width() / 2)
+    }
+    return centers
+  }
 
   return (
     <box class={cs.forecast} orientation={Gtk.Orientation.VERTICAL} visible={slots.as((it) => it.length > 0)}>
       <overlay class={cs.chart}>
-        <Plot className={cs.line} values={values} spread="columns" />
+        <Plot className={cs.line} values={values} anchors={anchors} />
         <box $type="overlay">
-          <Plot className={cs.day} values={values} mark="dots" only={day} spread="columns" />
+          <Plot className={cs.day} values={values} mark="dots" only={day} anchors={anchors} />
         </box>
         <box $type="overlay">
-          <Plot className={cs.night} values={values} mark="dots" only={night} spread="columns" />
+          <Plot className={cs.night} values={values} mark="dots" only={night} anchors={anchors} />
         </box>
       </overlay>
-      <box homogeneous>
+      <box $={(self: Gtk.Box) => (row = self)}>
         <For each={slots}>
-          {(slot: ForecastSlot) => (
-            <box class={cs.slot} orientation={Gtk.Orientation.VERTICAL}>
-              <label class={cs.degrees} label={slot.temperature} />
-              <label class={cs.time} label={slot.time} />
+          {(slot: ForecastSlot, index: Accessor<number>) => (
+            <box hexpand={createComputed(() => index() < slots().length - 1)}>
+              <box class={cs.slot} orientation={Gtk.Orientation.VERTICAL}>
+                <label class={cs.degrees} label={slot.temperature} />
+                <label class={cs.time} label={slot.time} />
+              </box>
             </box>
           )}
         </For>

@@ -11,16 +11,15 @@ export type PlotProps = {
   readonly values: Accessor<readonly number[]>
   readonly mark?: 'line' | 'dots'
   readonly only?: Accessor<readonly boolean[]>
-  readonly spread?: 'edges' | 'columns'
+  readonly anchors?: (area: Gtk.Widget) => readonly number[]
   readonly capacity?: number
   readonly className?: string
 }
 
-export function Plot({ values, mark = 'line', only, spread = 'edges', capacity, className }: PlotProps) {
+export function Plot({ values, mark = 'line', only, anchors, capacity, className }: PlotProps) {
   const inset = mark === 'dots' ? DOT : STROKE
 
   const x = (at: number, count: number, width: number) => {
-    if (spread === 'columns') return ((at + 0.5) / count) * width
     const slots = Math.max((capacity ?? count) - 1, 1)
     const offset = (capacity ?? count) - count
     return inset + ((offset + at) / slots) * (width - inset * 2)
@@ -33,13 +32,15 @@ export function Plot({ values, mark = 'line', only, spread = 'edges', capacity, 
     const points = values.peek()
     const shown = only?.peek()
     const color = area.get_color()
+    const placed = anchors?.(area)
+    const across = (index: number) => placed?.[index] ?? x(index, points.length, width)
 
     cr.setSourceRGBA(color.red, color.green, color.blue, color.alpha)
 
     if (mark === 'dots') {
-      points.forEach((value, at) => {
-        if (shown && !shown[at]) return
-        cr.arc(x(at, points.length, width), y(value, height), DOT, 0, Math.PI * 2)
+      points.forEach((value, index) => {
+        if (shown && !shown[index]) return
+        cr.arc(across(index), y(value, height), DOT, 0, Math.PI * 2)
         cr.fill()
       })
     }
@@ -47,7 +48,7 @@ export function Plot({ values, mark = 'line', only, spread = 'edges', capacity, 
       cr.setLineWidth(STROKE)
       cr.setLineCap(Cairo.LineCap.ROUND)
       cr.setLineJoin(Cairo.LineJoin.ROUND)
-      points.forEach((value, at) => cr.lineTo(x(at, points.length, width), y(value, height)))
+      points.forEach((value, index) => cr.lineTo(across(index), y(value, height)))
       cr.stroke()
     }
 
